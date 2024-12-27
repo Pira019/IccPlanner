@@ -6,7 +6,7 @@
     public abstract class Person : BaseEntity
     {
         protected string Name { get; set; } 
-        protected string FirstName { get; set; } 
+        protected string? LastName { get; set; } 
         protected string Sexe { get; set; } 
         protected string Tel { get; set; } // numéro de téléphone
         protected string? Email { get; set; } 

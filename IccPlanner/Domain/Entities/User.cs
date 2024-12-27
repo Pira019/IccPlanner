@@ -11,6 +11,6 @@ namespace IccPlanner.Domain.Entities
         private string password { get; set; }
         private Guid MemberId { get; set; }
         private Member Member { get; set; } = null!;
-        private MemberStatusEnum Status { get; set; }
+        private MemberStatusEnum Status { get; set; } = MemberStatusEnum.Active;
     }
 }
