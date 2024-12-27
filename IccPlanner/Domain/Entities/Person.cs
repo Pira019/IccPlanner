@@ -3,9 +3,8 @@
     /// <summary>
     /// Cette classe definit une personne
     /// </summary>
-    public abstract class Person
+    public abstract class Person : BaseEntity
     {
-
         protected string Name { get; set; } 
         protected string FirstName { get; set; } 
         protected string Sexe { get; set; } 

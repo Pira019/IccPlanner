@@ -7,6 +7,7 @@
     {
         private Guid Id { get; set; }
         private string password { get; set; }
-        private Member Member { get; set; }
+        private Guid MemberId { get; set; }
+        private Member Member { get; set; } = null!;
     }
 }

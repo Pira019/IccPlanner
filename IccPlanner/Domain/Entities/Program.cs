@@ -5,9 +5,10 @@
     /// </summary>
     public class Program
     {
-        private Guid Id { get; set; }
+        private int Id { get; set; }
         private string Name { get; set; }
         private string? Description { get; set; }
         private string ShortName { get; set; }
+        private List<Departement> Departements { get; } = [];
     }
 }

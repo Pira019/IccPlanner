@@ -8,9 +8,12 @@ namespace IccPlanner.Domain.Entities
     public class Member : Person
     {
         private Guid Id { get; set; }
+        private User User { get; set; } 
         private DateOnly? EntryDate { get; set; }
-        private Member AddedBy { get; set; } 
+        private Guid AddedByMemberId { get; set; } // Id member
+        private Member AddedBy { get; set; } // Id member
         private DateOnly? BirthDate { get; set; } 
-        private MemberStatusEnum Status { get; set; } 
+        private MemberStatusEnum Status { get; set; }
+        private List<Departement>  Departements { get; } = [];
     }
 }

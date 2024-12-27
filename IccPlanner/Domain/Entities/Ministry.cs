@@ -1,4 +1,5 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿ 
+namespace IccPlanner.Domain.Entities
 {
     /// <summary>
     /// Classe ministere ex: TELECOMMUNICATION
@@ -8,5 +9,6 @@
         private Guid Id { get;}
         private string Name { get; set; } 
         private string Description { get; set; }
+        public ICollection<Departement> Departements { get; } = new List<Departement>();
     }
 }
