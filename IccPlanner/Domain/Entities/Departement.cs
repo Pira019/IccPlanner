@@ -1,9 +1,9 @@
 ﻿namespace IccPlanner.Domain.Entities
 {
-    public class Departement
+    public class Departement : BaseEntity
     {
         private int Id {  get; set; }
-        public Guid MinistryId { get; set; }
+        public int MinistryId { get; set; }
         private Ministry Ministry { get; set; } = null!;
         private string Name { get; set; }
         private string Description { get; set; }

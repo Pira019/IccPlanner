@@ -1,4 +1,6 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿using IccPlanner.Domain.Enums;
+
+namespace IccPlanner.Domain.Entities
 {
     /// <summary>
     /// Table utilisateur qui permet d'indentifier un utilisateur
@@ -9,5 +11,6 @@
         private string password { get; set; }
         private Guid MemberId { get; set; }
         private Member Member { get; set; } = null!;
+        private MemberStatusEnum Status { get; set; }
     }
 }

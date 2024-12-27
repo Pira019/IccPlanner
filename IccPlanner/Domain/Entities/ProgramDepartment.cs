@@ -15,7 +15,7 @@
         private Member CreateBy { get; set; }
         private Member? UpdateBy { get; set; }
         private bool? isRecurring { get; set; } = false;
-        private List<DepartmentMember> DepartmentMembers { get; }
+        private List<DepartmentMember> DepartmentMembers { get; } = [];
         private List<FeedBack> FeedBacks { get; }
         private List<Availability> Availabilities { get; } = [];
 

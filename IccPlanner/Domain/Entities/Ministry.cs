@@ -6,7 +6,7 @@ namespace IccPlanner.Domain.Entities
     /// </summary>
     public class Ministry
     {
-        private Guid Id { get;}
+        private int Id { get;}
         private string Name { get; set; } 
         private string Description { get; set; }
         public ICollection<Departement> Departements { get; } = new List<Departement>();
