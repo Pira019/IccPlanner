@@ -1,6 +1,7 @@
-﻿using IccPlanner.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
 
-namespace IccPlanner.Domain.Entities
+namespace Domain.Entities
 {
 
     /// <summary>
@@ -9,6 +10,7 @@ namespace IccPlanner.Domain.Entities
     public class Planning
     {   
         public int AvailabilityId { get; set; }
+        [MaxLength(255)]
         public string MemberName { get; set; }
         private DateOnly ProgramDate { get; set; } // ProgramDepartment
         public Availability Availability { get; set; } = null!;

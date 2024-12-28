@@ -1,4 +1,4 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿namespace Domain.Entities
 {
     public class FeedBack : BaseEntity
     {

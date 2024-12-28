@@ -1,4 +1,6 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Entities
 {
     /// <summary>
     /// Classe qui définit le programme
@@ -10,6 +12,7 @@
         private int ProgramId { get; set; }
         private DateTime StartAt { get; set; }
         private DateTime EndAt { get; set; }
+        [MaxLength(255)]
         private string? Localisation { get; set; }
         private string? Comment { get; set; }
         private Member CreateBy { get; set; }

@@ -2,3 +2,6 @@
 IccPlanner/obj
 IccPlanner/obj
 IccPlanner/IccPlanner.csproj
+Domain/obj
+Infrastructure/obj
+IccPlanner.sln

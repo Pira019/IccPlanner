@@ -14,6 +14,11 @@ namespace IccPlanner
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Chaine de connexion a la DB
+            var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException (" Connection string not found");
+           // builder.Services.AdDb
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

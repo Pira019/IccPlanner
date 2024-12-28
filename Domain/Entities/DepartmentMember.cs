@@ -1,6 +1,7 @@
-﻿using IccPlanner.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Enums;
 
-namespace IccPlanner.Domain.Entities
+namespace Domain.Entities
 {
     public class DepartmentMember : BaseEntity
     {
@@ -8,6 +9,7 @@ namespace IccPlanner.Domain.Entities
         private int DepartementId { get; set; }
         public Member Member { get; set; } = null!;
         public Departement Departement { get; set; } = null!;
+        [MaxLength(255)]
         private string NickName {  get; set; }
         private DateOnly DateEnty { get; set; }
         private MemberStatusEnum Staus { get; set; }       

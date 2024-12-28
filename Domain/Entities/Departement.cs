@@ -1,10 +1,13 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Entities
 {
     public class Departement : BaseEntity
     {
         private int Id {  get; set; }
         public int MinistryId { get; set; }
         private Ministry Ministry { get; set; } = null!;
+        [MaxLength(255)]
         private string Name { get; set; }
         private string Description { get; set; }
         private  string shortName { get; set; }

@@ -1,6 +1,6 @@
-﻿using IccPlanner.Domain.Enums;
+﻿using Domain.Enums;
 
-namespace IccPlanner.Domain.Entities
+namespace Domain.Entities
 {
     /// <summary>
     /// Cette clase definit un member, ex: un chantre etc ...

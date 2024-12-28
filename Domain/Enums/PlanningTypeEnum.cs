@@ -1,4 +1,4 @@
-﻿namespace IccPlanner.Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum PlanningTypeEnum
     {

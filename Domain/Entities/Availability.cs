@@ -1,4 +1,4 @@
-﻿namespace IccPlanner.Domain.Entities
+﻿namespace Domain.Entities
 {
     /// <summary>
     /// Disponibilté des member

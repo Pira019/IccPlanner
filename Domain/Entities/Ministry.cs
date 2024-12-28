@@ -1,5 +1,7 @@
-﻿ 
-namespace IccPlanner.Domain.Entities
+﻿
+using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Entities
 {
     /// <summary>
     /// Classe ministere ex: TELECOMMUNICATION
@@ -7,6 +9,7 @@ namespace IccPlanner.Domain.Entities
     public class Ministry
     {
         private int Id { get;}
+        [MaxLength(255)]
         private string Name { get; set; } 
         private string Description { get; set; }
         public ICollection<Departement> Departements { get; } = new List<Departement>();
