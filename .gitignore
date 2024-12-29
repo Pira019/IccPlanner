@@ -5,3 +5,6 @@ IccPlanner/IccPlanner.csproj
 Domain/obj
 Infrastructure/obj
 IccPlanner.sln
+Domain/bin
+IccPlanner/bin
+Infrastructure/bin

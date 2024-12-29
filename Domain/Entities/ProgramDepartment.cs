@@ -7,20 +7,22 @@ namespace Domain.Entities
     /// </summary>
     public class ProgramDepartment : BaseEntity
     {
-        private int Id { get; set; }
-        private int DepartementId { get; set; }
-        private int ProgramId { get; set; }
-        private DateTime StartAt { get; set; }
-        private DateTime EndAt { get; set; }
+        public int Id { get; set; }
+        public int DepartementId { get; set; }
+        public int ProgramId { get; set; }
+        public Program Program { get; set; } 
+        public Departement Departement { get; set; } 
+        public DateTime StartAt { get; set; }
+        public DateTime EndAt { get; set; }
         [MaxLength(255)]
-        private string? Localisation { get; set; }
-        private string? Comment { get; set; }
-        private Member CreateBy { get; set; }
-        private Member? UpdateBy { get; set; }
-        private bool? isRecurring { get; set; } = false;
-        private List<DepartmentMember> DepartmentMembers { get; } = [];
-        private List<FeedBack> FeedBacks { get; }
-        private List<Availability> Availabilities { get; } = [];
+        public string? Localisation { get; set; }
+        public string? Comment { get; set; }
+        public Member CreateBy { get; set; }
+        public Member? UpdateBy { get; set; }
+        public bool? isRecurring { get; set; } = false;
+        public List<DepartmentMember> DepartmentMembers { get; } = [];
+        public List<FeedBack> FeedBacks { get; }
+        public List<Availability> Availabilities { get; } = [];
 
 
     }

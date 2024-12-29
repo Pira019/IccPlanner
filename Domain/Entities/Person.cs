@@ -8,18 +8,18 @@ namespace Domain.Entities
     public abstract class Person : BaseEntity
     {
         [MaxLength(255)]
-        protected string Name { get; set; }
+        public string Name { get; set; }
         [MaxLength(255)]
-        protected string? LastName { get; set; }
+        public string? LastName { get; set; }
         [MaxLength(10)]
-        protected string Sexe { get; set; } 
+        public string Sexe { get; set; } 
         [MaxLength(15)]
-        protected string Tel { get; set; } // numéro de téléphone
+        public string Tel { get; set; } // numéro de téléphone
         [MaxLength(255)]
-        protected string? Email { get; set; }
+        public string? Email { get; set; }
         [MaxLength(255)]
-        protected string? City { get; set; }
+        public string? City { get; set; }
         [MaxLength(255)]
-        protected string? Quarter { get; set; } // Quartier
+        public string? Quarter { get; set; } // Quartier
     }
 }

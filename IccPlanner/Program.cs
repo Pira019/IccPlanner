@@ -1,4 +1,8 @@
 
+
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 namespace IccPlanner
 {
     public class Program
@@ -16,8 +20,8 @@ namespace IccPlanner
 
             // Chaine de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException (" Connection string not found");
-           // builder.Services.AdDb
-
+            builder.Services.AddDbContext<IccPlannerContext>(option =>
+                option.UseNpgsql(conString)); 
 
             var app = builder.Build();
 

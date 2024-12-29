@@ -8,10 +8,10 @@ namespace Domain.Entities
     /// </summary>
     public class User
     {
-        private Guid Id { get; set; } 
-        private string password { get; set; }
-        private Guid MemberId { get; set; }
-        private Member Member { get; set; } = null!;
-        private MemberStatusEnum Status { get; set; } = MemberStatusEnum.Active;
+        public Guid Id { get; set; } 
+        public string Password { get; set; }
+        public Guid MemberId { get; set; }
+        public Member Member { get; set; } = null!;
+        public MemberStatusEnum Status { get; set; } = MemberStatusEnum.Active;
     }
 }

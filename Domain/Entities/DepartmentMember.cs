@@ -5,17 +5,18 @@ namespace Domain.Entities
 {
     public class DepartmentMember : BaseEntity
     {
-        private Guid MemberId { get; set; }
-        private int DepartementId { get; set; }
+        public int Id { get; set; }
+        public Guid MemberId { get; set; }
+        public int DepartementId { get; set; }
         public Member Member { get; set; } = null!;
         public Departement Departement { get; set; } = null!;
-        [MaxLength(255)]
-        private string NickName {  get; set; }
-        private DateOnly DateEnty { get; set; }
-        private MemberStatusEnum Staus { get; set; }       
-        private List<ProgramDepartment> ProgramDepartments { get; } = [];
-        private List<FeedBack> FeedBacks { get; } = [];
-        private List<Availability> Availabilities { get; } = [];
+        [MaxLength(55)]
+        public string? NickName {  get; set; }
+        public DateOnly? DateEntry { get; set; }
+        public MemberStatusEnum Staus { get; set; }       
+        public List<ProgramDepartment> ProgramDepartments { get; } = [];
+        public List<FeedBack> FeedBacks { get; } = [];
+        public List<Availability> Availabilities { get; } = [];
 
 
     }

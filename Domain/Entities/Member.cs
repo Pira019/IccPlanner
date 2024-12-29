@@ -7,13 +7,13 @@ namespace Domain.Entities
     /// </summary>
     public class Member : Person
     {
-        private Guid Id { get; set; }
-        private User User { get; set; } 
-        private DateOnly? EntryDate { get; set; }
-        private Guid AddedByMemberId { get; set; } // Id member
-        private Member AddedBy { get; set; } //  member
-        private DateOnly? BirthDate { get; set; } 
-        private MemberStatusEnum Status { get; set; }
-        private List<Departement> Departements { get; } = [];
+        public Guid Id { get; set; }
+        public User? User { get; set; } 
+        public DateOnly? EntryDate { get; set; }
+        public Guid AddedById { get; set; } // Id member
+        public Member AddedBy { get; set; } //  member
+        public DateOnly? BirthDate { get; set; } 
+        public MemberStatusEnum Status { get; set; }
+        public List<Departement> Departements { get; } = [];
     }
 }
