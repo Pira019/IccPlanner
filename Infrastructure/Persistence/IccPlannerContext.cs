@@ -28,10 +28,16 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           /* modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseEntityConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProfileConfiguration).Assembly);*/
+
+            //new BaseEntityConfiguration().Configure(modelBuilder.Entity<BaseEntity>());
+           // new ProfileConfiguration().Configure(modelBuilder.Entity<Profile>()); 
+
             base.OnModelCreating(modelBuilder);
 
             //// Appliquer toutes les configurations d'entité 
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly); 
+           modelBuilder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly); 
         } 
     }
 }
