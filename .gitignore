@@ -8,3 +8,5 @@ IccPlanner.sln
 Domain/bin
 IccPlanner/bin
 Infrastructure/bin
+Application/obj
+obj
