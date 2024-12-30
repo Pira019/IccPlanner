@@ -17,9 +17,9 @@ namespace Domain.Entities
         public string Tel { get; set; } // numéro de téléphone
         [MaxLength(255)]
         public string? Email { get; set; }
-        [MaxLength(255)]
+        [MaxLength(55)]
         public string? City { get; set; }
-        [MaxLength(255)]
+        [MaxLength(55)]
         public string? Quarter { get; set; } // Quartier
     }
 }

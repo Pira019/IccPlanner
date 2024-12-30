@@ -27,11 +27,12 @@ namespace Infrastructure.Persistence
         } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {            
+            //// Appliquer toutes les configurations d'entité 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly);
             base.OnModelCreating(modelBuilder);
 
-            //// Appliquer toutes les configurations d'entité 
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly); 
+            
         } 
     }
 }
