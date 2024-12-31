@@ -1,6 +1,10 @@
 
 
+using Application.Interfaces;
+using Application.Interfaces.Services;
+using Application.Services; 
 using Infrastructure.Persistence;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace IccPlanner
@@ -17,6 +21,10 @@ namespace IccPlanner
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Mapper 
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // Chaine de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException (" Connection string not found");
