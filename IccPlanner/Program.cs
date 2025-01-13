@@ -47,10 +47,12 @@ namespace IccPlanner
                  
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+             
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Mapper 
-            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Mapper  
 
             // Chaine de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException ("Connection string not found");
@@ -58,7 +60,10 @@ namespace IccPlanner
                 option.UseNpgsql(conString));
 
             //Pour l'authentification
-            builder.Services.AddIdentity<User, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+            })
              .AddEntityFrameworkStores<IccPlannerContext>()
              .AddDefaultTokenProviders();
 
