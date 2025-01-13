@@ -2,11 +2,15 @@
 
 namespace Domain.Entities
 {
-    public class Profile : BaseEntity
+    /// <summary>
+    /// Represente les roles d'un utilisateur
+    /// </summary>
+    public class Role : BaseEntity
     {
         public int Id { get; set; }
-        [MaxLength(255)]
+        [MaxLength(55)]
         public string Name { get; set; }
         public string Description { get; set; }    
+        public List<User> Users { get; set; }
     }
 }

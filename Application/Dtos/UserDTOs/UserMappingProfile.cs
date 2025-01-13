@@ -17,8 +17,6 @@ namespace Application.Dtos.UserDTOs
                         Name = src.Name,
                         LastName = src.LastName,
                         Sexe = src.Sexe,
-                        Tel = src.Tel,
-                        Email = src.Email,
                         City = src.City,
                         Quarter = src.Quarter,
                         EntryDate = src.EntryDate,
