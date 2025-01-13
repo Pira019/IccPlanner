@@ -1,11 +1,13 @@
 ﻿
 
-using Domain.Entities; 
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
-    public class IccPlannerContext : DbContext
+    public class IccPlannerContext : IdentityDbContext
     {
         public DbSet<Member> Members { get; set; } 
         public DbSet<Ministry> Ministries { get; set; } 
@@ -16,7 +18,7 @@ namespace Infrastructure.Persistence
         public DbSet<FeedBack> FeedBacks { get; set; } 
         public DbSet<Availability> Availabilities { get; set; } 
         public DbSet<Planning> Plannings { get; set; }  
-        public DbSet<Profile> Profiles { get; set; }  
+        public DbSet<Role> Profiles { get; set; }  
         public DbSet<Permission> Permissions { get; set; }
 
 
@@ -31,7 +33,14 @@ namespace Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly);
             base.OnModelCreating(modelBuilder);
 
-            
+            // Renommer les tables d'identité
+            modelBuilder.Entity<IdentityUser>().ToTable("Users");
+            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         } 
     }
 }

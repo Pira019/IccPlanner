@@ -27,7 +27,7 @@ namespace Application.Services
 
             var newUser = new User
             {
-                Password = dto.Password,
+                PasswordHash = dto.Password,
                 Member = dto.Member,
             }; 
             _repository.insert(newUser);

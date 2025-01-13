@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250112054104_RenameIndentityTables")]
+    partial class RenameIndentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -681,7 +684,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RoleUsers", b =>
+            modelBuilder.Entity("RoleUtilisateur", b =>
                 {
                     b.Property<int>("RolesId")
                         .HasColumnType("integer");
@@ -693,10 +696,10 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUsers");
+                    b.ToTable("RoleUtilisateur");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Users", b =>
+            modelBuilder.Entity("Domain.Entities.Utilisateur", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -711,7 +714,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MemberId")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Users");
+                    b.HasDiscriminator().HasValue("Utilisateur");
                 });
 
             modelBuilder.Entity("DepartementMember", b =>
@@ -945,7 +948,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoleUsers", b =>
+            modelBuilder.Entity("RoleUtilisateur", b =>
                 {
                     b.HasOne("Domain.Entities.Role", null)
                         .WithMany()
@@ -953,18 +956,18 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Users", null)
+                    b.HasOne("Domain.Entities.Utilisateur", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Users", b =>
+            modelBuilder.Entity("Domain.Entities.Utilisateur", b =>
                 {
                     b.HasOne("Domain.Entities.Member", "Member")
                         .WithOne("User")
-                        .HasForeignKey("Domain.Entities.Users", "MemberId")
+                        .HasForeignKey("Domain.Entities.Utilisateur", "MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
