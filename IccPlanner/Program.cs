@@ -1,11 +1,14 @@
-
+using Application.Helper;
 using Application.Interfaces;
 using Application.Interfaces.Services;
+using Application.Responses;
 using Application.Services;
 using Domain.Entities;
+using IccPlanner.Configurations;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -13,7 +16,7 @@ using Swashbuckle.AspNetCore.Filters;
 namespace IccPlanner
 {
     /// <summary>
-    /// Configurer l'API
+    ///   Configurer l'API
     /// </summary>
     public class Program
     {
@@ -21,21 +24,39 @@ namespace IccPlanner
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Configuration
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddJsonFile("appSettings.json")
+                .AddEnvironmentVariables()
+                .Build();
 
-            builder.Services.AddControllers();
+            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>();
+
+            // Add services to the container.
+            builder.Services.AddControllers()
+                .ConfigureApiBehaviorOptions(op =>
+                    {
+                        op.InvalidModelStateResponseFactory = context =>
+                        {
+                           var response = ApiResponseHelper.CreateValidationErrorResponse(context);
+                           return new BadRequestObjectResult(response);
+                        };
+                    });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options => 
+            builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
-                    new OpenApiInfo { 
-                        Title = "ELGO PLANNING", Version = "v1",
+                    new OpenApiInfo
+                    {
+                        Title = appSetting?.AppName,
+                        Version = "v1",
                         Contact = new OpenApiContact
                         {
-                            Name = "Pires LUFUNGULA",
-                            Email = "Pireslfgl@gmail.com"
-                        }                        
+                            Name = appSetting?.Contact?.Name,
+                            Email = appSetting?.Contact?.Email,
+                        }
                     });
 
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -44,10 +65,10 @@ namespace IccPlanner
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                 
+
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-             
+
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
 
@@ -55,7 +76,7 @@ namespace IccPlanner
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Mapper  
 
             // Chaine de connexion a la DB
-            var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException ("Connection string not found");
+            var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException("Connection string not found");
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
 
@@ -79,7 +100,7 @@ namespace IccPlanner
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            } 
+            }
             app.UseSwagger(opt =>
             {
                 opt.SerializeAsV2 = true;

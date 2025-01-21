@@ -21,7 +21,9 @@ namespace Application.Services
         /// <summary>
         /// Créer un compte 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">
+        ///  Body de la requette 
+        /// </param>
         /// <returns></returns>
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request)
         {

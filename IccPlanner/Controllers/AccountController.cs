@@ -1,6 +1,7 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Services;
+﻿using Application.Interfaces.Services;
 using Application.Requests.Account;
+using Application.Responses;
+using Application.Responses.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -10,7 +11,7 @@ namespace IccPlanner.Controllers
     /// </summary>
     /// 
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -21,22 +22,26 @@ namespace IccPlanner.Controllers
         }
 
         // POST: AccountController/Create
+        /// <summary>
+        ///   Ajouter un membre
+        /// </summary>
+        /// <param name="request">
+        /// 
+        /// </param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create(CreateAccountRequest request)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType<ApiErrorResponse> (StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([FromBody] CreateAccountRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = await _accountService.CreateAccount(request);
 
-            if (!result.Succeeded) 
-            { 
-                return Ok(new { message = "Erreur", error = result.Errors });
+            if (!result.Succeeded)
+            {
+                var response = CreateAccountResponseError.ApiErrorResponse(result);
+                return BadRequest(response);
             }
-
-
-            return Ok(new { message = "OK" }); 
+            return Ok();
         }
     }
 }
