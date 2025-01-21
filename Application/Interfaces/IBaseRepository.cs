@@ -7,6 +7,6 @@ namespace Application.Interfaces
     /// <typeparam name="T"></typeparam>
     public interface IBaseRepository<T>
     {
-        void insert(T entity);
+        public Task insert(T entity);
     }
 }
