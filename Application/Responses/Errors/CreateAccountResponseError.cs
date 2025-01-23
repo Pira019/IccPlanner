@@ -13,7 +13,9 @@ namespace Application.Responses.Errors
         ///  Model de message d'erreur de retour dans la creation de compte
         /// </summary>
         /// <param name="identityResult"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// <see cref="ApiErrorResponse"/>
+        /// </returns>
         public static ApiErrorResponse ApiErrorResponse(IdentityResult identityResult) 
         {
             return new ApiErrorResponse
@@ -21,7 +23,7 @@ namespace Application.Responses.Errors
                 StatusCode = StatusCodes.Status400BadRequest,
                 ValidationErrors = identityResult.Errors.Select(e => e.Description).ToArray(),
                 Message = identityResult.ToString(),
-                StatusDescription = "Bad request",
+                StatusDescription = "Bad request.",
             };                
         }
     }
