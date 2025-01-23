@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Application.Helper
 {
     /// <summary>
-    ///   Helper 
+    ///   Helper de retour
     /// </summary>
     public class ApiResponseHelper
     {

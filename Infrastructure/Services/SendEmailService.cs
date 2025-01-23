@@ -50,7 +50,7 @@ namespace Infrastructure.Services
         /// </summary>
         /// <param name="subject">Sujet duu mail</param>
         /// <param name="content">Le contenu</param>
-        /// <param name="toEmail"></param>
+        /// <param name="toEmail">Email destinateur</param>
         /// <returns>Returne objet Task.</returns>
         private async Task Execute(string subject,string content, string toEmail)
         {
