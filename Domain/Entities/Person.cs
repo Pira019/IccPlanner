@@ -7,13 +7,13 @@ namespace Domain.Entities
     /// </summary>
     public abstract class Person : BaseEntity
     {
-        [MaxLength(255)]
+        [MaxLength(55)]
         public string Name { get; set; }
-        [MaxLength(255)]
+        [MaxLength(55)]
         public string? LastName { get; set; }
-        [MaxLength(10)]
+        [MaxLength(1)]
         public string Sexe { get; set; } 
-        [MaxLength(15)]       
+        [MaxLength(55)]       
         public string? City { get; set; }
         [MaxLength(55)]
         public string? Quarter { get; set; } // Quartier

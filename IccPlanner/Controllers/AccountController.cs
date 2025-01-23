@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace IccPlanner.Controllers
 {
     /// <summary>
-    ///   Cette classe permet de gerer les comptes 
-    /// </summary>
-    /// 
+    /// Cette classe permet de gerer les comptes 
+    /// </summary> 
     [Route("api/[controller]")]
     [ApiController] 
     public class AccountController : ControllerBase
@@ -23,12 +22,11 @@ namespace IccPlanner.Controllers
 
         // POST: AccountController/Create
         /// <summary>
-        ///   Ajouter un membre
+        /// Ajouter un membre
         /// </summary>
-        /// <param name="request">
-        /// 
-        /// </param>
-        /// <returns></returns>
+        /// <param name="request"> 
+        /// <see cref="CreateAccountRequest"/> </param>
+        /// <returns>Reponse object IActionResult</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponse> (StatusCodes.Status400BadRequest)]

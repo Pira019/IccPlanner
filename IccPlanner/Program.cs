@@ -1,19 +1,20 @@
 using Application.Helper;
 using Application.Interfaces;
 using Application.Interfaces.Services;
-using Application.Responses;
 using Application.Services;
 using Domain.Entities;
-using IccPlanner.Configurations;
+using Application.Configurations;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.Extensions.Options;
 
-namespace IccPlanner
+namespace Application
 {
     /// <summary>
     ///   Configurer l'API
@@ -24,11 +25,21 @@ namespace IccPlanner
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            IHostEnvironment environment = builder.Environment;
+
+            //Ajouter le log
+            builder.Logging.AddConsole();
+
             // Configuration
             IConfigurationRoot config = new ConfigurationBuilder()
-                .AddJsonFile("appSettings.json")
+                .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appSettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
-                .Build();
+                .Build(); 
+
+            builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
+
+            builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
             AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>();
 
@@ -38,8 +49,8 @@ namespace IccPlanner
                     {
                         op.InvalidModelStateResponseFactory = context =>
                         {
-                           var response = ApiResponseHelper.CreateValidationErrorResponse(context);
-                           return new BadRequestObjectResult(response);
+                            var response = ApiResponseHelper.CreateValidationErrorResponse(context);
+                            return new BadRequestObjectResult(response);
                         };
                     });
 
@@ -70,24 +81,32 @@ namespace IccPlanner
             });
 
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ISendEmailService, SendEmailService>();
 
+            builder.Services.AddSingleton(resolver =>
+            resolver.GetRequiredService<IOptions<AppSetting>>().Value);
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Mapper  
+            // Mapper 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());  
 
             // Chaine de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException("Connection string not found");
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
 
-            //Pour l'authentification
+            //Pour l'authentification ou Identity
             builder.Services.AddIdentity<User, IdentityRole>(opt =>
             {
                 opt.User.RequireUniqueEmail = true;
+                opt.SignIn.RequireConfirmedEmail = true;
             })
              .AddEntityFrameworkStores<IccPlannerContext>()
              .AddDefaultTokenProviders();
 
+            builder.Services.Configure<DataProtectionTokenProviderOptions>
+               (options => options.TokenLifespan = TimeSpan.FromHours(3)); 
 
             /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, 

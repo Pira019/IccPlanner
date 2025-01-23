@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Domain.Entities
 {
     /// <summary>
-    /// Table utilisateur qui permet d'indentifier un utilisateur
+    /// Table User qui permet d'indentifier un utilisateur
     /// </summary>
     public class User : IdentityUser
     {

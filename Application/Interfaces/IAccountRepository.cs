@@ -11,5 +11,6 @@ namespace Application.Interfaces
     public interface IAccountRepository
     { 
         public Task<IdentityResult> CreateAsync(User user, string password);
+        public Task<User?> FindByEmailAsync(string email);
     }
 }

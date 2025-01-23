@@ -1,5 +1,5 @@
 ﻿
-namespace IccPlanner.Configurations
+namespace Application.Configurations
 {
     public class ContactSetting
     { 

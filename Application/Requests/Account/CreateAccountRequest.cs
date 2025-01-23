@@ -14,7 +14,7 @@ namespace Application.Requests.Account
         [EmailAddress]
         public string Email { get; set; }
 
-        [MaxLength(10)]
+        [MaxLength(1)]
         [Required]
         public string Sexe { get; set; }
         [MaxLength(15)]
