@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
 {
+    /// <summary>
+    /// Ce service permet de gerer les actions d'un compte
+    /// </summary>
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository AccountRepository;
@@ -26,7 +29,7 @@ namespace Application.Services
         /// <param name="request">
         ///  Body de la requette 
         /// </param>
-        /// <returns></returns>
+        /// <returns>Returne objet IdentityResult</returns>
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request)
         {
             var dto = _mapper.Map<CreateAccountDTO>(request);

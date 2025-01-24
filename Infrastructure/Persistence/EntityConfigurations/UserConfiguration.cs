@@ -16,7 +16,12 @@ namespace Infrastructure.Persistence.EntityConfigurations
                 .HasConversion(
                     v => v.ToString().ToUpper(),
                     v => (MemberStatusEnum)Enum.Parse(typeof(MemberStatusEnum), v, true)
-                    ) .HasMaxLength(15);
-        } 
+                    ).HasMaxLength(15);
+
+            builder.HasOne(user => user.Member)
+                .WithOne(member => member.User)
+                .HasForeignKey<User>(u => u.MemberId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
