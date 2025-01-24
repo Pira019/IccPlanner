@@ -71,7 +71,7 @@ namespace Infrastructure.Services
                 var response = await client.SendEmailAsync(msg);
                 _logger.LogInformation(response.IsSuccessStatusCode
                 ? "Email to {toEmail} queued successfully!"
-                : $"Failure Email to {toEmail}");
+                : "Failure Email to {toEmail}");
             }
             catch (Exception ex)
             {

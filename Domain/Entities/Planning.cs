@@ -20,6 +20,6 @@ namespace Domain.Entities
         public Guid? UpdatedById { get; set; } // Member Id
         public Member? UpdatedBy { get; set; }
         public string? Comment { get; set; } 
-        public PlanningTypeEnum PlanningType { get; set; } // ex Formation, Observation etc
+        public PlanningType PlanningType { get; set; } // ex Formation, Observation etc
     }
 }

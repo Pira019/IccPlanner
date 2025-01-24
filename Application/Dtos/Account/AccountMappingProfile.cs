@@ -14,7 +14,7 @@ namespace Application.Dtos.UserDTOs
     {
         public AccountMappingProfile()
         {
-            CreateMap<CreateAccountRequest, CreateAccountDTO>()
+            CreateMap<CreateAccountRequest, CreateAccountDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src =>
                     new User
                     {

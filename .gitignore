@@ -12,3 +12,4 @@ Application/obj
 obj
 Application/bin
 TemplateEngineHost
+.sonarqube
