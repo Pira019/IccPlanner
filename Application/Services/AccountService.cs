@@ -39,7 +39,7 @@ namespace Application.Services
             {
                 var newUser = await AccountRepository.FindByEmailAsync(dto.User.Email!);
                 // Envoie Email
-                _sendEmailService.SendEmailConfirmation(newUser!);
+                await _sendEmailService.SendEmailConfirmation(newUser!);
             }
             return result;
         }

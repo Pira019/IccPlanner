@@ -9,6 +9,6 @@ namespace Application.Interfaces.Services
         ///  Permet d'envoyer un email
         /// </summary>
         /// <param name="user">Nouvel utilisateur creer</param>
-        void SendEmailConfirmation(User user); 
+        Task SendEmailConfirmation(User user); 
     }
 }
