@@ -1,6 +1,9 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Abstractions
 {
+    [NotMapped]
     /// <summary>
     /// Cette classe permet de gerer les erreur
     /// </summary>
@@ -14,11 +17,11 @@ namespace Domain.Abstractions
         /// <summary>
         /// Le code de l'erreur
         /// </summary>
-        protected string Code {  get; set; }
+        public string Code {  get; set; }
 
         /// <summary>
         /// Message de l'erreur
         /// </summary>
-        protected string Message {  get; set; }
+        public string Message {  get; set; }
     }
 }
