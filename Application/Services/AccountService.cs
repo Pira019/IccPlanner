@@ -1,9 +1,12 @@
-﻿using Application.Dtos.Account;
+﻿using System.Text;
+using Application.Dtos.Account;
 using Application.Interfaces;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
 using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Application.Services
 {
@@ -12,13 +15,13 @@ namespace Application.Services
     /// </summary>
     public class AccountService : IAccountService
     {
-        private readonly IAccountRepository AccountRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly ISendEmailService _sendEmailService;
         private readonly IMapper _mapper;
 
         public AccountService(IAccountRepository accountRepository, IMapper mapper, ISendEmailService sendEmailService)
         {
-            AccountRepository = accountRepository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
             _sendEmailService = sendEmailService;
         }
@@ -33,15 +36,26 @@ namespace Application.Services
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request)
         {
             var dto = _mapper.Map<CreateAccountDto>(request);
-            var result = await AccountRepository.CreateAsync(dto.User, dto.User.PasswordHash!);
+            var result = await _accountRepository.CreateAsync(dto.User, dto.User.PasswordHash!);
 
             if (result.Succeeded)
             {
-                var newUser = await AccountRepository.FindByEmailAsync(dto.User.Email!);
+                var newUser = await _accountRepository.FindByEmailAsync(dto.User.Email!);
                 // Envoie Email
                 await _sendEmailService.SendEmailConfirmation(newUser!);
             }
             return result;
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAccount(User user, string code)
+        {
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            return await _accountRepository.ConfirmAccountEmailAsync(user!, code);
+        }
+
+        public async Task<User?> FindUserAccountById(string userId)
+        {
+            return await _accountRepository.FindByIdAsync(userId);
         }
     }
 }

@@ -3,6 +3,7 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Errors;
 using Microsoft.AspNetCore.Mvc;
+using SendGrid;
 
 namespace IccPlanner.Controllers
 {
@@ -10,7 +11,7 @@ namespace IccPlanner.Controllers
     /// Cette classe permet de gerer les comptes 
     /// </summary> 
     [Route("api/[controller]")]
-    [ApiController] 
+    [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -29,17 +30,44 @@ namespace IccPlanner.Controllers
         /// <returns>Reponse object IActionResult</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType<ApiErrorResponse> (StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateAccountRequest request)
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([FromForm] CreateAccountRequest request)
         {
             var result = await _accountService.CreateAccount(request);
 
             if (!result.Succeeded)
             {
-                var response = CreateAccountResponseError.ApiErrorResponse(result);
+                var response = AccountResponseError.ApiErrorResponse(result);
                 return BadRequest(response);
             }
             return Ok();
         }
+
+        /// <summary>
+        /// Confrimer l'email
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("confirm-email")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequest request)
+        {
+            // Trouver l'utilisateur
+            var user = await _accountService.FindUserAccountById(request.UserId);
+
+            if (user == null)
+            {
+                return BadRequest(AccountResponseError.UserNotFound());
+            }
+
+            var result = await _accountService.ConfirmEmailAccount(user, request.Token);
+
+            return result.Succeeded 
+                ? Ok()
+                : BadRequest(AccountResponseError.ApiErrorResponse(result));
+        }
     }
+
+
 }
