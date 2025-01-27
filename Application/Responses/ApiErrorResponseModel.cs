@@ -5,7 +5,7 @@ namespace Application.Responses
     /// <summary>
     ///   Model Erreur Api
     /// </summary>
-    public class ApiErrorResponse
+    public class ApiErrorResponseModel
     {
         /// <summary>
         ///   Status de la requette
