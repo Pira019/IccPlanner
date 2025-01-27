@@ -15,7 +15,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
             builder.Property(m => m.Status)
                 .HasConversion(
                     v => v.ToString().ToUpper(),
-                    v => (MemberStatusEnum)Enum.Parse(typeof(MemberStatusEnum), v, true)
+                    v => (MemberStatus)Enum.Parse(typeof(MemberStatus), v, true)
                     ).HasMaxLength(15);
 
             builder.HasOne(user => user.Member)

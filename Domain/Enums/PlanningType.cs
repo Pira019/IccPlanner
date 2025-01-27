@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum PlanningTypeEnum
+    public enum PlanningType
     {
         Regular,
         Tranning,

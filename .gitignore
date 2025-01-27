@@ -12,3 +12,9 @@ Application/obj
 obj
 Application/bin
 TemplateEngineHost
+.sonarqube
+Test/lcov.info
+Test/bin
+Test/coverage-report
+Tests/bin
+Tests/.config
