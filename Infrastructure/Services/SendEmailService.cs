@@ -34,7 +34,7 @@ namespace Infrastructure.Services
         /// Envoir l'email de confirmation
         /// </summary>
         /// <param name="email"></param>
-        public async void SendEmailConfirmation(User user)
+        public async Task SendEmailConfirmation(User user)
         { 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -71,7 +71,7 @@ namespace Infrastructure.Services
                 var response = await client.SendEmailAsync(msg);
                 _logger.LogInformation(response.IsSuccessStatusCode
                 ? "Email to {toEmail} queued successfully!"
-                : $"Failure Email to {toEmail}");
+                : "Failure Email to {toEmail}");
             }
             catch (Exception ex)
             {

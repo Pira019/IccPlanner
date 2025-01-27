@@ -32,14 +32,14 @@ namespace Application.Services
         /// <returns>Returne objet IdentityResult</returns>
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request)
         {
-            var dto = _mapper.Map<CreateAccountDTO>(request);
+            var dto = _mapper.Map<CreateAccountDto>(request);
             var result = await AccountRepository.CreateAsync(dto.User, dto.User.PasswordHash!);
 
             if (result.Succeeded)
             {
                 var newUser = await AccountRepository.FindByEmailAsync(dto.User.Email!);
                 // Envoie Email
-                _sendEmailService.SendEmailConfirmation(newUser!);
+                await _sendEmailService.SendEmailConfirmation(newUser!);
             }
             return result;
         }

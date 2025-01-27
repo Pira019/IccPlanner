@@ -13,7 +13,7 @@ namespace Domain.Entities
         [MaxLength(55)]
         public string? NickName {  get; set; }
         public DateOnly? DateEntry { get; set; }
-        public MemberStatusEnum Staus { get; set; }       
+        public MemberStatus Staus { get; set; }       
         public List<ProgramDepartment> ProgramDepartments { get; } = [];
         public List<FeedBack> FeedBacks { get; } = [];
         public List<Availability> Availabilities { get; } = [];
