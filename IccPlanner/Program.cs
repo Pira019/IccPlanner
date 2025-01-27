@@ -106,11 +106,13 @@ namespace Application
              .AddDefaultTokenProviders();
 
             builder.Services.Configure<DataProtectionTokenProviderOptions>
-               (options => options.TokenLifespan = TimeSpan.FromHours(3)); 
+               (options => options.TokenLifespan = TimeSpan.FromMinutes(20)); 
 
             /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, 
                     options => builder.Configuration.Bind("JwtSettings", options));*/
+
+            builder.Services.AddRouting(op => op.LowercaseUrls = true);
 
             var app = builder.Build();
 
