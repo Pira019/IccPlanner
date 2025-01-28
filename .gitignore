@@ -1,10 +1,8 @@
 ﻿.vs
 IccPlanner/obj
 IccPlanner/obj
-IccPlanner/IccPlanner.csproj
 Domain/obj
-Infrastructure/obj
-IccPlanner.sln
+Infrastructure/obj 
 Domain/bin
 IccPlanner/bin
 Infrastructure/bin
