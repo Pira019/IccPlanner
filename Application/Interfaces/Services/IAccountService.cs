@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 using Application.Requests.Account;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -28,5 +29,13 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="User"/> de l'opération </returns>
         public Task<User?> FindUserAccountById(string userId);
-    }
+
+        /// <summary>
+        /// Authentifier un utilisateur
+        /// </summary>
+        /// <param name="loginRequest">Model de donnée pour authetification</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="SignInResult"/> de l'opération </returns>
+        public Task<SignInResult> Login(LoginRequest loginRequest);
+    } 
 }

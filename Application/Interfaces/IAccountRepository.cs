@@ -34,5 +34,16 @@ namespace Application.Interfaces
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> ConfirmAccountEmailAsync(User user, string token);
+
+        /// <summary>
+        /// Permet d'authentifier un utilisateur
+        /// </summary>
+        /// <param name="email">Email ou le username d'un utilisateur </param>
+        /// <param name="password">Le mot de passe de l'utilisateur</param>
+        /// <param name="isPersistent">Flag indiquant si le cookie de connexion doit persister après la fermeture du navigateur.</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="SignInResult"/> de l'opération </returns>
+        public Task<SignInResult> SignIn (string email, string password, bool isPersistent = false);
+
     }
 }
