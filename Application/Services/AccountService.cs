@@ -57,5 +57,10 @@ namespace Application.Services
         {
             return await _accountRepository.FindByIdAsync(userId);
         }
+
+        public async Task<SignInResult> Login(LoginRequest loginRequest)
+        {
+            return await _accountRepository.SignIn(loginRequest.Email, loginRequest.Password, loginRequest.Remember);
+        }
     }
 }

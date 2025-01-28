@@ -1,9 +1,9 @@
 ﻿using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses;
+using Application.Responses.Account;
 using Application.Responses.Errors;
 using Microsoft.AspNetCore.Mvc;
-using SendGrid;
 
 namespace IccPlanner.Controllers
 {
@@ -63,9 +63,40 @@ namespace IccPlanner.Controllers
 
             var result = await _accountService.ConfirmEmailAccount(user, request.Token);
 
-            return result.Succeeded 
+            return result.Succeeded
                 ? Ok()
                 : BadRequest(AccountResponseError.ApiErrorResponse(result));
+        }
+
+        /// <summary>
+        /// Authentifier un utilisateur
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Login([FromForm] LoginRequest request)
+        {
+            // Auth
+            var resultat = await _accountService.Login(request);
+
+            if (resultat.IsLockedOut)
+            {
+                return BadRequest(AccountResponseError.UserIsLockedOut());
+            }
+
+            if (!resultat.Succeeded)
+            {
+                return BadRequest(AccountResponseError.LoginInvalidAttempt());
+            }
+
+            var res = new LoginAccountResponse
+            {
+                AccessToken = "Vlider ohhh"
+            };
+
+            return Ok(res);
         }
     }
 
