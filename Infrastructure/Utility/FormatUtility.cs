@@ -7,7 +7,7 @@ namespace Infrastructure.Utility
         public static string GenerateEmailConfirmationUrl(string url, string id, string code)
         {
             string callBackUrl = $"{url}?id={HtmlEncoder.Default.Encode(id)}&code={HtmlEncoder.Default.Encode(code)}";
-            return $"<a href={callBackUrl}>lien pour confimer l'email</a>";
+            return $"<a href={callBackUrl}>Lien pour confimer l'email</a>";
         }
     }
 }

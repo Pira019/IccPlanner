@@ -11,16 +11,18 @@ namespace Infrastructure.Repositories
     public class AccountRepository : IAccountRepository
     {
         private readonly UserManager<User> _userManager;
-        public AccountRepository(UserManager<User> userManager)
+        private readonly SignInManager<User> _signInManager;
+        public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
-         
+
         public Task<IdentityResult> ConfirmAccountEmailAsync(User user, string token)
         {
             return _userManager.ConfirmEmailAsync(user, token);
-        } 
-        
+        }
+
         public Task<IdentityResult> CreateAsync(User user, string password)
         {
             return _userManager.CreateAsync(user, password);
@@ -38,7 +40,12 @@ namespace Infrastructure.Repositories
 
         public Task<User?> FindByIdAsync(string id)
         {
-           return (_userManager.FindByIdAsync(id)); 
+            return (_userManager.FindByIdAsync(id));
+        }
+
+        public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)
+        {
+            return _signInManager.PasswordSignInAsync(email, password, isPersistent, true);
         }
     }
 }
