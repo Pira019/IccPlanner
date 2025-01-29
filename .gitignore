@@ -1,4 +1,6 @@
 ﻿.vs
+IccPlanner/obj
+IccPlanner/obj
 Domain/obj
 Infrastructure/obj 
 Domain/bin
