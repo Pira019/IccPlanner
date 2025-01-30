@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.Repositories
 {
     /// <summary>
     ///   Cette interface gére les action d'un compte
@@ -9,10 +9,10 @@ namespace Application.Interfaces
     public interface IAccountRepository
     {
         /// <summary>
-        /// Creer un compte
+        /// Créer un compte
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="user"><see cref="User"/>  </param>
+        /// <param name="password">Mot de passe de l'utilisateur</param>
         /// <returns>Objet IdentityResult</returns>
         public Task<IdentityResult> CreateAsync(User user, string password);
         public Task<User?> FindByEmailAsync(string email);
@@ -41,7 +41,7 @@ namespace Application.Interfaces
         /// <param name="isPersistent">Flag indiquant si le cookie de connexion doit persister après la fermeture du navigateur.</param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="SignInResult"/> de l'opération </returns>
-        public Task<SignInResult> SignIn (string email, string password, bool isPersistent = false);
+        public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false);
 
     }
 }

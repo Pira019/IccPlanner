@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence
         public DbSet<FeedBack> FeedBacks { get; set; } 
         public DbSet<Availability> Availabilities { get; set; } 
         public DbSet<Planning> Plannings { get; set; }  
-        public DbSet<Role> Profiles { get; set; }  
+        public DbSet<Role> Roles { get; set; }  
         public DbSet<Permission> Permissions { get; set; }
 
 

@@ -1,13 +1,11 @@
-﻿
-using System.Threading.Tasks;
-using Application.Requests.Account;
+﻿using Application.Requests.Account;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces.Services
 {
     /// <summary>
-    ///   Permet de gerer les actions d'un compte
+    ///   Permet de geérer les actions d'un compte
     /// </summary>
     public interface IAccountService
     {

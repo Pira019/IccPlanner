@@ -4,8 +4,7 @@ using Application.Interfaces.Services;
 using Application.Services;
 using Domain.Entities;
 using Application.Configurations;
-using Infrastructure.Persistence;
-using Infrastructure.Repositories;
+using Infrastructure.Persistence; 
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.Extensions.Options;
+using Infrastructure.Repositories;
+using Application.Interfaces.Repositories;
 
 namespace Application
 {
@@ -80,10 +81,12 @@ namespace Application
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            //Repositories 
 
+            //Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
