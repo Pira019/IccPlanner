@@ -81,7 +81,9 @@ namespace Application
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            //Repositories 
+            //Repositories  
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
             //Services
             builder.Services.AddScoped<IAccountService, AccountService>();
@@ -100,7 +102,7 @@ namespace Application
                 option.UseNpgsql(conString));
 
             //Pour l'authentification ou Identity
-            builder.Services.AddIdentity<User, IdentityRole>(opt =>
+            builder.Services.AddIdentity<User, Role>(opt =>
             {
                 opt.User.RequireUniqueEmail = true;
                 opt.SignIn.RequireConfirmedEmail = true;

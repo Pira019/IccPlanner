@@ -1,5 +1,6 @@
 ﻿
 using Application.Requests.Role;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces.Services
 {
@@ -12,8 +13,9 @@ namespace Application.Interfaces.Services
         /// Permet de creer un Role
         /// </summary>
         /// <param name="createRoleRequest">Le model de la requete <see cref="CreateRoleRequest"/></param>
-        /// <returns></returns>
-        public Task CreateRole(CreateRoleRequest createRoleRequest);
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="IdentityResult"/> de l'opération </returns>
+        public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest);
         
     }
 }

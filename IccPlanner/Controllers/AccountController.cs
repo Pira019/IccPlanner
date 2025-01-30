@@ -40,7 +40,7 @@ namespace IccPlanner.Controllers
                 var response = AccountResponseError.ApiErrorResponse(result);
                 return BadRequest(response);
             }
-            return Ok();
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         /// <summary>

@@ -1,21 +1,25 @@
-﻿using Application.Interfaces.Repositories;  
+﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories
 {
-    public class RoleRepository<T> : IRoleRepository<Role>
+    /// <summary>
+    /// Cete classe permet de faire les actions dans la table Role
+    /// </summary>
+    public class RoleRepository : IRoleRepository
     {
-        private readonly RoleManager <Role> roleManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public RoleRepository(RoleManager<Role> roleManager)
         {
-            this.roleManager = roleManager;
+            _roleManager = roleManager;
+        }
+        
+        public Task<IdentityResult> CreateAsync(Role role)
+        {
+            return _roleManager.CreateAsync(role);
         }
 
-        public Task insert(Role entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

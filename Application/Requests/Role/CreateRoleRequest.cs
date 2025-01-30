@@ -13,10 +13,11 @@ namespace Application.Requests.Role
         /// </summary>
         [Required]
         [LettersOnly]
-        public string Name { get; set; } 
+        public string Name { get; set; }
         /// <summary>
         /// Description du Role
         /// </summary>
+        [Required]
         public string Description { get; set; }
 
     }

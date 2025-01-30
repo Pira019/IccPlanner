@@ -1,8 +1,7 @@
 ﻿using Application.Interfaces.Services;
 using Application.Requests.Role;
 using Application.Responses;
-using Application.Services;
-using Microsoft.AspNetCore.Http;
+using Application.Responses.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -18,19 +17,31 @@ namespace IccPlanner.Controllers
             this._roleService = roleService;
         }
 
+        /// <summary>
+        /// Permet de créer un Role
+        /// </summary>
+        /// <param name="createRoleRequest"> Voir <see cref="CreateRoleRequest"/></param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="IActionResult"/> de l'opération </returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(CreateRoleRequest createRoleRequest)
+        public async Task<IActionResult> Create([FromForm] CreateRoleRequest createRoleRequest)
         {
             try
             {
-                await _roleService.CreateRole(createRoleRequest);
-                return Ok();
+                var result = await _roleService.CreateRole(createRoleRequest);
+
+                if (!result.Succeeded)
+                {
+                    var response = ApiError.ApiErrorResponse(result);
+                    return BadRequest(response);
+                }
+                return StatusCode(StatusCodes.Status201Created);
             }
-            catch
+            catch (Exception)
             {
-                return BadRequest();
+                return BadRequest(ApiError.ApiErrorResponse());
             }
         }
     }

@@ -2,6 +2,7 @@
 using Application.Interfaces.Services;
 using Application.Requests.Role;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services
 {
@@ -10,16 +11,17 @@ namespace Application.Services
     /// </summary>
     public class RoleService: IRoleService
     {
-         private readonly  IRoleRepository<Role> _roleRepository;
+         private readonly  IRoleRepository _roleRepository;
 
-        public RoleService(IRoleRepository<Role> roleRepository)
+        public RoleService(IRoleRepository roleRepository)
         {
             _roleRepository = roleRepository;
         }
 
-        public Task CreateRole(CreateRoleRequest createRoleRequest)
+        public Task<IdentityResult> CreateRole(CreateRoleRequest create)
         {
-            throw new NotImplementedException();
+            var role = new Role { Name = create.Name, Description = create.Description };
+            return _roleRepository.CreateAsync(role);    
         }
     }
 }
