@@ -30,7 +30,8 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_RoleUser_Profiles_RolesId",
                         column: x => x.RolesId,
-                        principalTable: "Profiles",
+                        principalTable: "" +
+                        "Profiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(

@@ -10,7 +10,6 @@ namespace Domain.Entities
     {
         public Guid MemberId { get; set; }
         public Member Member { get; set; } = null!;
-        public MemberStatus Status { get; set; } = MemberStatus.Active;
-        public List<Role> Roles { get; } = [];
+        public MemberStatus Status { get; set; } = MemberStatus.Active; 
     }
 }
