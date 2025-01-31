@@ -1,10 +1,8 @@
 using Application.Helper;
-using Application.Interfaces;
 using Application.Interfaces.Services;
 using Application.Services;
 using Domain.Entities;
-using Application.Configurations;
-using Infrastructure.Persistence; 
+using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +12,12 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.Extensions.Options;
 using Infrastructure.Repositories;
 using Application.Interfaces.Repositories;
+using Infrastructure.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace Application
+namespace IccPlanner
 {
     /// <summary>
     ///   Configurer l'API
@@ -36,7 +38,7 @@ namespace Application
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appSettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
-                .Build(); 
+                .Build();
 
             builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
 
@@ -94,7 +96,7 @@ namespace Application
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
 
             // Mapper 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());  
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Chaine de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException("Connection string not found");
@@ -102,6 +104,8 @@ namespace Application
                 option.UseNpgsql(conString));
 
             //Pour l'authentification ou Identity
+            builder.Services.AddSingleton<TokenProvider>();
+
             builder.Services.AddIdentity<User, Role>(opt =>
             {
                 opt.User.RequireUniqueEmail = true;
@@ -111,11 +115,22 @@ namespace Application
              .AddDefaultTokenProviders();
 
             builder.Services.Configure<DataProtectionTokenProviderOptions>
-               (options => options.TokenLifespan = TimeSpan.FromMinutes(20)); 
+               (options => options.TokenLifespan = TimeSpan.FromMinutes(20));
 
-            /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, 
-                    options => builder.Configuration.Bind("JwtSettings", options));*/
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer( o =>
+                {
+                    o.RequireHttpsMetadata = true;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)),
+                        ValidIssuer = appSetting.JwtSetting.Issuer,
+                        ValidAudience = appSetting.JwtSetting.Audiance,
+                        ClockSkew =TimeSpan.Zero
+                    };
+                });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddRouting(op => op.LowercaseUrls = true);
 
@@ -135,6 +150,7 @@ namespace Application
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
 
             app.MapControllers();
