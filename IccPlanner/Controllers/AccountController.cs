@@ -3,6 +3,7 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -14,11 +15,13 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, ILogger<AccountController> logger)
         {
             _accountService = accountService;
+            _logger = logger;
         }
 
         // POST: AccountController/Create
@@ -32,7 +35,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromForm] CreateAccountRequest request)
-        {
+        { 
             var result = await _accountService.CreateAccount(request);
 
             if (!result.Succeeded)
@@ -44,6 +47,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
+        /// 
         /// Confrimer l'email
         /// </summary>
         /// <param name="request"></param>
@@ -76,27 +80,39 @@ namespace IccPlanner.Controllers
         [HttpPost("login")]
         [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login([FromForm] LoginRequest request)
-        {
-            // Auth
-            var resultat = await _accountService.Login(request);
-
-            if (resultat.IsLockedOut)
+        public async Task<IActionResult> Login([FromForm] LoginRequest request, TokenProvider tokenProvider)
+        { 
+            try
             {
-                return BadRequest(AccountResponseError.UserIsLockedOut());
+                // Auth
+                var resultat = await _accountService.Login(request);
+
+
+                if (resultat.IsLockedOut)
+                {
+                    return BadRequest(AccountResponseError.UserIsLockedOut());
+                }
+
+                if (!resultat.Succeeded)
+                {
+                    return BadRequest(AccountResponseError.LoginInvalidAttempt());
+                }
+
+                var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
+
+                var res = new LoginAccountResponse
+                {
+                    AccessToken = tokenProvider.Create(userAuth!)
+                };
+
+                return Ok(res);
+
             }
-
-            if (!resultat.Succeeded)
+            catch (Exception ex) 
             {
-                return BadRequest(AccountResponseError.LoginInvalidAttempt());
+                _logger.LogError(ex.ToString());
+                return BadRequest(AccountResponseError.ApiErrorResponse());
             }
-
-            var res = new LoginAccountResponse
-            {
-                AccessToken = "Vlider ohhh"
-            };
-
-            return Ok(res);
         }
     }
 

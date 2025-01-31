@@ -40,7 +40,7 @@ namespace Application.Services
 
             if (result.Succeeded)
             {
-                var newUser = await _accountRepository.FindByEmailAsync(dto.User.Email!);
+                var newUser = await FindUserAccountByEmail(dto.User.Email!);
                 // Envoie Email
                 await _sendEmailService.SendEmailConfirmation(newUser!);
             }
@@ -61,6 +61,11 @@ namespace Application.Services
         public async Task<SignInResult> Login(LoginRequest loginRequest)
         {
             return await _accountRepository.SignIn(loginRequest.Email, loginRequest.Password, loginRequest.Remember);
+        }
+
+        public async Task<User?> FindUserAccountByEmail(string email)
+        {
+            return await _accountRepository.FindByEmailAsync(email);
         }
     }
 }
