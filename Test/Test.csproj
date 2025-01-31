@@ -36,9 +36,10 @@
 		<Using Include="Xunit" />
 	</ItemGroup>
 
-	<!-- Exécution de reportgenerator après les tests -->
+	<!-- Exécution de reportgenerator après les tests 
 	<Target Name="GenerateCoverageReport" AfterTargets="build">
 		<Exec Command="reportgenerator -reports:$(CoverletOutput) -targetdir:coverage-report -reporttypes:Html"/>
 	</Target>
+	-->
 
 </Project>
