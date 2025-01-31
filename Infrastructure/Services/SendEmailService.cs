@@ -1,7 +1,6 @@
 ﻿
 using Application.Interfaces.Services;
-using Domain.Entities;
-using Application.Configurations;
+using Domain.Entities; 
 using Microsoft.AspNetCore.Identity;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Infrastructure.Utility.Mails;
 using Infrastructure.Utility;
+using Infrastructure.Configurations;
 
 namespace Infrastructure.Services
 {

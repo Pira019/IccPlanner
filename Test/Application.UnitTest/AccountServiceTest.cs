@@ -1,13 +1,13 @@
 ﻿using Application.Dtos.Account;
-using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Services;
 using AutoMapper;
 using Domain.Entities;
-using FluentAssertions; 
+using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
-using NSubstitute;  
+using NSubstitute;
 
 namespace Test.Application.UnitTest
 {

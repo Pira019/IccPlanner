@@ -1,4 +1,4 @@
-﻿namespace Application.Configurations
+﻿namespace Infrastructure.Configurations
 {
     /// <summary>
     ///   Configuration
@@ -29,6 +29,11 @@
         /// Lien de url cote front pour confirme l'adresse Email
         /// </summary>
         public string? LinkUrlConfirmEmail { get; set; }
+
+        /// <summary>
+        /// Configuration Jwt
+        /// </summary>
+        public JwtSetting JwtSetting { get; set; }
 
 
     }

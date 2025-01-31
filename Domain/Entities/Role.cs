@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
 {
     /// <summary>
     /// Represente les roles d'un utilisateur
     /// </summary>
-    public class Role : BaseEntity
-    {
-        public int Id { get; set; }
-        [MaxLength(55)]
-        public string Name { get; set; }
-        public string Description { get; set; }    
-        public List<User> Users { get; set; }
+    public class Role : IdentityRole
+    { 
+        public string Description { get; set; }  
     }
 }

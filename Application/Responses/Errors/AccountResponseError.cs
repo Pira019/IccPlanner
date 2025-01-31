@@ -9,29 +9,10 @@ namespace Application.Responses.Errors
     /// <summary>
     /// Cette classe permet de gerer le retour des erreur des actons d'un compte
     /// </summary>
-    public class AccountResponseError
+    public class AccountResponseError : ApiError
     {
-        public static readonly ILogger<AccountResponseError>? _logger;
+        public static readonly ILogger<AccountResponseError>? _logger; 
 
-        /// <summary>
-        ///  Model de message d'erreur de retour dans la creation de compte
-        /// </summary>
-        /// <param name="identityResult"></param>
-        /// <returns>
-        /// <see cref="ApiErrorResponse"/>
-        /// </returns>
-        public static ApiErrorResponseModel ApiErrorResponse(IdentityResult identityResult) 
-        {
-            return new ApiErrorResponseModel
-            {
-                StatusCode = StatusCodes.Status400BadRequest,
-                ValidationErrors = identityResult.Errors.Select(e => e.Description).ToArray() ?? [ApiResponseErrorMessage.ERROR_UNDEFINED.Code],
-                Message = identityResult.ToString() ?? ApiResponseErrorMessage.ERROR_UNDEFINED.Message,
-                StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
-            };                
-        }
-
-        
         public static ApiErrorResponseModel UserNotFound()
         {
             _logger?.LogWarning(AccountErrors.USER_NOT_FOUND.Message); 
