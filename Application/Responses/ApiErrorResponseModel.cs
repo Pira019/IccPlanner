@@ -19,18 +19,18 @@ namespace Application.Responses
         [JsonPropertyName("statusCode")]
         public int StatusCode { get; set; }
         [JsonPropertyName("statusDescription")]
-        public string StatusDescription { get; set; }
+        public required string StatusDescription { get; set; }
 
         /// <summary>
         ///   Message d'erreur
         /// </summary>
         [JsonPropertyName("message")]
-        public string Message { get; set; }
+        public required string Message { get; set; }
 
         /// <summary>
         ///   Liste de messages de validation
         /// </summary>
         [JsonPropertyName("validationErrors")]
-        public string[] ValidationErrors { get; set; }
+        public required string[] ValidationErrors { get; set; }
     }
 }

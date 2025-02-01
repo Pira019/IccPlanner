@@ -8,8 +8,8 @@ namespace Domain.Entities
         public int MinistryId { get; set; }
         public Ministry Ministry { get; set; } = null!;
         [MaxLength(255)]
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
         [MaxLength(55)]
         public  string? shortName { get; set; }
         public DateOnly startDate { get; set; } // Date d'ouverture

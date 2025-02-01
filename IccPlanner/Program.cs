@@ -22,7 +22,7 @@ namespace IccPlanner
     /// <summary>
     ///   Configurer l'API
     /// </summary>
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -44,7 +44,7 @@ namespace IccPlanner
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
-            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>();
+            AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
             builder.Services.AddControllers()
