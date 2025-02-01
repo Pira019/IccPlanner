@@ -38,6 +38,8 @@
 
 	<!-- Exécution de reportgenerator après les tests 
 	<Target Name="GenerateCoverageReport" AfterTargets="build">
+	<!-- Exécution de reportgenerator après les tests -->
+	<Target Name="GenerateCoverageReport" AfterTargets="CollectCoverage">
 		<Exec Command="reportgenerator -reports:$(CoverletOutput) -targetdir:coverage-report -reporttypes:Html"/>
 	</Target>
 	-->

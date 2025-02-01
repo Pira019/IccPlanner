@@ -1,5 +1,4 @@
-﻿
-namespace Application.Configurations
+﻿namespace Infrastructure.Configurations
 {
     public class ContactSetting
     { 

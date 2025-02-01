@@ -1,12 +1,11 @@
-﻿
-using Application.Interfaces;
+﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories
 {
     /// <summary>
-    ///   Permet de faire des action dans la DB
+    ///   Permet de faire des actions dans la DB pour un compte
     /// </summary>
     public class AccountRepository : IAccountRepository
     {

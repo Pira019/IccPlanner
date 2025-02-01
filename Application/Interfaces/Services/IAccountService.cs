@@ -1,13 +1,11 @@
-﻿
-using System.Threading.Tasks;
-using Application.Requests.Account;
+﻿using Application.Requests.Account;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces.Services
 {
     /// <summary>
-    ///   Permet de gerer les actions d'un compte
+    ///   Permet de geérer les actions d'un compte
     /// </summary>
     public interface IAccountService
     {
@@ -37,5 +35,13 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="SignInResult"/> de l'opération </returns>
         public Task<SignInResult> Login(LoginRequest loginRequest);
+
+        /// <summary>
+        /// Récuperer un compte par email
+        /// </summary>
+        /// <param name="email">Email de l'utilisateur</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="User"/> de l'opération </returns>
+        public Task<User?> FindUserAccountByEmail(string email);
     } 
 }
