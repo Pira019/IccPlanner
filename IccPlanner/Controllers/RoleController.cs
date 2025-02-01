@@ -10,7 +10,7 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private IRoleService _roleService;
+        private readonly IRoleService _roleService;
 
         public RoleController(IRoleService roleService)
         {

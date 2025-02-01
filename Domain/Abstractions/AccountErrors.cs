@@ -3,7 +3,7 @@
     /// <summary>
     /// Message d'erreur pour le compte
     /// </summary>
-    public class AccountErrors
+    public static class AccountErrors
     {
         static public readonly Error USER_NOT_FOUND = new("USER_NOT_FOUND", "User not found.");
         static public readonly Error INVALID_LOGIN_ATTEMPT = new("INVALID_LOGIN_ATTEMPT", "Invalid login attempt.");

@@ -11,11 +11,16 @@ namespace Application.Responses.Errors
     /// </summary>
     public class AccountResponseError : ApiError
     {
-        public static readonly ILogger<AccountResponseError>? _logger; 
+        public static ILogger<AccountResponseError> _logger; 
+
+        public AccountResponseError(ILogger<AccountResponseError> logger) 
+        {
+            _logger = logger;
+        }
 
         public static ApiErrorResponseModel UserNotFound()
         {
-            _logger?.LogWarning(AccountErrors.USER_NOT_FOUND.Message); 
+            _logger.LogWarning(AccountErrors.USER_NOT_FOUND.Message); 
 
             return new ApiErrorResponseModel
             {
@@ -34,7 +39,7 @@ namespace Application.Responses.Errors
         /// </returns>
         public static ApiErrorResponseModel LoginInvalidAttempt()
         {
-            _logger?.LogWarning(AccountErrors.INVALID_LOGIN_ATTEMPT.Message);
+            _logger.LogWarning(AccountErrors.INVALID_LOGIN_ATTEMPT.Message);
 
             return new ApiErrorResponseModel
             {
