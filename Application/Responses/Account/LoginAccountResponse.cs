@@ -8,6 +8,6 @@ namespace Application.Responses.Account
     {
         [JsonPropertyName("accessToken")]
         [Required]
-        public required string AccessToken { get; set; }
+        public string AccessToken { get; set; }
     }
 }

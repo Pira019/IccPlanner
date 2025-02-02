@@ -4,9 +4,9 @@ namespace Application.Interfaces
     /// <summary>
     /// Cette interface permet de regrouper les fonctionnalites CRUD
     /// </summary>
-    /// <typeparam name="Model">Represente la classe</typeparam>
-    public interface IBaseRepository<Model>
+    /// <typeparam name="T"></typeparam>
+    public interface IBaseRepository<T>
     {
-        public Task insert(Model entity);
+        public Task insert(T entity);
     }
 }

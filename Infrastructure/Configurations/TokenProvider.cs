@@ -9,7 +9,7 @@ namespace Infrastructure.Configurations
 {
     public class TokenProvider
     {
-        private readonly IConfiguration _configuration;
+        private IConfiguration _configuration;
 
         public TokenProvider(IConfiguration configuration)
         {
