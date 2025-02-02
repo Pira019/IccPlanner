@@ -35,7 +35,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromForm] CreateAccountRequest request)
-        {
+        { 
             var result = await _accountService.CreateAccount(request);
 
             if (!result.Succeeded)
@@ -81,7 +81,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromForm] LoginRequest request, TokenProvider tokenProvider)
-        {
+        { 
             try
             {
                 // Auth
@@ -108,9 +108,9 @@ namespace IccPlanner.Controllers
                 return Ok(res);
 
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
-                _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
+                _logger.LogError(ex.ToString());
                 return BadRequest(AccountResponseError.ApiErrorResponse());
             }
         }

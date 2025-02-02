@@ -8,11 +8,11 @@ namespace Domain.Entities
     public abstract class Person : BaseEntity
     {
         [MaxLength(55)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
         [MaxLength(55)]
         public string? LastName { get; set; }
         [MaxLength(1)]
-        public required string Sexe { get; set; } 
+        public string Sexe { get; set; } 
         [MaxLength(55)]       
         public string? City { get; set; }
         [MaxLength(55)]
