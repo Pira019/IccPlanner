@@ -18,9 +18,9 @@ namespace Application.Services
             _roleRepository = roleRepository;
         }
 
-        public Task<IdentityResult> CreateRole(CreateRoleRequest create)
+        public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest)
         {
-            var role = new Role { Name = create.Name, Description = create.Description };
+            var role = new Role { Name = createRoleRequest.Name, Description = createRoleRequest.Description };
             return _roleRepository.CreateAsync(role);    
         }
     }

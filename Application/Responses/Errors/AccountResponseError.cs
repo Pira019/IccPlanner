@@ -10,13 +10,9 @@ namespace Application.Responses.Errors
     /// Cette classe permet de gerer le retour des erreur des actons d'un compte
     /// </summary>
     public class AccountResponseError : ApiError
-    {
-        public static readonly ILogger<AccountResponseError>? _logger; 
-
+    { 
         public static ApiErrorResponseModel UserNotFound()
-        {
-            _logger?.LogWarning(AccountErrors.USER_NOT_FOUND.Message); 
-
+        { 
             return new ApiErrorResponseModel
             {
                 StatusCode = StatusCodes.Status400BadRequest,
@@ -33,9 +29,7 @@ namespace Application.Responses.Errors
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>
         /// </returns>
         public static ApiErrorResponseModel LoginInvalidAttempt()
-        {
-            _logger?.LogWarning(AccountErrors.INVALID_LOGIN_ATTEMPT.Message);
-
+        { 
             return new ApiErrorResponseModel
             {
                 StatusCode = StatusCodes.Status400BadRequest,
@@ -53,9 +47,7 @@ namespace Application.Responses.Errors
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>
         /// </returns>
         public static ApiErrorResponseModel UserIsLockedOut()
-        {
-            _logger?.LogWarning(AccountErrors.USER_IS_LOCKED_OUT.Message);
-
+        { 
             return new ApiErrorResponseModel
             {
                 StatusCode = StatusCodes.Status400BadRequest,

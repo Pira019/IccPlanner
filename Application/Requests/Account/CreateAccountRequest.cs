@@ -7,16 +7,16 @@ namespace Application.Requests.Account
     {
         [MaxLength(55)]
         [Required]
-        public string Name { get; set; }
+        public required string Name { get; set; }
         [MaxLength(55)]
         public string? LastName { get; set; }
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [MaxLength(1)]
         [Required]
-        public string Sexe { get; set; }
+        public required string Sexe { get; set; }
         [MaxLength(15)]
         [MinLength(10)]
         [Phone]
@@ -33,13 +33,13 @@ namespace Application.Requests.Account
         /// </summary> 
         [DataType(DataType.Password)]
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         /// <summary>
         ///   Mot de passe de confirmation
         /// </summary>
         [Compare("Password")]
         [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }   
+        public required string ConfirmPassword { get; set; }   
     }
 }
