@@ -2,7 +2,6 @@
 using Application.Requests.Role;
 using Application.Responses;
 using Application.Responses.Errors;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -11,31 +10,11 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private ILogger<RoleController> _logger;
-        private readonly IRoleService _roleService;
+        private IRoleService _roleService;
 
-        public RoleController(IRoleService roleService, ILogger<RoleController> logger)
+        public RoleController(IRoleService roleService)
         {
             this._roleService = roleService;
-            _logger = logger;
-        }
-
-        [HttpGet]
-        [ProducesResponseType<ApiListReponse<Role>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Index()
-        {
-            try
-            {
-                var resul = await _roleService.GetAllRoles();
-                return Ok(resul);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
-                return BadRequest(ApiError.ApiErrorResponse());
-            }
-
         }
 
         /// <summary>

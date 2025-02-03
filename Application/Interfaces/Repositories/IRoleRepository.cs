@@ -7,7 +7,7 @@ namespace Application.Interfaces.Repositories
     /// <summary>
     /// Contrat Repository Role
     /// </summary> 
-    public interface IRoleRepository : IBaseRepository<Role>
+    public interface IRoleRepository
     {
         /// <summary>
         /// Créer uin Role

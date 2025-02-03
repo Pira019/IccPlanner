@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Role;
-using Application.Responses;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -23,12 +22,6 @@ namespace Application.Services
         {
             var role = new Role { Name = create.Name, Description = create.Description };
             return _roleRepository.CreateAsync(role);    
-        }
-
-        public async Task<ApiListReponse<Role>> GetAllRoles()
-        {
-            var rst = new ApiListReponse<Role> { Items = await _roleRepository.GetAllAsync() };            
-            return rst;
         }
     }
 }
