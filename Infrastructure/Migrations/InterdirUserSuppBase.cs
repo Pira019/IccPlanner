@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
-{
+{/*
     [DbContext(typeof(IccPlannerContext)), Migration("20250123090036_InterdirUserSupp")]
     internal class InterdirUserSuppBase
     {
@@ -987,5 +987,5 @@ namespace Infrastructure.Migrations
                 });
 #pragma warning restore 612, 618
         }
-    }
+    }*/
 }

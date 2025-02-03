@@ -9,10 +9,10 @@ namespace Application.Requests.Account
     {
         [Required] 
         [EmailAddress]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         /// <summary>
         /// Indique si l'utilisateur souhaite rester connecté.

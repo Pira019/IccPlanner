@@ -18,7 +18,7 @@ namespace Application.Helper.Validators
         {
             if (value == null) return true; // Si la valeur est nulle, la validation sera considérée comme réussie
 
-            string strValue = value as string;
+            string? strValue = value as string;
             if (strValue == null) return false;
 
             // Expression régulière pour valider uniquement les lettres

@@ -56,6 +56,7 @@ namespace Test.Application.UnitTest
                         LastName = createAccouteRequest.LastName, 
                         Quarter = createAccouteRequest.Quarter,
                         City = createAccouteRequest.City,
+                        Sexe = createAccouteRequest.Sexe
                         
                     }
                 }
