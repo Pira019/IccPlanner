@@ -12,12 +12,12 @@ namespace Application.Requests.Account
         /// id de l'utilisateur crée
         /// </summary>
         [Required]
-        public required string UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Le token envoyé
         /// </summary>
         [Required]
-        public required string Token { get; set; }
+        public string Token { get; set; }
     }
 }

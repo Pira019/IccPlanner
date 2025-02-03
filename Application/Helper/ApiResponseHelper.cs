@@ -9,12 +9,12 @@ namespace Application.Helper
     /// <summary>
     ///   Helper de retour
     /// </summary>
-    public static class ApiResponseHelper
+    public class ApiResponseHelper
     {
         public static ApiErrorResponseModel CreateValidationErrorResponse (ActionContext context)
         {
             var validationErrors = context.ModelState
-            .Where(ms => ms.Value?.Errors.Count > 0)
+            .Where(ms => ms.Value.Errors.Count > 0)
             .SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage))
             .ToArray();
 
