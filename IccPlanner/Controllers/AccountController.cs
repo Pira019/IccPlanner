@@ -3,6 +3,7 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
+using Domain.Abstractions;
 using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace IccPlanner.Controllers
 
             if (!result.Succeeded)
             {
-                var response = AccountResponseError.ApiErrorResponse(result);
+                var response = AccountResponseError.ApiIdentityResultResponseError(result);
                 return BadRequest(response);
             }
             return StatusCode(StatusCodes.Status201Created);
@@ -69,7 +70,7 @@ namespace IccPlanner.Controllers
 
             return result.Succeeded
                 ? Ok()
-                : BadRequest(AccountResponseError.ApiErrorResponse(result));
+                : BadRequest(AccountResponseError.ApiIdentityResultResponseError(result));
         }
 
         /// <summary>
@@ -110,8 +111,8 @@ namespace IccPlanner.Controllers
             }
             catch (Exception ex) 
             {
-                _logger.LogError(ex.ToString());
-                return BadRequest(AccountResponseError.ApiErrorResponse());
+                _logger.LogError(ex,AccountErrors.SIGN_IN_ERROR.Message);
+                return BadRequest(AccountResponseError.InternalServerError(AccountErrors.SIGN_IN_ERROR.Message));
             }
         }
     }
