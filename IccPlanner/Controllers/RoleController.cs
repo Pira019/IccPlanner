@@ -3,6 +3,8 @@ using Application.Requests.Role;
 using Application.Responses;
 using Application.Responses.Errors;
 using Domain.Entities;
+using Infrastructure.Security.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -45,6 +47,7 @@ namespace IccPlanner.Controllers
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IActionResult"/> de l'opération </returns>
         [HttpPost]
+        [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromForm] CreateRoleRequest createRoleRequest)
@@ -52,7 +55,6 @@ namespace IccPlanner.Controllers
             try
             {
                 var result = await _roleService.CreateRole(createRoleRequest);
-
                 if (!result.Succeeded)
                 {
                     var response = ApiError.ApiErrorResponse(result);

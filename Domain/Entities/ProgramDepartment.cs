@@ -21,7 +21,7 @@ namespace Domain.Entities
         public Member? UpdateBy { get; set; }
         public bool? isRecurring { get; set; } = false;
         public List<DepartmentMember> DepartmentMembers { get; } = [];
-        public List<FeedBack> FeedBacks { get; }
+        public List<FeedBack>? FeedBacks{ get; set; }
         public List<Availability> Availabilities { get; } = [];
 
 

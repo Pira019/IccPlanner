@@ -16,6 +16,7 @@ using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Infrastructure.Security;
 
 namespace IccPlanner
 {
@@ -32,6 +33,7 @@ namespace IccPlanner
 
             //Ajouter le log
             builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
 
             // Configuration
             IConfigurationRoot config = new ConfigurationBuilder()
@@ -40,11 +42,11 @@ namespace IccPlanner
                 .AddEnvironmentVariables()
                 .Build();
 
-            builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
+            // builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
-            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>();
+            AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // CreateAsync services to the container.
             builder.Services.AddControllers()
@@ -73,14 +75,31 @@ namespace IccPlanner
                         }
                     });
 
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                var securitySchema = new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
-                });
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    BearerFormat = "JWT"
+                };
 
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
+                            }
+                        }, new string[] {}
+                    }
+                };
+                options.AddSecurityRequirement(securityRequirement);
             });
 
             //Repositories  
@@ -103,7 +122,7 @@ namespace IccPlanner
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
 
-            //Pour l'authentification ou Identity
+            //Pour l'authentification la gestion de token
             builder.Services.AddSingleton<TokenProvider>();
 
             builder.Services.AddIdentity<User, Role>(opt =>
@@ -117,20 +136,33 @@ namespace IccPlanner
             builder.Services.Configure<DataProtectionTokenProviderOptions>
                (options => options.TokenLifespan = TimeSpan.FromMinutes(20));
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer( o =>
+            builder.Services.AddAuthentication(
+                op =>
                 {
-                    o.RequireHttpsMetadata = true;
+                    op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+                })
+                .AddJwtBearer(o =>
+                {
+                    o.RequireHttpsMetadata = false;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)),
+                        ValidateIssuer = true, 
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+
                         ValidIssuer = appSetting.JwtSetting.Issuer,
                         ValidAudience = appSetting.JwtSetting.Audiance,
-                        ClockSkew =TimeSpan.Zero
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)), 
+                        ClockSkew = TimeSpan.Zero
                     };
+                    o.MapInboundClaims = false;
                 });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                AuthorizationPolicies.AddPolicies(options);
+            });
 
             builder.Services.AddRouting(op => op.LowercaseUrls = true);
 
@@ -147,12 +179,10 @@ namespace IccPlanner
                 opt.SerializeAsV2 = true;
             });
 
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
-
+            app.UseHttpsRedirection();
             app.MapControllers();
 
             app.Run();
