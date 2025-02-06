@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces.Services;
 using Application.Requests.Role;
 using Application.Responses;
-using Application.Responses.Errors;
+using Application.Responses.Errors; 
 using Domain.Abstractions;
 using Domain.Entities; 
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +12,11 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private ILogger<RoleController> _logger;
-        private readonly IRoleService _roleService;
+        private IRoleService _roleService;
 
-        public RoleController(IRoleService roleService, ILogger<RoleController> logger)
+        public RoleController(IRoleService roleService)
         {
-            this._roleService = roleService;
+            this._roleService = roleService; 
             _logger = logger;
         }
 
@@ -35,8 +34,7 @@ namespace IccPlanner.Controllers
             {
                 _logger.LogError(ex,RoleErrors.ERROR_CREATE_ROLE.Message);
                 return BadRequest(ApiError.ApiIdentityResultResponseError());
-            }
-
+            } 
         }
 
         /// <summary>

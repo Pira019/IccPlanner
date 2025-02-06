@@ -10,6 +10,6 @@ namespace Application.Dtos.Account
         /// <summary>
         ///   Compte 
         /// </summary>
-       public required User User { get; set; } 
+       public User User { get; set; } 
     }
 }
