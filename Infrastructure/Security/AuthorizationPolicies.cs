@@ -1,4 +1,5 @@
-﻿using Infrastructure.Security.Constants;
+﻿using Application.Constants;
+using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Infrastructure.Security

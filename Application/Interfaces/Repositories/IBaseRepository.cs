@@ -6,7 +6,6 @@
     /// <typeparam name="T"></typeparam>
     public interface IBaseRepository<T> where T : class
     {
-        //  public Task insert(T entity); 
-        Task<IEnumerable<T>> GetAllAsync();
+        public Task insert(T entity);
     }
 }
