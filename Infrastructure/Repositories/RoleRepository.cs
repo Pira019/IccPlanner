@@ -1,8 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
-using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -12,23 +10,16 @@ namespace Infrastructure.Repositories
     public class RoleRepository : IRoleRepository
     {
         private readonly RoleManager<Role> _roleManager;
-        private readonly IccPlannerContext _iccPlannerContext;
 
-        public RoleRepository(RoleManager<Role> roleManager, IccPlannerContext context)
+        public RoleRepository(RoleManager<Role> roleManager)
         {
             _roleManager = roleManager;
-            _iccPlannerContext = context;
         }
-         
-
+        
         public Task<IdentityResult> CreateAsync(Role role)
         {
-            return CreateAsync(role);
+            return _roleManager.CreateAsync(role);
         }
 
-        public async Task<IEnumerable<Role>> GetAllAsync()
-        {
-            return await _iccPlannerContext.Roles.ToListAsync();
-        }
     }
 }
