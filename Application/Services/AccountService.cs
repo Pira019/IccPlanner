@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Application.Constants;
 using Application.Dtos.Account;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -34,7 +33,7 @@ namespace Application.Services
         ///  Body de la requette 
         /// </param>
         /// <returns>Returne objet IdentityResult</returns>
-        public async Task<IdentityResult> CreateAccount(CreateAccountRequest request, bool isAdmin = false)
+        public async Task<IdentityResult> CreateAccount(CreateAccountRequest request)
         {
             var dto = _mapper.Map<CreateAccountDto>(request);
             var result = await _accountRepository.CreateAsync(dto.User, dto.User.PasswordHash!);
@@ -42,11 +41,6 @@ namespace Application.Services
             if (result.Succeeded)
             {
                 var newUser = await FindUserAccountByEmail(dto.User.Email!);
-
-                if (isAdmin)
-                {
-                    _accountRepository.AddUserRole(newUser!,RolesConstants.ADMIN);
-                }
                 // Envoie Email
                 await _sendEmailService.SendEmailConfirmation(newUser!);
             }
@@ -72,11 +66,6 @@ namespace Application.Services
         public async Task<User?> FindUserAccountByEmail(string email)
         {
             return await _accountRepository.FindByEmailAsync(email);
-        }
-
-        public async Task<bool> IsAdminExistsAsync()
-        {
-            return await _accountRepository.IsAdminExistsAsync();
         }
     }
 }

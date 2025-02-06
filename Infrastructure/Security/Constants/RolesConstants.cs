@@ -1,5 +1,5 @@
 ﻿ 
-namespace Application.Constants
+namespace Infrastructure.Security.Constants
 {
     /// <summary>
     /// Le role par defaut 

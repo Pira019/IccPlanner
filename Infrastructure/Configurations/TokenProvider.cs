@@ -18,12 +18,12 @@ namespace Infrastructure.Configurations
         }
 
 
-        private AppSetting? _appSetting;
+        private AppSetting _appSetting;
 
 
         public string Create(User user)
         {
-            string secrteKey = _appSetting?.JwtSetting?.Secret!;
+            string secrteKey = _appSetting.JwtSetting.Secret;
             var secutityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secrteKey));
 
             var credentials = new SigningCredentials(secutityKey, SecurityAlgorithms.HmacSha256);
@@ -34,7 +34,7 @@ namespace Infrastructure.Configurations
                     [
                         new Claim(JwtRegisteredClaimNames.Sub , user.Id.ToString())  
                     ]),
-                Expires = DateTime.UtcNow.AddMinutes((double) _appSetting?.JwtSetting?.ExpirationInMinutes!),
+                Expires = DateTime.UtcNow.AddMinutes(_appSetting.JwtSetting.ExpirationInMinutes),
                 SigningCredentials = credentials,
                 Issuer = _appSetting.JwtSetting.Issuer,
                 Audience = _appSetting.JwtSetting.Audiance,
