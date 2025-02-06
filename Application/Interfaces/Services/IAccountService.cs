@@ -9,7 +9,7 @@ namespace Application.Interfaces.Services
     /// </summary>
     public interface IAccountService
     {
-        public Task<IdentityResult> CreateAccount(CreateAccountRequest request);
+        public Task<IdentityResult> CreateAccount(CreateAccountRequest request, bool isAdmin = false);
 
         /// <summary>
         ///  Confirmer l'adresse Email d'un compte
@@ -43,5 +43,9 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="User"/> de l'opération </returns>
         public Task<User?> FindUserAccountByEmail(string email);
+
+        public Task<bool> IsAdminExistsAsync();
+
+
     } 
 }

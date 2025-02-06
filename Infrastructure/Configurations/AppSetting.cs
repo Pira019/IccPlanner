@@ -13,7 +13,7 @@
         /// <summary>
         ///   Contact
         /// </summary>
-        public required ContactSetting Contact { get; set; }
+        public ContactSetting? Contact { get; set; }
 
         /// <summary>
         /// Clé sendGrid pour le mail
@@ -33,7 +33,7 @@
         /// <summary>
         /// Configuration Jwt
         /// </summary>
-        public required JwtSetting JwtSetting { get; set; }
+        public JwtSetting? JwtSetting { get; set; }
 
 
     }
