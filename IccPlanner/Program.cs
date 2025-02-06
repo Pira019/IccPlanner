@@ -48,7 +48,7 @@ namespace IccPlanner
 
             AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
-            // CreateAsync services to the container.
+            // Add services to the container.
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(op =>
                     {
