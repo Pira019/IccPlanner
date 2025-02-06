@@ -31,6 +31,6 @@ namespace Application.Responses
         ///   Liste de messages de validation
         /// </summary>
         [JsonPropertyName("validationErrors")]
-        public required string[] ValidationErrors { get; set; }
+        public string[]? ValidationErrors { get; set; }
     }
 }

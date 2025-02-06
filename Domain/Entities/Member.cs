@@ -11,7 +11,7 @@ namespace Domain.Entities
         public User? User { get; set; } 
         public DateOnly? EntryDate { get; set; }
         public Guid? AddedById { get; set; } // Id member
-        public Member AddedBy { get; set; } //  member
+        public Member? AddedBy { get; set; } //  member
         public DateOnly? BirthDate { get; set; } 
         public List<Departement> Departements { get; } = [];
     }

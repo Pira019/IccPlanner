@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 #nullable disable
 
 namespace Infrastructure.Migrations
-{
+{/*
     [DbContext(typeof(IccPlannerContext))]
     [Migration("20250123090036_InterdirUserSupp")]
     partial class InterdirUserSupp
@@ -993,5 +993,5 @@ namespace Infrastructure.Migrations
                 });
 #pragma warning restore 612, 618
         }
-    }
+    }*/
 }
