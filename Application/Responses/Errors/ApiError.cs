@@ -13,7 +13,7 @@ namespace Application.Responses.Errors
         /// <returns>
         /// <see cref="Errors.ApiError"/>
         /// </returns>
-        public static ApiErrorResponseModel ApiErrorResponse(IdentityResult? identityResult = null)
+        public static ApiErrorResponseModel ApiIdentityResultResponseError(IdentityResult? identityResult = null)
         {
             return new ApiErrorResponseModel
             {
@@ -21,6 +21,36 @@ namespace Application.Responses.Errors
                 ValidationErrors = identityResult?.Errors.Select(e => e.Description).ToArray() ?? [ApiResponseErrorMessage.ERROR_UNDEFINED.Code],
                 Message = identityResult?.ToString() ?? ApiResponseErrorMessage.ERROR_UNDEFINED.Message,
                 StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
+            };
+        }
+
+        /// <summary>
+        /// Definit l'erreur inconnu 
+        /// </summary>
+        /// <param name="message"> Message personaliser</param>
+        /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
+        public static ApiErrorResponseModel InternalServerError(string? message = null)
+        {
+            return new ApiErrorResponseModel
+            {
+                StatusCode = StatusCodes.Status500InternalServerError, 
+                Message = message ?? ApiResponseErrorMessage.ERROR_UNDEFINED.Message,
+                StatusDescription = ApiResponseErrorMessage.ERROR_UNDEFINED.Message
+            };
+        }
+
+        /// <summary>
+        /// Definit l'erreur d'authentification
+        /// </summary>
+        /// <param name="isUnauthorized">Paramettre</param>
+        /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
+        public static ApiErrorResponseModel AuthError(bool isUnauthorized = false)
+        {
+            return new ApiErrorResponseModel
+            {
+                StatusCode = isUnauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
+                Message = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message,
+                StatusDescription = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message
             };
         }
     }

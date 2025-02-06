@@ -2,7 +2,10 @@
 using Application.Requests.Role;
 using Application.Responses;
 using Application.Responses.Errors;
+using Domain.Abstractions;
 using Domain.Entities;
+using Infrastructure.Security.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -32,8 +35,8 @@ namespace IccPlanner.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
-                return BadRequest(ApiError.ApiErrorResponse());
+                _logger.LogError(ex,RoleErrors.ERROR_CREATE_ROLE.Message);
+                return BadRequest(ApiError.ApiIdentityResultResponseError());
             }
 
         }
@@ -45,24 +48,25 @@ namespace IccPlanner.Controllers
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IActionResult"/> de l'opération </returns>
         [HttpPost]
+       // [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromForm] CreateRoleRequest createRoleRequest)
+        public async Task<IActionResult> Create([FromBody] CreateRoleRequest createRoleRequest)
         {
             try
             {
                 var result = await _roleService.CreateRole(createRoleRequest);
-
                 if (!result.Succeeded)
                 {
-                    var response = ApiError.ApiErrorResponse(result);
+                    var response = ApiError.ApiIdentityResultResponseError(result);
                     return BadRequest(response);
                 }
                 return StatusCode(StatusCodes.Status201Created);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest(ApiError.ApiErrorResponse());
+                _logger.LogError(ex,RoleErrors.ERROR_CREATE_ROLE.Message);
+                return BadRequest(ApiError.InternalServerError(RoleErrors.ERROR_CREATE_ROLE.Message));
             }
         }
     }
