@@ -15,11 +15,4 @@ Test/bin
 Test/coverage-report
 Tests/bin
 Tests/.config
-.sonarqube/bin
-.sonarqube/conf/0
-.sonarqube/conf/1
-.sonarqube/conf/2
-.sonarqube/conf/3
-.sonarqube/conf/cs
-.sonarqube/conf/vbnet
-.sonarqube/out
+IccPlanner/appsettings.Development.json
