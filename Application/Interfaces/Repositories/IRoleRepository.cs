@@ -1,4 +1,5 @@
 ﻿
+using Application.Responses;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,5 +17,6 @@ namespace Application.Interfaces.Repositories
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> CreateAsync(Role role);
+        public Task<IEnumerable<Role>> GetAllAsync();
     }
 }
