@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
+using Application.Responses.Errors;
 
 namespace IccPlanner
 {
@@ -56,7 +57,10 @@ namespace IccPlanner
                             var response = ApiResponseHelper.CreateValidationErrorResponse(context);
                             return new BadRequestObjectResult(response);
                         };
-                    });
+                       // op.ClientErrorMapping[StatusCodes.Status401Unauthorized] = ApiError.AuthError();
+                    })
+                
+                ;
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

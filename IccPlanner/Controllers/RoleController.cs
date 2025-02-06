@@ -48,7 +48,7 @@ namespace IccPlanner.Controllers
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IActionResult"/> de l'opération </returns>
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
+       // [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateRoleRequest createRoleRequest)

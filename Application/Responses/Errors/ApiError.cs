@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Responses.Errors
 {
-    public abstract class ApiError
+    public class ApiError
     {
         /// <summary>
         ///  Model de message d'erreur de retour 
@@ -25,7 +25,7 @@ namespace Application.Responses.Errors
         }
 
         /// <summary>
-        /// Definit l'erreur inconnu a voir dans le log
+        /// Definit l'erreur inconnu 
         /// </summary>
         /// <param name="message"> Message personaliser</param>
         /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
@@ -33,10 +33,24 @@ namespace Application.Responses.Errors
         {
             return new ApiErrorResponseModel
             {
-                StatusCode = StatusCodes.Status500InternalServerError,
-                ValidationErrors = [ApiResponseErrorMessage.ERROR_UNDEFINED.Code],
+                StatusCode = StatusCodes.Status500InternalServerError, 
                 Message = message ?? ApiResponseErrorMessage.ERROR_UNDEFINED.Message,
                 StatusDescription = ApiResponseErrorMessage.ERROR_UNDEFINED.Message
+            };
+        }
+
+        /// <summary>
+        /// Definit l'erreur d'authentification
+        /// </summary>
+        /// <param name="isUnauthorized">Paramettre</param>
+        /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
+        public static ApiErrorResponseModel AuthError(bool isUnauthorized = false)
+        {
+            return new ApiErrorResponseModel
+            {
+                StatusCode = isUnauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
+                Message = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message,
+                StatusDescription = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message
             };
         }
     }
