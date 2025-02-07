@@ -39,6 +39,7 @@ namespace IccPlanner
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appSettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<Program>()
                 .AddEnvironmentVariables()
                 .Build();
 

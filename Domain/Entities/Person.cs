@@ -10,7 +10,7 @@ namespace Domain.Entities
         [MaxLength(55)]
         public required string Name { get; set; }
         [MaxLength(55)]
-        public required string? LastName { get; set; }
+        public string? LastName { get; set; }
         [MaxLength(1)]
         public required string Sexe { get; set; } 
         [MaxLength(55)]       
