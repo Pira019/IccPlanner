@@ -45,7 +45,7 @@ namespace Application.Services
 
                 if (isAdmin)
                 {
-                    _accountRepository.AddUserRole(newUser!,RolesConstants.ADMIN);
+                  await  _accountRepository.AddUserRole(newUser!,RolesConstants.ADMIN);
                 }
                 // Envoie Email
                 await _sendEmailService.SendEmailConfirmation(newUser!);
