@@ -43,5 +43,19 @@ namespace Application.Interfaces.Repositories
         /// contenant <see cref="SignInResult"/> de l'opération </returns>
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false);
 
+        /// <summary>
+        /// Permet d'indique s'il existe un utilisateur avec le role ADMIN/>
+        /// </summary>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant une valeur bool </returns>
+        public Task<bool> IsAdminExistsAsync();
+
+        /// <summary>
+        /// Ajouter un role a un utilisateur
+        /// </summary>
+        /// <param name="user">Utilisateur</param>
+        /// <param name="roleName">Nom de role</param>
+        public Task AddUserRole(User user, string roleName);
+
     }
 }

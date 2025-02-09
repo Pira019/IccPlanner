@@ -39,6 +39,7 @@ namespace IccPlanner
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appSettings.{environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets<Program>()
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -46,7 +47,7 @@ namespace IccPlanner
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
-            AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
+            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
             builder.Services.AddControllers()
@@ -154,8 +155,8 @@ namespace IccPlanner
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = appSetting.JwtSetting.Issuer,
-                        ValidAudience = appSetting.JwtSetting.Audiance,
+                        ValidIssuer = appSetting?.JwtSetting?.Issuer,
+                        ValidAudience = appSetting?.JwtSetting?.Audiance,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)), 
                         ClockSkew = TimeSpan.Zero
                     };

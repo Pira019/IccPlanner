@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Account;
+﻿using Application.Constants;
+using Application.Dtos.Account;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
@@ -76,5 +77,56 @@ namespace Test.Application.UnitTest
            resul.Should().Be(identityResult);
             await _sendEmailService.Received(1).SendEmailConfirmation(createAccountDto.User);
         }
+
+        [Fact]
+        public async void CreateAccount_WhenIsAdmin_ShouldReturnIdentityResult()
+        {
+            //Arrange
+            var createAccouteRequest = new CreateAccountRequest
+            {
+                Email = "Test@gmail.com",
+                Name = "name",
+                Password = "Password123@",
+                ConfirmPassword = "Password123@",
+                Sexe = "M"
+            };
+
+            var createAccountDto = new CreateAccountDto
+            {
+                User = new User
+                {
+                    Email = createAccouteRequest.Email,
+                    PasswordHash = createAccouteRequest.Password,
+                    UserName = createAccouteRequest.Email,
+                    PhoneNumber = createAccouteRequest.Tel,
+                    //Creation du membre
+                    Member = new Member
+                    {
+                        Name = createAccouteRequest.Name,
+                        LastName = createAccouteRequest.LastName,
+                        Quarter = createAccouteRequest.Quarter,
+                        City = createAccouteRequest.City,
+                        Sexe = createAccouteRequest.Sexe
+
+                    }
+                }
+            };
+
+            _mapper.Map<CreateAccountDto>(createAccouteRequest).Returns(createAccountDto);
+            
+            var identityResult = IdentityResult.Success;
+
+            _accountRepository.CreateAsync(Arg.Any<User>(), Arg.Any<String>()).Returns(identityResult);
+            _accountRepository.FindByEmailAsync(Arg.Any<string>()).Returns(Task.FromResult<User?>(createAccountDto.User));
+
+            //Act 
+            var result = await accountService.CreateAccount(createAccouteRequest,true);
+
+            //Assert
+            result.Should().Be(identityResult);
+            await _accountRepository.Received(1).AddUserRole(Arg.Is<User>(u => u.Email == createAccouteRequest.Email), RolesConstants.ADMIN);
+
+        }
+
     }
 }

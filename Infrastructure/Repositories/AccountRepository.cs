@@ -1,5 +1,7 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Constants;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories
@@ -15,6 +17,11 @@ namespace Infrastructure.Repositories
         {
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task AddUserRole(User user, string roleName)
+        {
+           await _userManager.AddToRoleAsync(user, roleName);
         }
 
         public Task<IdentityResult> ConfirmAccountEmailAsync(User user, string token)
@@ -40,6 +47,12 @@ namespace Infrastructure.Repositories
         public Task<User?> FindByIdAsync(string id)
         {
             return (_userManager.FindByIdAsync(id));
+        }
+
+        public async Task<bool> IsAdminExistsAsync()
+        {
+            var isAdminExists = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
+            return isAdminExists.Any();
         }
 
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)
