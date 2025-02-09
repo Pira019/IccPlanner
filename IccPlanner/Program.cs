@@ -155,8 +155,8 @@ namespace IccPlanner
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = appSetting.JwtSetting.Issuer,
-                        ValidAudience = appSetting.JwtSetting.Audiance,
+                        ValidIssuer = appSetting?.JwtSetting?.Issuer,
+                        ValidAudience = appSetting?.JwtSetting?.Audiance,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)), 
                         ClockSkew = TimeSpan.Zero
                     };

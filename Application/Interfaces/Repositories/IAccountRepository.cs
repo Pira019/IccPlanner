@@ -55,7 +55,7 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <param name="user">Utilisateur</param>
         /// <param name="roleName">Nom de role</param>
-        public void AddUserRole(User user, string roleName);
+        public Task AddUserRole(User user, string roleName);
 
     }
 }

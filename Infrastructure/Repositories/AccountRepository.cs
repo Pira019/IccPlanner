@@ -19,9 +19,9 @@ namespace Infrastructure.Repositories
             _signInManager = signInManager;
         }
 
-        public void AddUserRole(User user, string roleName)
+        public async Task AddUserRole(User user, string roleName)
         {
-            _userManager.AddToRoleAsync(user, roleName);
+           await _userManager.AddToRoleAsync(user, roleName);
         }
 
         public Task<IdentityResult> ConfirmAccountEmailAsync(User user, string token)
