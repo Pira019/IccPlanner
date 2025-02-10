@@ -1,4 +1,4 @@
-﻿
+﻿using Application.Dtos.Role;
 using Application.Requests.Role;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,6 +16,12 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest);
+
+        /// <summary>
+        /// Recuperer tous les roles
+        /// </summary>
+        /// <returns></returns>
+        public Task<ICollection<GetRolesDTO>> GetAll();
         
     }
 }

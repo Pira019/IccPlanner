@@ -49,6 +49,11 @@ namespace Infrastructure.Repositories
             return (_userManager.FindByIdAsync(id));
         }
 
+        public async Task<IList<string>> GetUserRoles(User user)
+        {
+            return await _userManager.GetRolesAsync(user);
+        }
+
         public async Task<bool> IsAdminExistsAsync()
         {
             var isAdminExists = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);

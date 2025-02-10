@@ -9,6 +9,6 @@ namespace Application.Constants
         /// <summary>
         /// Defint le role d'un administrateur
         /// </summary>
-        public const string ADMIN = "ADMIN";
+        public const string ADMIN = "Admin";
     }
 }

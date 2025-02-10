@@ -100,10 +100,12 @@ namespace IccPlanner.Controllers
                 }
 
                 var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
+                var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
+                var token = tokenProvider.Create(userAuth!,userAuthRoles);
 
                 var res = new LoginAccountResponse
                 {
-                    AccessToken = tokenProvider.Create(userAuth!)
+                    AccessToken = token
                 };
 
                 return Ok(res);

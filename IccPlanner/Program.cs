@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
-using Application.Responses.Errors;
 
 namespace IccPlanner
 {
@@ -47,7 +46,7 @@ namespace IccPlanner
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
-            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
+            AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
             builder.Services.AddControllers()
@@ -157,7 +156,7 @@ namespace IccPlanner
 
                         ValidIssuer = appSetting?.JwtSetting?.Issuer,
                         ValidAudience = appSetting?.JwtSetting?.Audiance,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)), 
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting?.JwtSetting.Secret!)), 
                         ClockSkew = TimeSpan.Zero
                     };
                     o.MapInboundClaims = false;
