@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Utility.Mails
 {
-    public class ModelMails
+    public static class ModelMails
     {
         public const string OBJECTEMAILCONFIRMATION = "Confirmation de votre adresse e-mail";
 

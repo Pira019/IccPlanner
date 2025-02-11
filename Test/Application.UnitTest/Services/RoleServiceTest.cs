@@ -34,9 +34,9 @@ namespace Test.Application.UnitTest.Services
 
             _roleRepository.GetAllRoles().Returns(Task.FromResult<List<Role>>(roles));
 
-            var expectedResponse = new List<GetRolesDTO>
+            var expectedResponse = new List<GetRolesDto>
             {
-                new GetRolesDTO { Description = "Test", Name = "Test", Id = "122345" }
+                new GetRolesDto { Description = "Test", Name = "Test", Id = "122345" }
             };
 
             //Act
