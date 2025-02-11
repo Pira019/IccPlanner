@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
+using Infrastructure.Configurations.Interface;
 
 namespace IccPlanner
 {
@@ -126,7 +127,7 @@ namespace IccPlanner
                 option.UseNpgsql(conString));
 
             //Pour l'authentification la gestion de token
-            builder.Services.AddSingleton<TokenProvider>();
+            builder.Services.AddSingleton<ITokenProvider,TokenProvider>();
 
             builder.Services.AddIdentity<User, Role>(opt =>
             {

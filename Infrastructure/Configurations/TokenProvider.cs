@@ -1,19 +1,17 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Interfaces.Repositories;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Infrastructure.Configurations.Interface;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Configurations
 {
-    public class TokenProvider
+    public class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private AppSetting? _appSetting; 
+        private readonly AppSetting? _appSetting; 
         
         public TokenProvider(IConfiguration configuration)
         {
