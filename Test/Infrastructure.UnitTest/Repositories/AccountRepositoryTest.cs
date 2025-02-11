@@ -1,11 +1,9 @@
 ﻿using Application.Constants;
-using Application.Requests.Account;
 using Domain.Entities;
-using Infrastructure.Persistence;
+using FluentAssertions;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
 namespace Test.Infrastructure.UnitTest.Repositories
@@ -23,7 +21,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             var userStore = Substitute.For<IUserStore<User>>();
 
             _userManager = Substitute.For<UserManager<User>>(userStore, null, null, null, null, null, null, null, null);
-            _signInManager = Substitute.For<SignInManager<User>>(_userManager,Substitute.For<IHttpContextAccessor>(), Substitute.For<IUserClaimsPrincipalFactory<User>>(),null,null,null,null);
+            _signInManager = Substitute.For<SignInManager<User>>(_userManager, Substitute.For<IHttpContextAccessor>(), Substitute.For<IUserClaimsPrincipalFactory<User>>(), null, null, null, null);
 
             _accountRepository = new AccountRepository(_userManager, _signInManager);
         }
@@ -35,7 +33,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             var user = new User
             {
                 Email = "Test@gmail.com",
-                UserName ="Test"                 
+                UserName = "Test"
             };
 
             _userManager.AddToRoleAsync(Arg.Any<User>(), RolesConstants.ADMIN)
@@ -48,6 +46,56 @@ namespace Test.Infrastructure.UnitTest.Repositories
             await _userManager.Received(1).AddToRoleAsync(user, RolesConstants.ADMIN);
         }
 
+        /// <summary>
+        /// Doit appeler GetRolesAsync de lòbjet <see cref="UserManager{TUser}"/>
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUserRoles_ShouldCallAGetRolesAsync()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com",
+                UserName = "Test"
+            };
+
+            var roles = new List<string>
+            {
+                "Admin",
+            };
+
+            _userManager.GetRolesAsync(user).Returns(Task.FromResult<IList<string>>(roles));
+
+            //Act
+            var response = await _accountRepository.GetUserRoles(user);
+
+            //Assert
+            response.Should().BeEquivalentTo(roles);
+
+        }
+
+        [Fact]
+        public async Task ConfirmAccountEmailAsync_ShouldReturnIdentityResult()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com",
+                UserName = "Test"
+            };
+
+            var token = "Token";
+            var identityResponse = IdentityResult.Success;
+            _userManager.ConfirmEmailAsync(user, token).Returns(Task.FromResult(identityResponse));
+
+            //Act
+            var response = await _accountRepository.ConfirmAccountEmailAsync(user, token);
+
+            //Assert
+            response.Should().Be(identityResponse);
+
+        }
 
     }
 }

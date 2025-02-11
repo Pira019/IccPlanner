@@ -23,6 +23,13 @@ namespace Infrastructure.Security
                     context.User.IsInRole(RolesConstants.ADMIN) || 
                     context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_ROLE)
                     ));
+            
+            //CAN_READ_ROLE
+            options.AddPolicy(PolicyConstants.CAN_READ_ROLE, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.IsInRole(RolesConstants.ADMIN) || 
+                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_READ_ROLE)
+                    ));
             //Fin Acces Roles
         }
     }

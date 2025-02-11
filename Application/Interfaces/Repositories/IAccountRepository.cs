@@ -57,5 +57,13 @@ namespace Application.Interfaces.Repositories
         /// <param name="roleName">Nom de role</param>
         public Task AddUserRole(User user, string roleName);
 
+        /// <summary>
+        /// Recuperer les roles d'un User <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant la liste de roles </returns>
+        public Task<IList<string>> GetUserRoles(User user);
+
     }
 }

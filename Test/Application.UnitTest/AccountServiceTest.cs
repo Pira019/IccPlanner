@@ -13,10 +13,10 @@ using NSubstitute;
 namespace Test.Application.UnitTest
 {
     public class AccountServiceTest
-    { 
-         private readonly IAccountRepository _accountRepository;
-         private readonly ISendEmailService _sendEmailService;
-         private readonly IMapper _mapper;
+    {
+        private readonly IAccountRepository _accountRepository;
+        private readonly ISendEmailService _sendEmailService;
+        private readonly IMapper _mapper;
 
         private readonly AccountService accountService;
 
@@ -43,22 +43,22 @@ namespace Test.Application.UnitTest
             };
 
             var createAccountDto = new CreateAccountDto
-            { 
+            {
                 User = new User
                 {
-                    Email = createAccouteRequest.Email, 
+                    Email = createAccouteRequest.Email,
                     PasswordHash = createAccouteRequest.Password,
                     UserName = createAccouteRequest.Email,
-                    PhoneNumber = createAccouteRequest.Tel, 
+                    PhoneNumber = createAccouteRequest.Tel,
                     //Creation du membre
                     Member = new Member
                     {
                         Name = createAccouteRequest.Name,
-                        LastName = createAccouteRequest.LastName, 
+                        LastName = createAccouteRequest.LastName,
                         Quarter = createAccouteRequest.Quarter,
                         City = createAccouteRequest.City,
                         Sexe = createAccouteRequest.Sexe
-                        
+
                     }
                 }
             };
@@ -71,10 +71,10 @@ namespace Test.Application.UnitTest
 
 
             //Act
-            var resul = await accountService.CreateAccount(createAccouteRequest);
+            var result = await accountService.CreateAccount(createAccouteRequest);
 
-           //Assert
-           resul.Should().Be(identityResult);
+            //Assert
+            result.Should().Be(identityResult);
             await _sendEmailService.Received(1).SendEmailConfirmation(createAccountDto.User);
         }
 
@@ -113,14 +113,14 @@ namespace Test.Application.UnitTest
             };
 
             _mapper.Map<CreateAccountDto>(createAccouteRequest).Returns(createAccountDto);
-            
+
             var identityResult = IdentityResult.Success;
 
             _accountRepository.CreateAsync(Arg.Any<User>(), Arg.Any<String>()).Returns(identityResult);
             _accountRepository.FindByEmailAsync(Arg.Any<string>()).Returns(Task.FromResult<User?>(createAccountDto.User));
 
             //Act 
-            var result = await accountService.CreateAccount(createAccouteRequest,true);
+            var result = await accountService.CreateAccount(createAccouteRequest, true);
 
             //Assert
             result.Should().Be(identityResult);
@@ -128,5 +128,27 @@ namespace Test.Application.UnitTest
 
         }
 
+        [Fact]
+        public async void GetUserRoles_ShouldReturnListString()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com"
+            };
+
+            var roleName = new List<string>
+            {
+                "Admin"
+            }; 
+
+            _accountRepository.GetUserRoles(user).Returns(Task.FromResult<IList<string>>(roleName));
+
+            //Act
+            var response = await accountService.GetUserRoles(user);
+
+            //Assert
+            response.Should().BeEquivalentTo(roleName);
+        } 
     }
 }
