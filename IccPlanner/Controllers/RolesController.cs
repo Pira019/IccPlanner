@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services;
+using Application.Responses;
 using Application.Responses.Role;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,9 @@ namespace IccPlanner.Controllers
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.CAN_READ_ROLE)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType<GetRolesResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
