@@ -29,11 +29,11 @@ namespace Application.Services
             return _roleRepository.CreateAsync(role);
         }
 
-        public async Task<ICollection<GetRolesDTO>> GetAll()
+        public async Task<ICollection<GetRolesDto>> GetAll()
         {
             var roles = await _roleRepository.GetAllRoles();
 
-            return _mapper.Map<ICollection<GetRolesDTO>>(roles);
+            return _mapper.Map<ICollection<GetRolesDto>>(roles);
         }
     }
 }

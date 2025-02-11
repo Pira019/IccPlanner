@@ -4,6 +4,6 @@ namespace Application.Responses.Role
 {
     public class GetRolesResponse
     {
-        public ICollection<GetRolesDTO>? Items { get; set; }
+        public ICollection<GetRolesDto>? Items { get; set; }
     }
 }

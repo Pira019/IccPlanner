@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Utility
 {
-    public class FormatUtility
+    public static class FormatUtility
     {
         public static string GenerateEmailConfirmationUrl(string url, string id, string code)
         {

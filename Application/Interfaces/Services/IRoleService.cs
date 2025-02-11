@@ -21,7 +21,7 @@ namespace Application.Interfaces.Services
         /// Recuperer tous les roles
         /// </summary>
         /// <returns></returns>
-        public Task<ICollection<GetRolesDTO>> GetAll();
+        public Task<ICollection<GetRolesDto>> GetAll();
         
     }
 }

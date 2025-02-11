@@ -21,15 +21,14 @@ namespace IccPlanner.Controllers
         [HttpGet]
         [Authorize(Policy = PolicyConstants.CAN_READ_ROLE)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)] 
         [ProducesResponseType<GetRolesResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
-        {
+        { 
             var roles = await _roleService.GetAll();
             var result = new GetRolesResponse{ Items = roles };
 
-            return Ok(result);
+            return Ok(result); 
         }
 
     }

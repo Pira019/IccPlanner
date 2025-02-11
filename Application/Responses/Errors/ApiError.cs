@@ -50,7 +50,7 @@ namespace Application.Responses.Errors
             {
                 StatusCode = isUnauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
                 Message = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message,
-                StatusDescription = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message
+                StatusDescription = isUnauthorized ? StatusCodes.Status401Unauthorized.ToString() : StatusCodes.Status403Forbidden.ToString()
             };
         }
     }

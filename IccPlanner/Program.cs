@@ -7,7 +7,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models; 
+using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using Infrastructure.Repositories;
 using Application.Interfaces.Repositories;
@@ -17,6 +17,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
 using Infrastructure.Configurations.Interface;
+using System.Text.Json;
+using Application.Responses.Errors;
+using Microsoft.AspNetCore.Diagnostics;
+using Infrastructure.Middlewares.Interfaces;
+using Infrastructure.Middlewares;
 
 namespace IccPlanner
 {
@@ -57,7 +62,7 @@ namespace IccPlanner
                             return new BadRequestObjectResult(response);
                         };
                     })
-                
+
                 ;
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -110,10 +115,13 @@ namespace IccPlanner
             //Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();  
+
+            builder.Services.AddScoped<CustomJwtBearerEventHandler>(); 
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
+
 
             // Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -124,7 +132,7 @@ namespace IccPlanner
                 option.UseNpgsql(conString));
 
             //Pour l'authentification la gestion de token
-            builder.Services.AddSingleton<ITokenProvider,TokenProvider>();
+            builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 
             builder.Services.AddIdentity<User, Role>(opt =>
             {
@@ -141,23 +149,24 @@ namespace IccPlanner
                 op =>
                 {
                     op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+                    op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(o =>
                 {
                     o.RequireHttpsMetadata = false;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true, 
+                        ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
 
                         ValidIssuer = appSetting?.JwtSetting?.Issuer,
                         ValidAudience = appSetting?.JwtSetting?.Audiance,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting?.JwtSetting.Secret!)), 
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting?.JwtSetting.Secret!)),
                         ClockSkew = TimeSpan.Zero
                     };
                     o.MapInboundClaims = false;
+                    o.EventsType = typeof(CustomJwtBearerEventHandler);
                 });
 
             builder.Services.AddAuthorization(options =>
@@ -178,7 +187,7 @@ namespace IccPlanner
             app.UseSwagger(opt =>
             {
                 opt.SerializeAsV2 = true;
-            });
+            }); 
 
             app.UseAuthentication();
             app.UseAuthorization();

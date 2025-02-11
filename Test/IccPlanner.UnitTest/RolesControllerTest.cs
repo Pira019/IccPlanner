@@ -27,11 +27,11 @@ namespace Test.IccPlanner.UnitTest
         public async void GetRole_ShouldRetursRolesList()
         {
             //Arrage
-            var data = new List<GetRolesDTO>
+            var data = new List<GetRolesDto>
             {
-                new GetRolesDTO { Id = "1", Description = "Desc", Name = "NomRole" }
+                new GetRolesDto { Id = "1", Description = "Desc", Name = "NomRole" }
             };
-            _roleService.GetAll().Returns(Task.FromResult((ICollection<GetRolesDTO>)data));
+            _roleService.GetAll().Returns(Task.FromResult((ICollection<GetRolesDto>)data));
 
             //Act
             var request = await _rolesController.Get();

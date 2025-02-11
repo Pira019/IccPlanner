@@ -13,7 +13,7 @@ namespace Application.Dtos.Role
         /// </summary>
         public RoleMappingProfile() 
         {
-           CreateMap<Domain.Entities.Role, GetRolesDTO>();
+           CreateMap<Domain.Entities.Role, GetRolesDto>();
         }
     }
 }

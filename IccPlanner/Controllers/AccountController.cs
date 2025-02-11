@@ -17,7 +17,7 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private ILogger<AccountController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
 
         public AccountController(IAccountService accountService, ILogger<AccountController> logger)
