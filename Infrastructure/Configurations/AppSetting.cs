@@ -33,7 +33,7 @@
         /// <summary>
         /// Configuration Jwt
         /// </summary>
-        public JwtSetting? JwtSetting { get; set; }
+        public required JwtSetting JwtSetting { get; set; }
 
 
     }

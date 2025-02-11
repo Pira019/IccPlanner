@@ -5,6 +5,7 @@ using Application.Responses.Account;
 using Application.Responses.Errors;
 using Domain.Abstractions;
 using Infrastructure.Configurations;
+using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -81,7 +82,7 @@ namespace IccPlanner.Controllers
         [HttpPost("login")]
         [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login([FromForm] LoginRequest request, TokenProvider tokenProvider)
+        public async Task<IActionResult> Login([FromForm] LoginRequest request, ITokenProvider tokenProvider)
         { 
             try
             {
@@ -100,10 +101,12 @@ namespace IccPlanner.Controllers
                 }
 
                 var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
+                var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
+                var token = tokenProvider.Create(userAuth!,userAuthRoles);
 
                 var res = new LoginAccountResponse
                 {
-                    AccessToken = tokenProvider.Create(userAuth!)
+                    AccessToken = token
                 };
 
                 return Ok(res);

@@ -78,5 +78,10 @@ namespace Application.Services
         {
             return await _accountRepository.IsAdminExistsAsync();
         }
+
+        public async Task<ICollection<string>> GetUserRoles(User user)
+        {
+            return await _accountRepository.GetUserRoles(user);
+        }
     }
 }

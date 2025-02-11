@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
-using Application.Responses.Errors;
+using Infrastructure.Configurations.Interface;
 
 namespace IccPlanner
 {
@@ -43,11 +43,9 @@ namespace IccPlanner
                 .AddEnvironmentVariables()
                 .Build();
 
-            // builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
-
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
-            AppSetting? appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
+            AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
             builder.Services.AddControllers()
@@ -58,7 +56,6 @@ namespace IccPlanner
                             var response = ApiResponseHelper.CreateValidationErrorResponse(context);
                             return new BadRequestObjectResult(response);
                         };
-                       // op.ClientErrorMapping[StatusCodes.Status401Unauthorized] = ApiError.AuthError();
                     })
                 
                 ;
@@ -127,7 +124,7 @@ namespace IccPlanner
                 option.UseNpgsql(conString));
 
             //Pour l'authentification la gestion de token
-            builder.Services.AddSingleton<TokenProvider>();
+            builder.Services.AddSingleton<ITokenProvider,TokenProvider>();
 
             builder.Services.AddIdentity<User, Role>(opt =>
             {
@@ -157,7 +154,7 @@ namespace IccPlanner
 
                         ValidIssuer = appSetting?.JwtSetting?.Issuer,
                         ValidAudience = appSetting?.JwtSetting?.Audiance,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.JwtSetting.Secret)), 
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting?.JwtSetting.Secret!)), 
                         ClockSkew = TimeSpan.Zero
                     };
                     o.MapInboundClaims = false;

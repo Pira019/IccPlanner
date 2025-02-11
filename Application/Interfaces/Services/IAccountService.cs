@@ -46,6 +46,14 @@ namespace Application.Interfaces.Services
 
         public Task<bool> IsAdminExistsAsync();
 
+        /// <summary>
+        /// Recuperer les roles d'un utilsateur
+        /// </summary>
+        /// <param name="user">Represente un utilisateur</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant les noms de roles </returns>
+        public Task<ICollection<string>> GetUserRoles(User user);
+
 
     } 
 }

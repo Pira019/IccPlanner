@@ -16,5 +16,11 @@ namespace Application.Interfaces.Repositories
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> CreateAsync(Role role);
+
+        /// <summary>
+        /// Recuperer tout les roles
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<Role>> GetAllRoles(); 
     }
 }
