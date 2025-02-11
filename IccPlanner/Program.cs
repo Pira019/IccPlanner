@@ -43,8 +43,6 @@ namespace IccPlanner
                 .AddEnvironmentVariables()
                 .Build();
 
-            // builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("AppSetting"));
-
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
 
             AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
@@ -58,7 +56,6 @@ namespace IccPlanner
                             var response = ApiResponseHelper.CreateValidationErrorResponse(context);
                             return new BadRequestObjectResult(response);
                         };
-                       // op.ClientErrorMapping[StatusCodes.Status401Unauthorized] = ApiError.AuthError();
                     })
                 
                 ;
