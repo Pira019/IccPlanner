@@ -1,5 +1,5 @@
-﻿ using AutoMapper;
-using Domain.Entities;
+﻿using Application.Responses.Role;
+using AutoMapper; 
 
 namespace Application.Dtos.Role
 {
@@ -14,6 +14,7 @@ namespace Application.Dtos.Role
         public RoleMappingProfile() 
         {
            CreateMap<Domain.Entities.Role, GetRolesDto>();
+           CreateMap<Domain.Entities.Role, CreateRoleResponse>();
         }
     }
 }

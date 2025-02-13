@@ -6,12 +6,16 @@
 		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
-		<IsTestProject>true</IsTestProject>
+		<IsTestProject>true</IsTestProject> 
 
+	</PropertyGroup> 
+
+	<PropertyGroup>
 		<CollectCoverage>true</CollectCoverage>
 		<CoverletOutputFormat>lcov</CoverletOutputFormat>
-		<CoverletOutput>./lcov.info</CoverletOutput>
-
+		<CoverletOutput>./lcov.info</CoverletOutput> 
+		<UseSourceLink>true</UseSourceLink>
+		<ExcludeByFile>**/Migrations/*.cs</ExcludeByFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,6 +25,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="FluentAssertions" Version="8.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageReference Include="ReportGenerator" Version="5.4.3" />
 		<PackageReference Include="xunit" Version="2.5.3" />

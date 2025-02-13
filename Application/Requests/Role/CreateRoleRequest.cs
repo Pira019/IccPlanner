@@ -4,7 +4,7 @@ using Application.Helper.Validators;
 namespace Application.Requests.Role
 {
     /// <summary>
-    /// Model de donnees a envoyer pour creer un role
+    /// Model de données a envoyer pour créer un role
     /// </summary>
     public class CreateRoleRequest
     {

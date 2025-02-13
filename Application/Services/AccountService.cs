@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Application.Services
 {
     /// <summary>
-    /// Ce service permet de gerer les actions d'un compte
+    /// Ce service permet de gérer les actions d'un compte
     /// </summary>
     public class AccountService : IAccountService
     {
@@ -31,17 +31,17 @@ namespace Application.Services
         /// Créer un compte 
         /// </summary>
         /// <param name="request">
-        ///  Body de la requette 
+        ///  Body de la requête 
         /// </param>
-        /// <returns>Returne objet IdentityResult</returns>
+        /// <returns>Retourne objet IdentityResult</returns>
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request, bool isAdmin = false)
         {
             var dto = _mapper.Map<CreateAccountDto>(request);
-            var result = await _accountRepository.CreateAsync(dto.User, dto.User.PasswordHash!);
+            var result = await _accountRepository.CreateAsync(dto.User!, dto.User?.PasswordHash!);
 
             if (result.Succeeded)
             {
-                var newUser = await FindUserAccountByEmail(dto.User.Email!);
+                var newUser = await FindUserAccountByEmail(dto?.User?.Email!);
 
                 if (isAdmin)
                 {

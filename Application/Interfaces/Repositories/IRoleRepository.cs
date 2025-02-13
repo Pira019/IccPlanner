@@ -10,7 +10,7 @@ namespace Application.Interfaces.Repositories
     public interface IRoleRepository
     {
         /// <summary>
-        /// Créer uin Role
+        /// Créer un Role
         /// </summary>
         /// <param name="role">Nouveau Role <see cref="Role"/></param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
@@ -18,9 +18,17 @@ namespace Application.Interfaces.Repositories
         public Task<IdentityResult> CreateAsync(Role role);
 
         /// <summary>
-        /// Recuperer tout les roles
+        /// Récupérer tout les roles
         /// </summary>
         /// <returns></returns>
-        public Task<List<Role>> GetAllRoles(); 
+        public Task<List<Role>> GetAllRoles();
+
+        /// <summary>
+        /// Récupérer l'Id d'un role
+        /// </summary>
+        /// <param name="roleName">Nom du role</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="Role"/> de l'opération </returns>
+        public Task<Role?> GetRoleByNameAsync(string roleName);
     }
 }

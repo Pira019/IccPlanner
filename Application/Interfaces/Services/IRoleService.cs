@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Role;
 using Application.Requests.Role;
+using Application.Responses.Role;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces.Services
@@ -10,18 +11,26 @@ namespace Application.Interfaces.Services
     public interface IRoleService
     {
         /// <summary>
-        /// Permet de creer un Role
+        /// Permet de créer un Role
         /// </summary>
-        /// <param name="createRoleRequest">Le model de la requete <see cref="CreateRoleRequest"/></param>
+        /// <param name="createRoleRequest">Le model de la requête <see cref="CreateRoleRequest"/></param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest);
 
         /// <summary>
-        /// Recuperer tous les roles
+        /// Récupérer tous les roles
         /// </summary>
         /// <returns></returns>
         public Task<ICollection<GetRolesDto>> GetAll();
+
+        /// <summary>
+        /// Permet de récupéré Id d'un Role
+        /// </summary>
+        /// <param name="roleName">Nom du role</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant le result de l'opération </returns>
+        public Task<CreateRoleResponse> GetRoleByName(string roleName);
         
     }
 }

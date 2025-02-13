@@ -10,12 +10,12 @@ namespace Infrastructure.Security
     public static class AuthorizationPolicies
     {
         /// <summary>
-        /// Permet de definir les acces
+        /// Permet de définir les accès
         /// </summary>
         /// <param name="options"> Fait reference <see cref="AuthorizationOptions"/></param>
         public static void AddPolicies(AuthorizationOptions options)
         {
-            //Acces Roles
+            //Accès Roles
 
             //CAN_CREATE_ROLE
             options.AddPolicy(PolicyConstants.CAN_CREATE_ROLE, policy =>
@@ -29,8 +29,8 @@ namespace Infrastructure.Security
                 policy.RequireAssertion(context =>
                     context.User.IsInRole(RolesConstants.ADMIN) || 
                     context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_READ_ROLE)
-                    ));
-            //Fin Acces Roles
+                    )); 
+            //Fin Accès Roles
         }
     }
 }

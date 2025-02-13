@@ -2,7 +2,7 @@
 namespace Domain.Abstractions
 {
     /// <summary>
-    /// Cette classe definit le message d'erreur de l'API
+    /// Cette classe définit le message d'erreur de l'API
     /// </summary>
     public static class ApiResponseErrorMessage
     {
