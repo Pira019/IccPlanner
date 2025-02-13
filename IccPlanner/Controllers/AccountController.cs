@@ -50,7 +50,7 @@ namespace IccPlanner.Controllers
 
         /// <summary>
         /// 
-        /// Confrimer l'email
+        /// Confirmer l’émail
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

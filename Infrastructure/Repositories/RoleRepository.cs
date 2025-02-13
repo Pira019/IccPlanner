@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
     /// <summary>
-    /// Cete classe permet de faire les actions dans la table Role
+    /// Cette classe permet de faire les actions dans la table Role
     /// </summary>
     public class RoleRepository : IRoleRepository
     {
@@ -28,6 +28,11 @@ namespace Infrastructure.Repositories
         public async Task<List<Role>> GetAllRoles()
         {
             return await _iccPlannerContext.Roles.ToListAsync();
-        } 
+        }
+
+        public async Task<Role?> GetRoleByNameAsync(string roleName)
+        {
+            return await _roleManager.FindByNameAsync(roleName);
+        }
     }
 }

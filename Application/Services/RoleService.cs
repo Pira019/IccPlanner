@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Role;
+﻿using System.Data;
+using Application.Dtos.Role;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Role;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Application.Services
 {
     /// <summary>
-    /// Permet de gerer les actions d'un Role
+    /// Permet de gérer les actions d'un Role
     /// </summary>
     public class RoleService : IRoleService
     {
@@ -34,6 +35,12 @@ namespace Application.Services
             var roles = await _roleRepository.GetAllRoles();
 
             return _mapper.Map<ICollection<GetRolesDto>>(roles);
+        }
+
+        public async Task<CreateRoleResponse> GetRoleByName(string roleName)
+        {
+            var role = await _roleRepository.GetRoleByNameAsync(roleName);
+            return _mapper.Map<CreateRoleResponse>(role);
         }
     }
 }

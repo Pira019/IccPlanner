@@ -1,7 +1,6 @@
 ﻿using Application.Constants;
 using Application.Interfaces.Repositories;
-using Domain.Entities;
-using Infrastructure.Security.Constants;
+using Domain.Entities; 
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories

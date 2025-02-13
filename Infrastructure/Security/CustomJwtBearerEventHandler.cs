@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 namespace Infrastructure.Security
 {
     /// <summary>
-    /// Permt de gerer le retour 401 et 403
+    /// Permet de gérer le retour 401 et 403
     /// </summary>
     public class CustomJwtBearerEventHandler : JwtBearerEvents
     {

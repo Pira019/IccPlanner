@@ -8,7 +8,7 @@ namespace Application.Responses
     public class ApiErrorResponseModel
     {
         /// <summary>
-        ///   Status de la requette
+        ///   Status de la requête
         /// </summary>
         [JsonPropertyName("success")]
         public bool Success { get; set; }

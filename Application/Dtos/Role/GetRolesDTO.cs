@@ -2,7 +2,7 @@
 namespace Application.Dtos.Role
 {
     /// <summary>
-    /// Model d'objet a retourner pour la lste des Roles
+    /// Model d'objet a retourner pour la liste des Roles
     /// </summary>
     public class GetRolesDto
     {
