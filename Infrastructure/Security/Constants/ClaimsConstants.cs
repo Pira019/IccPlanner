@@ -8,5 +8,8 @@
         // Permissions liées aux rôles
         public const string CAN_CREATE_ROLE = "CanCreateRole";
         public const string CAN_READ_ROLE = "CanReadRole";
+
+        // Permissions liées aux Ministères
+        public const string CAN_CREATE_MINISTRY = "CanCreateMinistry";
     }
 }
