@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Domain.Entities
 {
     /// <summary>
-    /// Classe ministere ex: TELECOMMUNICATION
+    /// Classe ministère ex: TELECOMMUNICATION
     /// </summary>
     public class Ministry
     {
