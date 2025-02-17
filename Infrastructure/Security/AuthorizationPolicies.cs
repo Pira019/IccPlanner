@@ -20,17 +20,30 @@ namespace Infrastructure.Security
             //CAN_CREATE_ROLE
             options.AddPolicy(PolicyConstants.CAN_CREATE_ROLE, policy =>
                 policy.RequireAssertion(context =>
-                    context.User.IsInRole(RolesConstants.ADMIN) || 
+                    context.User.IsInRole(RolesConstants.ADMIN) ||
                     context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_ROLE)
                     ));
-            
+
             //CAN_READ_ROLE
             options.AddPolicy(PolicyConstants.CAN_READ_ROLE, policy =>
                 policy.RequireAssertion(context =>
-                    context.User.IsInRole(RolesConstants.ADMIN) || 
+                    context.User.IsInRole(RolesConstants.ADMIN) ||
                     context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_READ_ROLE)
-                    )); 
+                    ));
             //Fin Accès Roles
+
+            /*Accès Ministère*/
+
+            //CAN_CREATE_MINISTRY
+            options.AddPolicy(PolicyConstants.CAN_CREATE_MINISTRY, policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
+                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
+                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_MINISTRY);
+                }));
+
+            /*Fin Accès Ministère*/
         }
     }
 }

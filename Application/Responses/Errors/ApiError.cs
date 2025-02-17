@@ -25,9 +25,9 @@ namespace Application.Responses.Errors
         }
 
         /// <summary>
-        /// Definit l'erreur inconnu 
+        /// Définit l'erreur inconnu 
         /// </summary>
-        /// <param name="message"> Message personaliser</param>
+        /// <param name="message"> Message personnalisé</param>
         /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
         public static ApiErrorResponseModel InternalServerError(string? message = null)
         {
@@ -40,9 +40,9 @@ namespace Application.Responses.Errors
         }
 
         /// <summary>
-        /// Definit l'erreur d'authentification
+        /// Définit l'erreur d'authentification
         /// </summary>
-        /// <param name="isUnauthorized">Paramettre</param>
+        /// <param name="isUnauthorized">Paramètre</param>
         /// <returns> <see cref="ApiErrorResponseModel"/> représente le model d'erreur de retour</returns>
         public static ApiErrorResponseModel AuthError(bool isUnauthorized = false)
         {

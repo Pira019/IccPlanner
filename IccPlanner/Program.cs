@@ -17,11 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Security;
 using Infrastructure.Configurations.Interface;
-using System.Text.Json;
-using Application.Responses.Errors;
-using Microsoft.AspNetCore.Diagnostics;
-using Infrastructure.Middlewares.Interfaces;
 using Infrastructure.Middlewares;
+
 
 namespace IccPlanner
 {
@@ -110,12 +107,17 @@ namespace IccPlanner
 
             //Repositories  
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
+            builder.Services.AddScoped<IMinistryRepository, MinistryRepository>(); 
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
+
+
 
             //Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
             builder.Services.AddScoped<IRoleService, RoleService>();  
+            builder.Services.AddScoped<IMinistryService, MinistryService>();  
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>(); 
 
@@ -126,7 +128,7 @@ namespace IccPlanner
             // Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            // Chaine de connexion a la DB
+            // Chaîne de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException("Connection string not found");
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
@@ -187,8 +189,8 @@ namespace IccPlanner
             app.UseSwagger(opt =>
             {
                 opt.SerializeAsV2 = true;
-            }); 
-
+            });
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 

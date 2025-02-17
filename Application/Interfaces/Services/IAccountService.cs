@@ -15,7 +15,7 @@ namespace Application.Interfaces.Services
         ///  Confirmer l'adresse Email d'un compte
         /// </summary>
         /// <param name="user">L'utilisateur a valider</param>
-        /// <param name="code">Code generer dans l'URL de confirmation</param>
+        /// <param name="code">Code générer dans l'URL de confirmation</param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
         public Task<IdentityResult> ConfirmEmailAccount(User user, string code);
