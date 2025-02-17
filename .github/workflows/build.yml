@@ -45,3 +45,6 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Pira019_IccPlanner" /o:"pira019" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Run unit tests
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"  # Collecte de la couverture de test
