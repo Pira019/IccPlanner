@@ -41,8 +41,8 @@
 		<Using Include="Xunit" />
 	</ItemGroup>
 
-	<!-- Exécution de reportgenerator après les tests -->
+	<!-- Exécution de reportgenerator après les tests 
 	<Target Name="GenerateCoverageReport" AfterTargets="build">
 		<Exec Command="reportgenerator -reports:./lcov.info -targetdir:coverage-report -reporttypes:Html" />
-	</Target> 
+	</Target>  -->
 </Project>
