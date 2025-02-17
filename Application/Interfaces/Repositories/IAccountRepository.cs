@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Application.Interfaces.Repositories
 {
     /// <summary>
-    ///   Cette interface gére les action d'un compte
+    ///   Cette interface gère les action d'un compte
     /// </summary>
     public interface IAccountRepository
     {
@@ -36,7 +36,7 @@ namespace Application.Interfaces.Repositories
         /// <summary>
         /// Permet d'authentifier un utilisateur
         /// </summary>
-        /// <param name="email">Email ou le username d'un utilisateur </param>
+        /// <param name="email">Email ou le user name d'un utilisateur </param>
         /// <param name="password">Le mot de passe de l'utilisateur</param>
         /// <param name="isPersistent">Flag indiquant si le cookie de connexion doit persister après la fermeture du navigateur.</param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
@@ -44,7 +44,7 @@ namespace Application.Interfaces.Repositories
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false);
 
         /// <summary>
-        /// Permet d'indique s'il existe un utilisateur avec le role ADMIN/>
+        /// Permet d’indiquer s'il existe un utilisateur avec le role ADMIN/>
         /// </summary>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant une valeur bool </returns>
@@ -58,7 +58,7 @@ namespace Application.Interfaces.Repositories
         public Task AddUserRole(User user, string roleName);
 
         /// <summary>
-        /// Recuperer les roles d'un User <see cref="User"/>
+        /// Récupérer les roles d'un User <see cref="User"/>
         /// </summary>
         /// <param name="user"></param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 

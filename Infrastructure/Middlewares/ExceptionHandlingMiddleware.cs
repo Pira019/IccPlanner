@@ -35,6 +35,9 @@ namespace Infrastructure.Middlewares
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = contentType;
+                context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
+                context.Response.Headers["Pragma"] = "no-cache";
+                context.Response.Headers["Expires"] = "0";
 
                 await context.Response.WriteAsync(JsonSerializer.Serialize(ApiError.InternalServerError()));
             }

@@ -21,7 +21,7 @@ namespace Application.Responses.Errors
         }
 
         /// <summary>
-        /// Retourn l'erreur login invalid
+        /// Retourne l'erreur login invalid
         /// </summary>
         /// <returns>
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>

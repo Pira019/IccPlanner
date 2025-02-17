@@ -3,7 +3,7 @@
 namespace Application.Dtos.Account
 {
     /// <summary>
-    ///   Modele de donnee pour creer un compte
+    ///   Modèle de donnée pour créer un compte
     /// </summary>
     public class CreateAccountDto
     {

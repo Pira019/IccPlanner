@@ -32,7 +32,7 @@ namespace IccPlanner.Controllers
         /// </summary>
         /// <param name="request"> 
         /// <see cref="CreateAccountRequest"/> </param>
-        /// <returns>Reponse object IActionResult</returns>
+        /// <returns>Réponse object IActionResult</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
