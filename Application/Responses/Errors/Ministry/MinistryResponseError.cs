@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 namespace Application.Responses.Errors.Ministry
 {
-    public class MinistryResponseError
+    public static class MinistryResponseError
     {
         public static ApiErrorResponseModel NameExist()
         {

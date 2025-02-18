@@ -41,7 +41,7 @@ namespace Application.Services
 
             if (result.Succeeded)
             {
-                var newUser = await FindUserAccountByEmail(dto?.User?.Email!);
+                var newUser = await FindUserAccountByEmail(dto.User?.Email!);
 
                 if (isAdmin)
                 {

@@ -47,4 +47,4 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Run unit tests
-        run: dotnet test --no-build --collect:"XPlat Code Coverage"  # Collecte de la couverture de test
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.opencover.xml
