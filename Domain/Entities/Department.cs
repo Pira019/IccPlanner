@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class Departement : BaseEntity
+    public class Department : BaseEntity
     { 
         public int Id {  get; set; }
         public int MinistryId { get; set; }
@@ -11,8 +11,8 @@ namespace Domain.Entities
         public required string Name { get; set; }
         public required string Description { get; set; }
         [MaxLength(55)]
-        public  string? shortName { get; set; }
-        public DateOnly startDate { get; set; } // Date d'ouverture
+        public  string? ShortName { get; set; }
+        public DateOnly? StartDate { get; set; } // Date d'ouverture
         public List<Member> Members { get; } = [];
         public List<Program> Programs { get; } = [];
        

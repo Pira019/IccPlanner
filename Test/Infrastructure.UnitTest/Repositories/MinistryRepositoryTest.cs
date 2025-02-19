@@ -25,20 +25,40 @@ namespace Test.Infrastructure.UnitTest.Repositories
 
             _ministryRepository = new MinistryRepository(_iccPlannerContext);
 
-        } 
+        }
 
         [Fact]
         public async Task IsNameExists_ShouldReturnBool()
         {
             //Arrange
             _iccPlannerContext.Ministries.AddRange(new Ministry { Description = "Desc", Name = "Name" });
-            await _iccPlannerContext.SaveChangesAsync(); 
+            await _iccPlannerContext.SaveChangesAsync();
             //Act
-             var result = await _ministryRepository.IsNameExists("Name");
+            var result = await _ministryRepository.IsNameExists("Name");
 
             //Assert
-             result.Should().BeTrue();
+            result.Should().BeTrue();
         }
-         
+
+        [Fact]
+        public async Task IsExists_ShouldReturnTrue()
+        {
+            //Arrange
+            _iccPlannerContext.Ministries.AddRange(
+                new Ministry
+                {
+                    Id = 2,
+                    Description = "Desc",
+                    Name = "Name"
+                });
+
+            await _iccPlannerContext.SaveChangesAsync();
+            //Act
+            var result = await _ministryRepository.IsExists(2);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
     }
 }

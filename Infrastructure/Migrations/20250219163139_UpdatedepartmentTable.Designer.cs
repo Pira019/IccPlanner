@@ -12,20 +12,20 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    [Migration("20250129203329_AjouterDescriptionRole01")]
-    partial class AjouterDescriptionRole01
+    [Migration("20250219163139_UpdatedepartmentTable")]
+    partial class UpdatedepartmentTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DepartementMember", b =>
+            modelBuilder.Entity("DepartmentMember", b =>
                 {
                     b.Property<int>("DepartementsId")
                         .HasColumnType("integer");
@@ -37,22 +37,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MembersId");
 
-                    b.ToTable("DepartementMember");
-                });
-
-            modelBuilder.Entity("DepartementProgram", b =>
-                {
-                    b.Property<int>("DepartementsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartementsId", "ProgramsId");
-
-                    b.HasIndex("ProgramsId");
-
-                    b.ToTable("DepartementProgram");
+                    b.ToTable("DepartmentMember");
                 });
 
             modelBuilder.Entity("DepartmentMemberProgramDepartment", b =>
@@ -68,6 +53,21 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ProgramDepartmentsId");
 
                     b.ToTable("DepartmentMemberProgramDepartment");
+                });
+
+            modelBuilder.Entity("DepartmentProgram", b =>
+                {
+                    b.Property<int>("DepartementsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProgramsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DepartementsId", "ProgramsId");
+
+                    b.HasIndex("ProgramsId");
+
+                    b.ToTable("DepartmentProgram");
                 });
 
             modelBuilder.Entity("Domain.Entities.Availability", b =>
@@ -134,21 +134,24 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("shortName")
+                    b.Property<string>("ShortName")
                         .HasMaxLength(55)
                         .HasColumnType("character varying(55)");
 
-                    b.Property<DateOnly>("startDate")
+                    b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MinistryId");
 
-                    b.ToTable("Department");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
@@ -297,6 +300,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Ministries");
                 });
@@ -475,7 +481,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("Roles", (string)null);
 
-                    b.HasDiscriminator().HasValue("IdentityRole");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
 
                     b.UseTphMappingStrategy();
                 });
@@ -573,7 +579,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("Users", (string)null);
 
-                    b.HasDiscriminator().HasValue("IdentityUser");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
 
                     b.UseTphMappingStrategy();
                 });
@@ -688,7 +694,7 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("DepartementMember", b =>
+            modelBuilder.Entity("DepartmentMember", b =>
                 {
                     b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
@@ -699,21 +705,6 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Member", null)
                         .WithMany()
                         .HasForeignKey("MembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartementProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartementsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Program", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -729,6 +720,21 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ProgramDepartment", null)
                         .WithMany()
                         .HasForeignKey("ProgramDepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DepartmentProgram", b =>
+                {
+                    b.HasOne("Domain.Entities.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartementsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Program", null)
+                        .WithMany()
+                        .HasForeignKey("ProgramsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -765,7 +771,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", "Department")
+                    b.HasOne("Domain.Entities.Department", "Departement")
                         .WithMany()
                         .HasForeignKey("DepartementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -777,7 +783,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("Departement");
 
                     b.Navigation("Member");
                 });
@@ -843,7 +849,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Department", "Department")
+                    b.HasOne("Domain.Entities.Department", "Departement")
                         .WithMany()
                         .HasForeignKey("DepartementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -861,7 +867,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("CreateBy");
 
-                    b.Navigation("Department");
+                    b.Navigation("Departement");
 
                     b.Navigation("Program");
 

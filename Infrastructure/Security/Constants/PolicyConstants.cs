@@ -8,5 +8,8 @@
 
         // Permissions liées aux ministère 
         public const string CAN_CREATE_MINISTRY = "CAN_CREATE_MINISTRY";
+        
+        // Permissions liées aux Départements  
+        public const string CAN_CREATE_DEPARTMENT = "CAN_CREATE_DEPARTMENT";
     }
 }

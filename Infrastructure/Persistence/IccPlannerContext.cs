@@ -11,6 +11,7 @@ namespace Infrastructure.Persistence
     {
         public DbSet<Member> Members { get; set; } 
         public DbSet<Ministry> Ministries { get; set; } 
+        public DbSet<Department> Departments { get; set; } 
         public DbSet<Program> Programs { get; set; }
 #pragma warning disable CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<User> Users { get; set; }

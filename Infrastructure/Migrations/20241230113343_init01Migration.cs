@@ -122,7 +122,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departement",
+                name: "Department",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -159,7 +159,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_DepartementMember_Departement_DepartementsId",
                         column: x => x.DepartementsId,
-                        principalTable: "Departement",
+                        principalTable: "Department",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -183,7 +183,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_DepartementProgram_Departement_DepartementsId",
                         column: x => x.DepartementsId,
-                        principalTable: "Departement",
+                        principalTable: "Department",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -214,7 +214,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_DepartmentMembers_Departement_DepartementId",
                         column: x => x.DepartementId,
-                        principalTable: "Departement",
+                        principalTable: "Department",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -249,7 +249,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_ProgramDepartments_Departement_DepartementId",
                         column: x => x.DepartementId,
-                        principalTable: "Departement",
+                        principalTable: "Department",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -406,7 +406,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departement_MinistryId",
-                table: "Departement",
+                table: "Department",
                 column: "MinistryId");
 
             migrationBuilder.CreateIndex(
@@ -534,7 +534,7 @@ namespace Infrastructure.Migrations
                 name: "ProgramDepartments");
 
             migrationBuilder.DropTable(
-                name: "Departement");
+                name: "Department");
 
             migrationBuilder.DropTable(
                 name: "Members");

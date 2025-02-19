@@ -9,7 +9,13 @@ namespace Infrastructure.Repositories
     {
         public MinistryRepository(IccPlannerContext plannerContext) : base(plannerContext)
         {
-        } 
+        }
+
+        public async Task<bool> IsExists(int id)
+        {
+           return await PlannerContext.Ministries.AnyAsync(x => x.Id == id);
+        }
+
         public async Task<bool> IsNameExists(string name)
         {
             return await PlannerContext.Ministries.AnyAsync(x => x.Name == name);

@@ -11,7 +11,7 @@ namespace Domain.Entities
         public int DepartementId { get; set; }
         public int ProgramId { get; set; }
         public required Program Program { get; set; } 
-        public required Departement Departement { get; set; } 
+        public required Department Departement { get; set; } 
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
         [MaxLength(255)]
