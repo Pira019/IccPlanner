@@ -2,8 +2,5 @@
 {
     public class DepartmentResponseError : ApiError
     {
-        public DepartmentResponseError()
-        {
-        }
     }
 }
