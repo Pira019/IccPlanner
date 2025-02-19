@@ -44,6 +44,19 @@ namespace Infrastructure.Security
                 }));
 
             /*Fin Accès Ministère*/
+
+            /*Accès Départements*/
+
+            //CAN_CREATE_DEPARTMENT
+            options.AddPolicy(PolicyConstants.CAN_CREATE_DEPARTMENT, policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
+                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
+                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_DEPARTMENT);
+                }));
+
+            /*Fin Accès Départements*/
         }
     }
 }

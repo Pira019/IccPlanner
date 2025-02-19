@@ -111,7 +111,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Availabilities");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Departement", b =>
+            modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +148,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MinistryId");
 
-                    b.ToTable("Departement");
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
@@ -716,7 +716,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartementMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Departement", null)
+                    b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
                         .HasForeignKey("DepartementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -731,7 +731,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartementProgram", b =>
                 {
-                    b.HasOne("Domain.Entities.Departement", null)
+                    b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
                         .HasForeignKey("DepartementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -778,7 +778,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("ProgramDepartment");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Departement", b =>
+            modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
                         .WithMany("Departements")
@@ -791,7 +791,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Departement", "Departement")
+                    b.HasOne("Domain.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -803,7 +803,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Departement");
+                    b.Navigation("Department");
 
                     b.Navigation("Member");
                 });
@@ -869,7 +869,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Departement", "Departement")
+                    b.HasOne("Domain.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -887,7 +887,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("CreateBy");
 
-                    b.Navigation("Departement");
+                    b.Navigation("Department");
 
                     b.Navigation("Program");
 

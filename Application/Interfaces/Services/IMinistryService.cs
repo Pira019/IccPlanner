@@ -17,6 +17,14 @@ namespace Application.Interfaces.Services
         /// <param name="name">Nom du ministère</param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant la valeur <see cref="bool"/> de l'opération </returns>>
-        public Task<bool> IsNameMinistryExists(string name); 
+        public Task<bool> IsNameMinistryExists(string name);
+
+        /// <summary>
+        /// Permet de versifier si le ministère existe 
+        /// </summary>
+        /// <param name="id">L'Id du ministère</param> 
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant la valeur <see cref="bool"/> de l'opération </returns>>
+        public Task<bool> IsMinistryExistsById(int id); 
     }
 }

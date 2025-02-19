@@ -13,6 +13,6 @@ namespace Domain.Entities
         public string? Description { get; set; }
         [MaxLength(50)]
         public string? ShortName { get; set; }
-        public List<Departement> Departements { get; } = [];
+        public List<Department> Departements { get; } = [];
     }
 }
