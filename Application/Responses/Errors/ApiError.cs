@@ -53,5 +53,16 @@ namespace Application.Responses.Errors
                 StatusDescription = isUnauthorized ? StatusCodes.Status401Unauthorized.ToString() : StatusCodes.Status403Forbidden.ToString()
             };
         }
+
+        public static ApiErrorResponseModel ErrorMessage(Error errorMessage)
+        {
+            return new ApiErrorResponseModel
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+                ValidationErrors = [errorMessage.Code],
+                Message = errorMessage.Message,
+                StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
+            };
+        }
     }
 }

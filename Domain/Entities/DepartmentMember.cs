@@ -9,7 +9,7 @@ namespace Domain.Entities
         public Guid MemberId { get; set; }
         public int DepartementId { get; set; }
         public Member Member { get; set; } = null!;
-        public Departement Departement { get; set; } = null!;
+        public Department Departement { get; set; } = null!;
         [MaxLength(55)]
         public string? NickName {  get; set; }
         public DateOnly? DateEntry { get; set; }

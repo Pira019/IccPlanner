@@ -24,6 +24,11 @@ namespace Application.Services
             return _mapper.Map<AddMinistryResponse>(newMinistry);
         }
 
+        public async Task<bool> IsMinistryExistsById(int id)
+        {
+            return await _ministryRepository.IsExists(id);
+        }
+
         public async Task<bool> IsNameMinistryExists(string name)
         {
            return await _ministryRepository.IsNameExists(name);

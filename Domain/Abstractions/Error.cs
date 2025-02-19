@@ -5,7 +5,7 @@ namespace Domain.Abstractions
 {
     [NotMapped]
     /// <summary>
-    /// Cette classe permet de gerer les erreur
+    /// Cette classe permet de gérer les erreur
     /// </summary>
     public class Error
     {

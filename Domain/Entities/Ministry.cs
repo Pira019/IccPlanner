@@ -12,6 +12,6 @@ namespace Domain.Entities
         [MaxLength(255)]
         public required string Name { get; set; } 
         public required string Description { get; set; }
-        public ICollection<Departement> Departements { get; } = new List<Departement>();
+        public ICollection<Department> Departements { get; } = new List<Department>();
     }
 }
