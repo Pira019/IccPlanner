@@ -37,11 +37,11 @@ namespace Application.Services
         public async Task<IdentityResult> CreateAccount(CreateAccountRequest request, bool isAdmin = false)
         {
             var dto = _mapper.Map<CreateAccountDto>(request);
-            var result = await _accountRepository.CreateAsync(dto.User!, dto.User?.PasswordHash!);
+            var result = await _accountRepository.CreateAsync(dto.User!, request.Password);
 
             if (result.Succeeded)
             {
-                var newUser = await FindUserAccountByEmail(dto?.User?.Email!);
+                var newUser = await FindUserAccountByEmail(request.Email);
 
                 if (isAdmin)
                 {

@@ -11,22 +11,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace IccPlanner.Controllers
 {
     /// <summary>
-    /// Cette classe permet de gerer les comptes 
+    /// Cette classe permet de gérer les comptes 
     /// </summary> 
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<AccountsController> _logger;
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, ILogger<AccountController> logger)
+        public AccountsController(IAccountService accountService, ILogger<AccountsController> logger)
         {
             _accountService = accountService;
             _logger = logger;
         }
 
-        // POST: AccountController/Create
+        // POST: AccountsController/Create
         /// <summary>
         /// Ajouter un membre
         /// </summary>
@@ -37,7 +37,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromForm] CreateAccountRequest request)
-        { 
+        {
             var result = await _accountService.CreateAccount(request);
 
             if (!result.Succeeded)
@@ -83,42 +83,31 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromForm] LoginRequest request, ITokenProvider tokenProvider)
-        { 
-            try
+        {
+            // Authentification
+            var resultat = await _accountService.Login(request);
+
+            if (resultat.IsLockedOut)
             {
-                // Auth
-                var resultat = await _accountService.Login(request);
-
-
-                if (resultat.IsLockedOut)
-                {
-                    return BadRequest(AccountResponseError.UserIsLockedOut());
-                }
-
-                if (!resultat.Succeeded)
-                {
-                    return BadRequest(AccountResponseError.LoginInvalidAttempt());
-                }
-
-                var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
-                var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
-                var token = tokenProvider.Create(userAuth!,userAuthRoles);
-
-                var res = new LoginAccountResponse
-                {
-                    AccessToken = token
-                };
-
-                return Ok(res);
-
+                return BadRequest(AccountResponseError.UserIsLockedOut());
             }
-            catch (Exception ex) 
+
+            if (!resultat.Succeeded)
             {
-                _logger.LogError(ex,AccountErrors.SIGN_IN_ERROR.Message);
-                return BadRequest(AccountResponseError.InternalServerError(AccountErrors.SIGN_IN_ERROR.Message));
+                return BadRequest(AccountResponseError.LoginInvalidAttempt());
             }
+
+            var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
+            var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
+            var token = tokenProvider.Create(userAuth!, userAuthRoles);
+
+            var res = new LoginAccountResponse
+            {
+                AccessToken = token
+            };
+
+            return Ok(res);
+
         }
     }
-
-
 }
