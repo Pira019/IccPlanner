@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using System.Text;
+using Application.Constants;
 using Application.Dtos.Account;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -8,6 +9,7 @@ using AutoMapper;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using NSubstitute;
 
 namespace Test.Application.UnitTest
@@ -30,7 +32,7 @@ namespace Test.Application.UnitTest
         }
 
         [Fact]
-        public async Task CreateAccount_Should_ReturnIdentityResult_WhenCreateAccountSucceffully()
+        public async Task CreateAccount_ShouldReturnIdentityResult_WhenCreateAccountSucceed()
         {
             // Arrange
             var createAccouteRequest = new CreateAccountRequest
@@ -66,8 +68,8 @@ namespace Test.Application.UnitTest
             _mapper.Map<CreateAccountDto>(createAccouteRequest).Returns(createAccountDto);
 
             var identityResult = IdentityResult.Success;
-            _accountRepository.CreateAsync(Arg.Any<User>(), Arg.Any<String>()).Returns(identityResult);
-            _accountRepository.FindByEmailAsync(Arg.Any<string>()).Returns(Task.FromResult<User?>(createAccountDto.User));
+            _accountRepository.CreateAsync(createAccountDto.User, createAccouteRequest.Password).Returns(identityResult);
+            _accountRepository.FindByEmailAsync(createAccouteRequest.Email).Returns(Task.FromResult<User?>(createAccountDto.User));
 
 
             //Act
@@ -116,8 +118,8 @@ namespace Test.Application.UnitTest
 
             var identityResult = IdentityResult.Success;
 
-            _accountRepository.CreateAsync(Arg.Any<User>(), Arg.Any<String>()).Returns(identityResult);
-            _accountRepository.FindByEmailAsync(Arg.Any<string>()).Returns(Task.FromResult<User?>(createAccountDto.User));
+            _accountRepository.CreateAsync(createAccountDto.User, createAccouteRequest.Password).Returns(identityResult);
+            _accountRepository.FindByEmailAsync(createAccouteRequest.Email).Returns(Task.FromResult<User?>(createAccountDto.User));
 
             //Act 
             var result = await accountService.CreateAccount(createAccouteRequest, true);
@@ -125,7 +127,54 @@ namespace Test.Application.UnitTest
             //Assert
             result.Should().Be(identityResult);
             await _accountRepository.Received(1).AddUserRole(Arg.Is<User>(u => u.Email == createAccouteRequest.Email), RolesConstants.ADMIN);
+        }
 
+        [Fact]
+        public async void CreateAccount_WhenNotSucceed_ShouldReturnIdentityResult()
+        {
+            //Arrange
+            var createAccouteRequest = new CreateAccountRequest
+            {
+                Email = "Test@gmail.com",
+                Name = "name",
+                Password = "Password123@",
+                ConfirmPassword = "Password123@",
+                Sexe = "M"
+            };
+
+            var createAccountDto = new CreateAccountDto
+            {
+                User = new User
+                {
+                    Email = createAccouteRequest.Email,
+                    PasswordHash = createAccouteRequest.Password,
+                    UserName = createAccouteRequest.Email,
+                    PhoneNumber = createAccouteRequest.Tel,
+                    //Creation du membre
+                    Member = new Member
+                    {
+                        Name = createAccouteRequest.Name,
+                        LastName = createAccouteRequest.LastName,
+                        Quarter = createAccouteRequest.Quarter,
+                        City = createAccouteRequest.City,
+                        Sexe = createAccouteRequest.Sexe
+
+                    }
+                }
+            };
+
+            _mapper.Map<CreateAccountDto>(createAccouteRequest).Returns(createAccountDto);
+
+            var identityResult = IdentityResult.Failed();
+
+            _accountRepository.CreateAsync(createAccountDto.User!, createAccouteRequest.Password!).Returns(Task.FromResult(identityResult));
+
+            //Act 
+            var result = await accountService.CreateAccount(createAccouteRequest);
+
+            //Assert
+            result.Should().Be(identityResult);
+            await _sendEmailService.Received(0).SendEmailConfirmation(createAccountDto.User);
         }
 
         [Fact]
@@ -140,7 +189,7 @@ namespace Test.Application.UnitTest
             var roleName = new List<string>
             {
                 "Admin"
-            }; 
+            };
 
             _accountRepository.GetUserRoles(user).Returns(Task.FromResult<IList<string>>(roleName));
 
@@ -149,6 +198,83 @@ namespace Test.Application.UnitTest
 
             //Assert
             response.Should().BeEquivalentTo(roleName);
-        } 
+        }
+
+        [Fact]
+        public async Task ConfirmEmailAccount_ShouldReturnIdentityResult()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com"
+            };
+
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode("test"));
+
+            var identityResult = IdentityResult.Success;
+
+            _accountRepository.ConfirmAccountEmailAsync(user, code).Returns(Task.FromResult(identityResult));
+
+            //Act
+            var response = await accountService.ConfirmEmailAccount(user, "test");
+
+            //Assert
+            response.Should().Be(identityResult);
+        }
+
+        [Fact]
+        public async Task IsAdminExistsAsync_ShouldReturnTrue()
+        {
+            //Arrange 
+
+            _accountRepository.IsAdminExistsAsync().Returns(Task.FromResult(true));
+
+            //Act
+            var response = await accountService.IsAdminExistsAsync();
+
+            //Assert
+            response.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task Login_ShouldReturnTrue()
+        {
+            //Arrange 
+
+            var loginRequest = new LoginRequest
+            {
+                Email = "Test@gmail.com",
+                Password = "password",
+                Remember = false
+            };
+
+            var singInResult = SignInResult.Success;
+
+            _accountRepository.SignIn(loginRequest.Email, loginRequest.Password, loginRequest.Remember).Returns(Task.FromResult(singInResult));
+
+            //Act
+            var response = await accountService.Login(loginRequest);
+
+            //Assert
+            response.Should().Be(singInResult);
+        }
+
+        [Fact]
+        public async Task FindUserAccountById_ShouldReturnUser()
+        {
+            //Arrange 
+            var user = new User
+            {
+                Id = "1"
+            };
+
+            _accountRepository.FindByIdAsync(user.Id).Returns(Task.FromResult(user ?? null));
+
+            //Act
+            var response = await accountService.FindUserAccountById("1");
+
+            //Assert
+            response.Should().Be(user);
+        }
     }
 }

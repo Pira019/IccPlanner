@@ -17,21 +17,21 @@ using NSubstitute;
 namespace Test.IccPlanner.UnitTest
 {
     /// <summary>
-    /// Test AccountController
+    /// Test AccountsController
     /// </summary>
     public class AccountControllerTest
     {
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<AccountsController> _logger;
         private readonly IAccountService _accountService;
 
-        private readonly AccountController _accountController;
+        private readonly AccountsController _accountController;
 
         public AccountControllerTest()
         {
-            _logger = Substitute.For<ILogger<AccountController>>();
+            _logger = Substitute.For<ILogger<AccountsController>>();
             _accountService = Substitute.For<IAccountService>();
 
-            _accountController = new AccountController(_accountService, _logger);
+            _accountController = new AccountsController(_accountService, _logger);
         }
 
         [Fact]
@@ -58,6 +58,54 @@ namespace Test.IccPlanner.UnitTest
             //Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(requestController).Value;
             badRequestResult.Should().BeEquivalentTo(AccountResponseError.UserIsLockedOut());
+        }
+        
+        [Fact]
+        public async Task Create_WhenNotSucceed_ShouldReturnBadRequest()
+        {
+            //Arrange
+            var identity = IdentityResult.Failed();
+            var request = new CreateAccountRequest
+            {
+                ConfirmPassword = "TEST",
+                Email = "Test@gmail.com",
+                Name = "name",
+                Password = "password",
+                Sexe = "M"
+            };
+            
+            _accountService.CreateAccount(request).Returns(Task.FromResult(identity)); 
+
+            //Act
+            var requestController = await _accountController.Create(request);
+
+            //Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(requestController).Value;
+            badRequestResult.Should().BeEquivalentTo(AccountResponseError.ApiIdentityResultResponseError(identity));
+        }
+        
+        [Fact]
+        public async Task Create_WhenSucceed_ShouldReturnBadRequest()
+        {
+            //Arrange
+            var identity = IdentityResult.Success;
+            var request = new CreateAccountRequest
+            {
+                ConfirmPassword = "TEST",
+                Email = "Test@gmail.com",
+                Name = "name",
+                Password = "password",
+                Sexe = "M"
+            };
+            
+            _accountService.CreateAccount(request).Returns(Task.FromResult(identity)); 
+
+            //Act
+            var requestController = await _accountController.Create(request);
+
+            //Assert
+            var statusCodeResult = Assert.IsType<StatusCodeResult>(requestController);
+            statusCodeResult.StatusCode.Should().Be(StatusCodes.Status201Created);
         }
 
         [Fact]

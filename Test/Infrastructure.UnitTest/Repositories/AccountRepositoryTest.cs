@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using System.Data;
+using Application.Constants;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Repositories;
@@ -47,7 +48,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
         }
 
         /// <summary>
-        /// Doit appeler GetRolesAsync de lòbjet <see cref="UserManager{TUser}"/>
+        /// Doit appeler GetRolesAsync de objet <see cref="UserManager{TUser}"/>
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -95,6 +96,110 @@ namespace Test.Infrastructure.UnitTest.Repositories
             //Assert
             response.Should().Be(identityResponse);
 
+        }
+
+        [Fact]
+        public async Task CreateAsync_ShouldReturnIdentityResult()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com",
+                UserName = "Test"
+            };
+
+            var token = "Token";
+            var identityResponse = IdentityResult.Success;
+            _userManager.CreateAsync(user, token).Returns(Task.FromResult(identityResponse));
+
+            //Act
+            var response = await _accountRepository.CreateAsync(user, token);
+
+            //Assert
+            response.Should().Be(identityResponse);
+
+        }
+
+        [Fact]
+        public async Task FindByEmailAsync_ShouldReturnUser()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com",
+                UserName = "Test"
+            };
+
+            _userManager.FindByEmailAsync(user!.Email).Returns(Task.FromResult(user ?? null));
+
+            //Act
+            var response = await _accountRepository.FindByEmailAsync(user!.Email);
+
+            //Assert
+            response.Should().Be(user);
+
+        }
+
+        [Fact]
+        public async Task FindByIdAsync_ShouldReturnUser()
+        {
+            //Arrange
+            var user = new User
+            {
+                Email = "Test@gmail.com",
+                UserName = "Test",
+                Id = "1"
+
+            };
+
+            _userManager.FindByIdAsync(user!.Id).Returns(Task.FromResult(user ?? null));
+
+            //Act
+            var response = await _accountRepository.FindByIdAsync(user!.Id);
+
+            //Assert
+            response.Should().Be(user);
+        }
+
+        [Fact]
+        public async Task IsAdminExistsAsync_ShouldReturnTrue()
+        {
+            //Arrange
+            var users = new List<User>
+            {
+               new User
+               {
+                   Id = "1",
+               }
+            };
+            _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN).Returns(Task.FromResult<IList<User>>(users));
+
+            //Act
+            var response = await _accountRepository.IsAdminExistsAsync();
+
+            //Assert
+            response.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task SignIn_ShouldReturnSignInResult()
+        {
+            //Arrange
+            var request =
+                new
+                {
+                    email = "Test@gmail.com",
+                    password = "Test@gmail.com",
+                    isPersistent = false,
+                };
+            var singIn = SignInResult.Success;
+            _signInManager.PasswordSignInAsync(request.email, request.password, request.isPersistent, true).Returns(Task.FromResult(singIn));
+
+            //Act
+            var response = await _accountRepository.SignIn( request.email, request.password, request.isPersistent);
+
+            //Assert
+            response.Should().Be(singIn);
         }
 
     }
