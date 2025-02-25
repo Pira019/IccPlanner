@@ -10,8 +10,13 @@ namespace Application.Helper.Validators
         {
             var departementRepository = (IDepartmentRepository)validationContext.GetService(typeof(IDepartmentRepository))!;
 
+            if (departementRepository == null && validationContext.Items.ContainsKey(typeof(IDepartmentRepository)))
+            {
+                departementRepository = validationContext.Items[typeof(IDepartmentRepository)] as IDepartmentRepository;
+            }
+
             var departmentId = (int)value!;
-            var depatmentExists = departementRepository.IsDepartmentIdExists(departmentId).Result;
+            var depatmentExists =  departmentId != 0 ?  departementRepository!.IsDepartmentIdExists(departmentId).Result : false;
 
             if (!depatmentExists) 
             {

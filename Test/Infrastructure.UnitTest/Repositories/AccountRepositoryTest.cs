@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Application.Constants;
+﻿using Application.Constants;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Persistence;
@@ -206,10 +205,33 @@ namespace Test.Infrastructure.UnitTest.Repositories
             _signInManager.PasswordSignInAsync(request.email, request.password, request.isPersistent, true).Returns(Task.FromResult(singIn));
 
             //Act
-            var response = await _accountRepository.SignIn( request.email, request.password, request.isPersistent);
+            var response = await _accountRepository.SignIn(request.email, request.password, request.isPersistent);
 
             //Assert
             response.Should().Be(singIn);
+        }
+
+        [Fact]
+        public async Task IsMemberExist_ShouldReturnTrue()
+        {
+            //Arrange
+            var memberId = Guid.NewGuid();
+
+            var member = new Member
+            {
+                Name = "Name",
+                Sexe = "M",
+                Id = memberId
+            };
+
+            _iccPlannerContext.Members.AddRange(member);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.IsMemberExist(memberId.ToString());
+
+            //Assert
+            result.Should().BeTrue();
         }
 
     }
