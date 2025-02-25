@@ -42,7 +42,6 @@ namespace Infrastructure.Security
                     return allowedRoles.Any(role => context.User.IsInRole(role)) ||
                            context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_MINISTRY);
                 }));
-
             /*Fin Accès Ministère*/
 
             /*Accès Départements*/
@@ -56,6 +55,20 @@ namespace Infrastructure.Security
                            context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_DEPARTMENT);
                 }));
 
+            //CAN_ATTRIBUT_DEPARTMENT_CHEF
+            options.AddPolicy(PolicyConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF, policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var allowedRoles = new[]
+                    {
+                        RolesConstants.ADMIN,
+                        RolesConstants.AP,
+                        RolesConstants.PASTEUR,
+                        RolesConstants.BERGER
+                    };
+                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
+                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF);
+                }));
             /*Fin Accès Départements*/
         }
     }

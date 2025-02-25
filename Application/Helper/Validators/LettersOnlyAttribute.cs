@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace Application.Helper.Validators
 {
     /// <summary>
-    /// Personaliser le message de validation
+    /// Personnaliser le message de validation
     /// </summary>
     public class LettersOnlyAttribute : ValidationAttribute
     {

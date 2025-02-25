@@ -2,9 +2,11 @@
 using Application.Constants;
 using Domain.Entities;
 using FluentAssertions;
+using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 
 namespace Test.Infrastructure.UnitTest.Repositories
@@ -13,6 +15,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IccPlannerContext _iccPlannerContext;
 
         private readonly AccountRepository _accountRepository;
 
@@ -24,7 +27,14 @@ namespace Test.Infrastructure.UnitTest.Repositories
             _userManager = Substitute.For<UserManager<User>>(userStore, null, null, null, null, null, null, null, null);
             _signInManager = Substitute.For<SignInManager<User>>(_userManager, Substitute.For<IHttpContextAccessor>(), Substitute.For<IUserClaimsPrincipalFactory<User>>(), null, null, null, null);
 
-            _accountRepository = new AccountRepository(_userManager, _signInManager);
+
+            var option = new DbContextOptionsBuilder<IccPlannerContext>()
+                   .UseInMemoryDatabase("fakeDb")
+                   .Options;
+
+            _iccPlannerContext = new IccPlannerContext(option);
+
+            _accountRepository = new AccountRepository(_userManager, _signInManager, _iccPlannerContext);
         }
 
         [Fact]

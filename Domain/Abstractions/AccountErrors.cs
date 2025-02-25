@@ -13,6 +13,6 @@
         //Message Logs
         static public readonly Error SIGN_IN_ERROR = new("LOGIN_ERROR", "Error while Sign in.");
         static public readonly Error CREATE_ADMIN_ERROR = new("CREATE_ADMIN_ERROR", "Error while creating Admin account.");
-
+        static public readonly Error MEMBER_NOT_EXISTS = new("MEMBER_NOT_EXISTS", "This member not exists.");
     }
 }
