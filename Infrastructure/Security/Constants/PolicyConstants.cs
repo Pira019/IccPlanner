@@ -11,5 +11,6 @@
         
         // Permissions liées aux Départements  
         public const string CAN_CREATE_DEPARTMENT = "CAN_CREATE_DEPARTMENT";
+        public const string CAN_ATTRIBUT_DEPARTMENT_CHEF = "CAN_ATTRIBUT_DEPARTMENT_CHEF";
     }
 }

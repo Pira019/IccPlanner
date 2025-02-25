@@ -65,5 +65,12 @@ namespace Application.Interfaces.Repositories
         /// contenant la liste de roles </returns>
         public Task<IList<string>> GetUserRoles(User user);
 
+        /// <summary>
+        /// Permet de trouver un membre par ID
+        /// </summary>
+        /// <param name="memberId">L'Id du membre</param>
+        /// <returns></returns>
+        public Task<bool> IsMemberExist(string memberId);
+
     }
 }

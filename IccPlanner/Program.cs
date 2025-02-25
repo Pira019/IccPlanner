@@ -111,6 +111,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IMinistryRepository, MinistryRepository>(); 
             builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
+            builder.Services.AddScoped<IPostRepository, PosteRepository>(); 
 
 
 

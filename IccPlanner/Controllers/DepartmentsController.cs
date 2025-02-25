@@ -7,6 +7,7 @@ using Domain.Abstractions;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace IccPlanner.Controllers
 {
@@ -47,5 +48,19 @@ namespace IccPlanner.Controllers
             var result = await _departmentService.AddDepartment(request);
             return Created(string.Empty, result);
         }
+
+        [HttpPost("responsable")]
+        [Authorize(Policy = PolicyConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType (StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddResponsable([FromBody] AddDepartmentRespoRequest request) 
+        {
+            await _departmentService.AddDepartmentResponsable(request);
+            return Ok();
+        }
+
+         
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Application.Interfaces.Services;
-using Application.Requests.Department;
-using Application.Responses.Department;
+using Application.Requests.Department; 
 using Application.Responses.Errors.Department;
 using Domain.Abstractions;
 using FluentAssertions;
 using IccPlanner.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 
@@ -86,6 +86,27 @@ namespace Test.IccPlanner.UnitTest
             var result = await _departmentsController.Add(addRequest); 
             //Assert
             var createdObject = Assert.IsType<CreatedResult>(result);   
+        }
+        
+        [Fact]
+        public async Task AddResponsable_ShouldReturnOk()
+        {
+            //Arrange
+            var addDepartmentRespoRequest = new AddDepartmentRespoRequest
+            {
+                DepartmentId = 1,
+                MemberId = "123456789",
+                StartAt = DateOnly.Parse("2025-02-02"),
+                EndAt = DateOnly.Parse("2025-02-02"),
+            }; 
+
+            //Act
+            var result = await _departmentsController.AddResponsable(addDepartmentRespoRequest); 
+            
+            //Assert
+            var okResult = Assert.IsType<OkResult>(result);   
+            okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
+
         }
     }
 }
