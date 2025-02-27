@@ -112,6 +112,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
             builder.Services.AddScoped<IPostRepository, PosteRepository>(); 
+            builder.Services.AddScoped<IProgramRepository, ProgramRepository>(); 
 
 
 
@@ -121,6 +122,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IRoleService, RoleService>();  
             builder.Services.AddScoped<IMinistryService, MinistryService>();  
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();  
+            builder.Services.AddScoped<IProgramService, ProgramService>();  
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>(); 
 

@@ -70,6 +70,18 @@ namespace Infrastructure.Security
                            context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF);
                 }));
             /*Fin Accès Départements*/
+
+
+            /*Accès Départements*/
+
+            //CAN_CREATE_ROLE
+            options.AddPolicy(PolicyConstants.CAN_CREATE_PROGRAM, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.IsInRole(RolesConstants.ADMIN) ||
+                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_PROGRAM)
+                    ));
+
+            /*Fin Accès Program*/
         }
     }
 }
