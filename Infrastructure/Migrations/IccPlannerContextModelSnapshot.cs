@@ -54,13 +54,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartmentProgram", b =>
                 {
-                    b.Property<int>("DepartementsId")
+                    b.Property<int>("DepartmentsId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProgramsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("DepartementsId", "ProgramsId");
+                    b.HasKey("DepartmentsId", "ProgramsId");
 
                     b.HasIndex("ProgramsId");
 
@@ -791,7 +791,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
-                        .HasForeignKey("DepartementsId")
+                        .HasForeignKey("DepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

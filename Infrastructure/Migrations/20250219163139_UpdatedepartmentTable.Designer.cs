@@ -761,7 +761,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
-                        .WithMany("Departements")
+                        .WithMany("Departments")
                         .HasForeignKey("MinistryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -950,7 +950,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Ministry", b =>
                 {
-                    b.Navigation("Departements");
+                    b.Navigation("Departments");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProgramDepartment", b =>
