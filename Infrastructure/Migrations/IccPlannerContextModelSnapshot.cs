@@ -54,13 +54,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartmentProgram", b =>
                 {
-                    b.Property<int>("DepartementsId")
+                    b.Property<int>("DepartmentsId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProgramsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("DepartementsId", "ProgramsId");
+                    b.HasKey("DepartmentsId", "ProgramsId");
 
                     b.HasIndex("ProgramsId");
 
@@ -175,19 +175,51 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(55)
                         .HasColumnType("character varying(55)");
 
-                    b.Property<int>("Staus")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartementId");
-
                     b.HasIndex("MemberId");
 
+                    b.HasIndex("DepartementId", "MemberId")
+                        .IsUnique();
+
                     b.ToTable("DepartmentMembers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DepartmentMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("EndAt")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PosteId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("StartAt")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentMemberId");
+
+                    b.HasIndex("PosteId");
+
+                    b.ToTable("DepartmentMemberPosts");
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -366,6 +398,40 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.ToTable("Plannings");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Poste", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepartmentMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
+
+                    b.Property<string>("ShortName")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentMemberId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Postes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>
@@ -725,7 +791,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
-                        .HasForeignKey("DepartementsId")
+                        .HasForeignKey("DepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -785,6 +851,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Member");
                 });
 
+            modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
+                {
+                    b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
+                        .WithMany()
+                        .HasForeignKey("DepartmentMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Poste", "Poste")
+                        .WithMany()
+                        .HasForeignKey("PosteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DepartmentMember");
+
+                    b.Navigation("Poste");
+                });
+
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
@@ -836,6 +921,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("ProgrammedBy");
 
                     b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Poste", b =>
+                {
+                    b.HasOne("Domain.Entities.DepartmentMember", null)
+                        .WithMany("Postes")
+                        .HasForeignKey("DepartmentMemberId");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProgramDepartment", b =>
@@ -938,6 +1030,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Availabilities");
 
                     b.Navigation("FeedBacks");
+
+                    b.Navigation("Postes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Member", b =>

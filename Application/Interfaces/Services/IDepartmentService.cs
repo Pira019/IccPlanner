@@ -18,5 +18,12 @@ namespace Application.Interfaces.Services
         /// <param name="name">Le nom du département </param>
         /// <returns></returns>
         public Task<bool> IsNameExists(string name); 
+
+        /// <summary>
+        /// Permet d'ajouter un responsable du département
+        /// </summary>
+        /// <param name="addDepartmentRespoRequest"> Model de donnée a recevoir </param>
+        /// <returns></returns>
+        public Task AddDepartmentResponsable(AddDepartmentRespoRequest addDepartmentRespoRequest); 
     }
 }

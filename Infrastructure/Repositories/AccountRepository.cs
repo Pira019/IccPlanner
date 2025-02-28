@@ -1,7 +1,9 @@
 ﻿using Application.Constants;
 using Application.Interfaces.Repositories;
-using Domain.Entities; 
+using Domain.Entities;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -12,10 +14,12 @@ namespace Infrastructure.Repositories
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IccPlannerContext _iccPlannerContext;
+        public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager, IccPlannerContext iccPlannerContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _iccPlannerContext = iccPlannerContext;
         }
 
         public async Task AddUserRole(User user, string roleName)
@@ -57,6 +61,11 @@ namespace Infrastructure.Repositories
         {
             var isAdminExists = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
             return isAdminExists.Any();
+        }
+
+        public Task<bool> IsMemberExist(string memberId)
+        {
+           return _iccPlannerContext.Members.AnyAsync(x => x.Id == Guid.Parse(memberId));
         }
 
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)

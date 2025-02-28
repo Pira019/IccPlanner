@@ -3,6 +3,7 @@ using Application.Requests.Department;
 using Application.Responses.Department;
 using Application.Services;
 using AutoMapper;
+using Domain.Abstractions;
 using Domain.Entities;
 using FluentAssertions;
 using NSubstitute;
@@ -13,15 +14,17 @@ namespace Test.Application.UnitTest.Services
     {
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
+        private readonly IPostRepository _postRepository;
 
         private readonly DepartmentService _departmentService;
 
-        public DepartmentServiceTest() 
+        public DepartmentServiceTest()
         {
             _departmentRepository = Substitute.For<IDepartmentRepository>();
             _mapper = Substitute.For<IMapper>();
+            _postRepository = Substitute.For<IPostRepository>();
 
-            _departmentService = new DepartmentService(_departmentRepository, _mapper);
+            _departmentService = new DepartmentService(_departmentRepository, _mapper, _postRepository);
         }
 
         [Fact]
@@ -69,12 +72,115 @@ namespace Test.Application.UnitTest.Services
             //Arrange
             var name = "name";
             _departmentRepository.IsNameExistsAsync(name).Returns(true);
-             
+
             //Act
             var result = await _departmentService.IsNameExists(name);
 
-           //Assert
-           result.Should().Be(true);
+            //Assert
+            result.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task AddDepartmentResponsable_WhenDepartmentIsNotFound_ShouldReturnTask()
+        {
+            //Arrange
+            var addDepartmentRespoRequest = new AddDepartmentRespoRequest
+            {
+                DepartmentId = 1,
+                MemberId = "123456789",
+                StartAt = DateOnly.Parse("2025-02-02"),
+                EndAt = DateOnly.Parse("2025-02-02"),
+            };
+
+            var departmentMember = new DepartmentMember
+            {
+                DepartementId = 1,
+                NickName = "123",
+                MemberId = Guid.NewGuid()
+            };
+
+            var poste = new Poste
+            {
+                Description = "Desc",
+                Name = "Name",
+                Id = 1,
+                ShortName = "123",
+            };
+
+            var departmentMemberPost = new DepartmentMemberPost
+            {
+                Id = 1,
+                DepartmentMember = departmentMember,
+                Poste = poste,
+                DepartmentMemberId = 1,  
+            };
+
+            _departmentRepository.FindDepartmentMember(addDepartmentRespoRequest.MemberId, addDepartmentRespoRequest.DepartmentId)
+                .Returns(Task.FromResult<DepartmentMember?>(null));
+
+            _mapper.Map<DepartmentMember>(addDepartmentRespoRequest).Returns(departmentMember);
+            _departmentRepository.SaveDepartmentMember(departmentMember).Returns(Task.FromResult(departmentMember));
+
+            _postRepository.FindPosteByName(MemberPost.RESPONSABLE_REFERENT).Returns(Task.FromResult(poste ?? null));
+
+            _mapper.Map<DepartmentMemberPost>(addDepartmentRespoRequest).Returns(departmentMemberPost);
+
+            //Act
+             await _departmentService.AddDepartmentResponsable(addDepartmentRespoRequest);
+
+            //Assert 
+            await _departmentRepository.Received(1).SaveDepartmentMemberPost(Arg.Any<DepartmentMemberPost>());
+        } 
+        
+        [Fact]
+        public async Task AddDepartmentResponsable_WhenDepartmentIsFound_ShouldReturnTask()
+        {
+            //Arrange
+            var addDepartmentRespoRequest = new AddDepartmentRespoRequest
+            {
+                DepartmentId = 1,
+                MemberId = "123456789",
+                StartAt = DateOnly.Parse("2025-02-02"),
+                EndAt = DateOnly.Parse("2025-02-02"),
+            };
+
+            var departmentMember = new DepartmentMember
+            {
+                DepartementId = 1,
+                NickName = "123",
+                DateEntry = DateOnly.Parse("2025-02-02")
+            };
+
+            var poste = new Poste
+            {
+                Description = "Desc",
+                Name = "Name",
+                Id = 1,
+                ShortName = "123",
+            };
+
+            var departmentMemberPost = new DepartmentMemberPost
+            {
+                Id = 1,
+                DepartmentMember = departmentMember,
+                Poste = poste,
+                DepartmentMemberId = 1,
+                StartAt = DateOnly.Parse("2025-02-02"),
+                EndAt = DateOnly.Parse("2025-02-02")
+            };
+
+            _departmentRepository.FindDepartmentMember(addDepartmentRespoRequest.MemberId, addDepartmentRespoRequest.DepartmentId)
+                .Returns(Task.FromResult<DepartmentMember?>(departmentMember)); 
+            
+            _postRepository.FindPosteByName(MemberPost.RESPONSABLE_REFERENT).Returns(Task.FromResult(poste ?? null));
+
+            _mapper.Map<DepartmentMemberPost>(addDepartmentRespoRequest).Returns(departmentMemberPost);
+
+            //Act
+             await _departmentService.AddDepartmentResponsable(addDepartmentRespoRequest);
+
+            //Assert 
+            await _departmentRepository.Received(1).SaveDepartmentMemberPost(Arg.Any<DepartmentMemberPost>());
         }
     }
 }
