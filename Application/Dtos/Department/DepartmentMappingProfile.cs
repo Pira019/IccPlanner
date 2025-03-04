@@ -2,6 +2,7 @@
 using Application.Requests.Department;
 using Application.Responses.Department;
 using AutoMapper;
+using Domain.Entities;
 
 namespace Application.Dtos.Department
 {
@@ -18,6 +19,9 @@ namespace Application.Dtos.Department
             CreateMap<AddDepartmentRespoRequest, Domain.Entities.DepartmentMemberPost>()               
                 .ForMember(dest => dest.PosteId, opt => opt.Ignore())
                 .ForMember(dest => dest.DepartmentMemberId, opt => opt.Ignore());
+
+            CreateMap<AddDepartmentProgramRequest, DepartmentProgram>()
+                .ForMember(dest => dest.DepartmentId, opt => opt.Ignore());
         }
     }
 }
