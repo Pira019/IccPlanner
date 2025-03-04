@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init01Migration : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,16 +18,13 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EntryDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    AddedById = table.Column<Guid>(type: "uuid", nullable: false),
+                    AddedById = table.Column<Guid>(type: "uuid", nullable: true),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    Sexe = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Tel = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    Name = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true),
+                    Sexe = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: false),
                     City = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true),
                     Quarter = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true)
                 },
@@ -38,8 +35,7 @@ namespace Infrastructure.Migrations
                         name: "FK_Members_Members_AddedById",
                         column: x => x.AddedById,
                         principalTable: "Members",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -71,22 +67,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Profiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Programs",
                 columns: table => new
                 {
@@ -102,13 +82,43 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    MemberId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    MemberId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,11 +128,11 @@ namespace Infrastructure.Migrations
                         column: x => x.MemberId,
                         principalTable: "Members",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Department",
+                name: "Departments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -130,16 +140,16 @@ namespace Infrastructure.Migrations
                     MinistryId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    shortName = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true),
-                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ShortName = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departement", x => x.Id);
+                    table.PrimaryKey("PK_Departments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Departement_Ministries_MinistryId",
+                        name: "FK_Departments_Ministries_MinistryId",
                         column: x => x.MinistryId,
                         principalTable: "Ministries",
                         principalColumn: "Id",
@@ -147,7 +157,113 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DepartementMember",
+                name: "RoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserClaims_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    ProviderKey = table.Column<string>(type: "text", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_UserLogins_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    RoleId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DepartmentMember",
                 columns: table => new
                 {
                     DepartementsId = table.Column<int>(type: "integer", nullable: false),
@@ -155,41 +271,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DepartementMember", x => new { x.DepartementsId, x.MembersId });
+                    table.PrimaryKey("PK_DepartmentMember", x => new { x.DepartementsId, x.MembersId });
                     table.ForeignKey(
-                        name: "FK_DepartementMember_Departement_DepartementsId",
+                        name: "FK_DepartmentMember_Departments_DepartementsId",
                         column: x => x.DepartementsId,
-                        principalTable: "Department",
+                        principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DepartementMember_Members_MembersId",
+                        name: "FK_DepartmentMember_Members_MembersId",
                         column: x => x.MembersId,
                         principalTable: "Members",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DepartementProgram",
-                columns: table => new
-                {
-                    DepartementsId = table.Column<int>(type: "integer", nullable: false),
-                    ProgramsId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DepartementProgram", x => new { x.DepartementsId, x.ProgramsId });
-                    table.ForeignKey(
-                        name: "FK_DepartementProgram_Departement_DepartementsId",
-                        column: x => x.DepartementsId,
-                        principalTable: "Department",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DepartementProgram_Programs_ProgramsId",
-                        column: x => x.ProgramsId,
-                        principalTable: "Programs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -204,7 +296,7 @@ namespace Infrastructure.Migrations
                     DepartementId = table.Column<int>(type: "integer", nullable: false),
                     NickName = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: true),
                     DateEntry = table.Column<DateOnly>(type: "date", nullable: true),
-                    Staus = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -212,9 +304,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_DepartmentMembers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DepartmentMembers_Departement_DepartementId",
+                        name: "FK_DepartmentMembers_Departments_DepartementId",
                         column: x => x.DepartementId,
-                        principalTable: "Department",
+                        principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -226,20 +318,43 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DepartmentProgram",
+                columns: table => new
+                {
+                    DepartmentsId = table.Column<int>(type: "integer", nullable: false),
+                    ProgramsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepartmentProgram", x => new { x.DepartmentsId, x.ProgramsId });
+                    table.ForeignKey(
+                        name: "FK_DepartmentProgram_Departments_DepartmentsId",
+                        column: x => x.DepartmentsId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DepartmentProgram_Programs_ProgramsId",
+                        column: x => x.ProgramsId,
+                        principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProgramDepartments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DepartementId = table.Column<int>(type: "integer", nullable: false),
+                    DepartmentId = table.Column<int>(type: "integer", nullable: false),
                     ProgramId = table.Column<int>(type: "integer", nullable: false),
-                    StartAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StartAt = table.Column<DateOnly>(type: "date", nullable: false),
                     Localisation = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Comment = table.Column<string>(type: "text", nullable: true),
                     CreateById = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdateById = table.Column<Guid>(type: "uuid", nullable: true),
-                    isRecurring = table.Column<bool>(type: "boolean", nullable: true),
+                    IsRecurring = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -247,9 +362,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ProgramDepartments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProgramDepartments_Departement_DepartementId",
-                        column: x => x.DepartementId,
-                        principalTable: "Department",
+                        name: "FK_ProgramDepartments_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -269,6 +384,27 @@ namespace Infrastructure.Migrations
                         principalTable: "Programs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Postes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(55)", maxLength: 55, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    ShortName = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    DepartmentMemberId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Postes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Postes_DepartmentMembers_DepartmentMemberId",
+                        column: x => x.DepartmentMemberId,
+                        principalTable: "DepartmentMembers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -359,6 +495,34 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DepartmentMemberPosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DepartmentMemberId = table.Column<int>(type: "integer", nullable: false),
+                    PosteId = table.Column<int>(type: "integer", nullable: false),
+                    StartAt = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndAt = table.Column<DateOnly>(type: "date", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepartmentMemberPosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DepartmentMemberPosts_DepartmentMembers_DepartmentMemberId",
+                        column: x => x.DepartmentMemberId,
+                        principalTable: "DepartmentMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DepartmentMemberPosts_Postes_PosteId",
+                        column: x => x.PosteId,
+                        principalTable: "Postes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Plannings",
                 columns: table => new
                 {
@@ -405,19 +569,19 @@ namespace Infrastructure.Migrations
                 column: "ProgramDepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Departement_MinistryId",
-                table: "Department",
-                column: "MinistryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DepartementMember_MembersId",
-                table: "DepartementMember",
+                name: "IX_DepartmentMember_MembersId",
+                table: "DepartmentMember",
                 column: "MembersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepartementProgram_ProgramsId",
-                table: "DepartementProgram",
-                column: "ProgramsId");
+                name: "IX_DepartmentMemberPosts_DepartmentMemberId",
+                table: "DepartmentMemberPosts",
+                column: "DepartmentMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DepartmentMemberPosts_PosteId",
+                table: "DepartmentMemberPosts",
+                column: "PosteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DepartmentMemberProgramDepartment_ProgramDepartmentsId",
@@ -425,14 +589,31 @@ namespace Infrastructure.Migrations
                 column: "ProgramDepartmentsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepartmentMembers_DepartementId",
+                name: "IX_DepartmentMembers_DepartementId_MemberId",
                 table: "DepartmentMembers",
-                column: "DepartementId");
+                columns: new[] { "DepartementId", "MemberId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DepartmentMembers_MemberId",
                 table: "DepartmentMembers",
                 column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DepartmentProgram_ProgramsId",
+                table: "DepartmentProgram",
+                column: "ProgramsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Departments_MinistryId",
+                table: "Departments",
+                column: "MinistryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Departments_Name",
+                table: "Departments",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FeedBacks_DepartmentMemberId",
@@ -450,6 +631,12 @@ namespace Infrastructure.Migrations
                 column: "AddedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ministries_Name",
+                table: "Ministries",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Plannings_AvailabilityId",
                 table: "Plannings",
                 column: "AvailabilityId");
@@ -465,8 +652,13 @@ namespace Infrastructure.Migrations
                 column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Profiles_Name",
-                table: "Profiles",
+                name: "IX_Postes_DepartmentMemberId",
+                table: "Postes",
+                column: "DepartmentMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Postes_Name",
+                table: "Postes",
                 column: "Name",
                 unique: true);
 
@@ -476,14 +668,15 @@ namespace Infrastructure.Migrations
                 column: "CreateById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProgramDepartments_DepartementId",
+                name: "IX_ProgramDepartments_DepartmentId",
                 table: "ProgramDepartments",
-                column: "DepartementId");
+                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProgramDepartments_ProgramId",
+                name: "IX_ProgramDepartments_ProgramId_DepartmentId_StartAt",
                 table: "ProgramDepartments",
-                column: "ProgramId");
+                columns: new[] { "ProgramId", "DepartmentId", "StartAt" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProgramDepartments_UpdateById",
@@ -491,9 +684,46 @@ namespace Infrastructure.Migrations
                 column: "UpdateById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "Roles",
+                column: "NormalizedName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaims_UserId",
+                table: "UserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId",
+                table: "UserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "Users",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_MemberId",
                 table: "Users",
                 column: "MemberId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "Users",
+                column: "NormalizedUserName",
                 unique: true);
         }
 
@@ -501,13 +731,16 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DepartementMember");
+                name: "DepartmentMember");
 
             migrationBuilder.DropTable(
-                name: "DepartementProgram");
+                name: "DepartmentMemberPosts");
 
             migrationBuilder.DropTable(
                 name: "DepartmentMemberProgramDepartment");
+
+            migrationBuilder.DropTable(
+                name: "DepartmentProgram");
 
             migrationBuilder.DropTable(
                 name: "FeedBacks");
@@ -519,13 +752,31 @@ namespace Infrastructure.Migrations
                 name: "Plannings");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "RoleClaims");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "UserClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserLogins");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Postes");
 
             migrationBuilder.DropTable(
                 name: "Availabilities");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "DepartmentMembers");
@@ -534,7 +785,7 @@ namespace Infrastructure.Migrations
                 name: "ProgramDepartments");
 
             migrationBuilder.DropTable(
-                name: "Department");
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "Members");

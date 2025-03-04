@@ -12,20 +12,20 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    [Migration("20250112055115_RenommerTables")]
-    partial class RenommerTables
+    [Migration("20250304134339_Correction")]
+    partial class Correction
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DepartementMember", b =>
+            modelBuilder.Entity("DepartmentMember", b =>
                 {
                     b.Property<int>("DepartementsId")
                         .HasColumnType("integer");
@@ -37,25 +37,10 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MembersId");
 
-                    b.ToTable("DepartementMember");
+                    b.ToTable("DepartmentMember");
                 });
 
-            modelBuilder.Entity("DepartementProgram", b =>
-                {
-                    b.Property<int>("DepartementsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartementsId", "ProgramsId");
-
-                    b.HasIndex("ProgramsId");
-
-                    b.ToTable("DepartementProgram");
-                });
-
-            modelBuilder.Entity("DepartmentMemberProgramDepartment", b =>
+            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
                 {
                     b.Property<int>("DepartmentMembersId")
                         .HasColumnType("integer");
@@ -67,7 +52,22 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProgramDepartmentsId");
 
-                    b.ToTable("DepartmentMemberProgramDepartment");
+                    b.ToTable("DepartmentMemberDepartmentProgram");
+                });
+
+            modelBuilder.Entity("DepartmentProgram", b =>
+                {
+                    b.Property<int>("DepartmentsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProgramsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DepartmentsId", "ProgramsId");
+
+                    b.HasIndex("ProgramsId");
+
+                    b.ToTable("DepartmentProgram");
                 });
 
             modelBuilder.Entity("Domain.Entities.Availability", b =>
@@ -134,21 +134,24 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("shortName")
+                    b.Property<string>("ShortName")
                         .HasMaxLength(55)
                         .HasColumnType("character varying(55)");
 
-                    b.Property<DateOnly>("startDate")
+                    b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MinistryId");
 
-                    b.ToTable("Department");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
@@ -175,19 +178,104 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(55)
                         .HasColumnType("character varying(55)");
 
-                    b.Property<int>("Staus")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartementId");
-
                     b.HasIndex("MemberId");
 
+                    b.HasIndex("DepartementId", "MemberId")
+                        .IsUnique();
+
                     b.ToTable("DepartmentMembers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DepartmentMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("EndAt")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PosteId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("StartAt")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentMemberId");
+
+                    b.HasIndex("PosteId");
+
+                    b.ToTable("DepartmentMemberPosts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("CreateById")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Localisation")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("StartAt")
+                        .HasColumnType("date");
+
+                    b.Property<Guid?>("UpdateById")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreateById");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UpdateById");
+
+                    b.HasIndex("ProgramId", "DepartmentId", "StartAt")
+                        .IsUnique();
+
+                    b.ToTable("DepartmentPrograms");
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -242,8 +330,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("City")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -252,13 +340,13 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("LastName")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
 
                     b.Property<string>("Quarter")
                         .HasMaxLength(55)
@@ -266,11 +354,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Sexe")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -300,6 +385,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Ministries");
                 });
@@ -368,6 +456,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("Plannings");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Poste", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepartmentMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
+
+                    b.Property<string>("ShortName")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentMemberId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Postes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Program", b =>
                 {
                     b.Property<int>("Id")
@@ -393,92 +515,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Programs");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProgramDepartment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("CreateById")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("DepartementId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("EndAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Localisation")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<int>("ProgramId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("StartAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdateById")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool?>("isRecurring")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreateById");
-
-                    b.HasIndex("DepartementId");
-
-                    b.HasIndex("ProgramId");
-
-                    b.HasIndex("UpdateById");
-
-                    b.ToTable("ProgramDepartments");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Profiles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -487,6 +523,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -503,6 +544,10 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -598,7 +643,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("Users", (string)null);
 
-                    b.HasDiscriminator().HasValue("IdentityUser");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
 
                     b.UseTphMappingStrategy();
                 });
@@ -684,22 +729,18 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RoleUsers", b =>
+            modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUsers");
+                    b.HasDiscriminator().HasValue("Role");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Users", b =>
+            modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -714,10 +755,10 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MemberId")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Users");
+                    b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("DepartementMember", b =>
+            modelBuilder.Entity("DepartmentMember", b =>
                 {
                     b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
@@ -732,22 +773,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DepartementProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartementsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Program", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentMemberProgramDepartment", b =>
+            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", null)
                         .WithMany()
@@ -755,9 +781,24 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProgramDepartment", null)
+                    b.HasOne("Domain.Entities.DepartmentProgram", null)
                         .WithMany()
                         .HasForeignKey("ProgramDepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DepartmentProgram", b =>
+                {
+                    b.HasOne("Domain.Entities.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Program", null)
+                        .WithMany()
+                        .HasForeignKey("ProgramsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -770,7 +811,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProgramDepartment", "ProgramDepartment")
+                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartment")
                         .WithMany("Availabilities")
                         .HasForeignKey("ProgramDepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -784,7 +825,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
-                        .WithMany("Departments")
+                        .WithMany("Departements")
                         .HasForeignKey("MinistryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -794,7 +835,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", "Department")
+                    b.HasOne("Domain.Entities.Department", "Departement")
                         .WithMany()
                         .HasForeignKey("DepartementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -806,9 +847,61 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("Departement");
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
+                {
+                    b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
+                        .WithMany()
+                        .HasForeignKey("DepartmentMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Poste", "Poste")
+                        .WithMany()
+                        .HasForeignKey("PosteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DepartmentMember");
+
+                    b.Navigation("Poste");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
+                {
+                    b.HasOne("Domain.Entities.Member", "CreateBy")
+                        .WithMany()
+                        .HasForeignKey("CreateById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Department", "Department")
+                        .WithMany("ProgramDepartments")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Program", "Program")
+                        .WithMany("ProgramDepartments")
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Member", "UpdateBy")
+                        .WithMany()
+                        .HasForeignKey("UpdateById");
+
+                    b.Navigation("CreateBy");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Program");
+
+                    b.Navigation("UpdateBy");
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -819,7 +912,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProgramDepartment", "ProgramDepartment")
+                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartment")
                         .WithMany("FeedBacks")
                         .HasForeignKey("ProgramDepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -864,37 +957,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProgramDepartment", b =>
+            modelBuilder.Entity("Domain.Entities.Poste", b =>
                 {
-                    b.HasOne("Domain.Entities.Member", "CreateBy")
-                        .WithMany()
-                        .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Program", "Program")
-                        .WithMany()
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Member", "UpdateBy")
-                        .WithMany()
-                        .HasForeignKey("UpdateById");
-
-                    b.Navigation("CreateBy");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Program");
-
-                    b.Navigation("UpdateBy");
+                    b.HasOne("Domain.Entities.DepartmentMember", null)
+                        .WithMany("Postes")
+                        .HasForeignKey("DepartmentMemberId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -948,33 +1015,32 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoleUsers", b =>
-                {
-                    b.HasOne("Domain.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Users", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Users", b =>
+            modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Member", "Member")
                         .WithOne("User")
-                        .HasForeignKey("Domain.Entities.Users", "MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Domain.Entities.User", "MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Member");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Department", b =>
+                {
+                    b.Navigation("ProgramDepartments");
+                });
+
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
+                {
+                    b.Navigation("Availabilities");
+
+                    b.Navigation("FeedBacks");
+
+                    b.Navigation("Postes");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
                 {
                     b.Navigation("Availabilities");
 
@@ -988,14 +1054,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Ministry", b =>
                 {
-                    b.Navigation("Departments");
+                    b.Navigation("Departements");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProgramDepartment", b =>
+            modelBuilder.Entity("Domain.Entities.Program", b =>
                 {
-                    b.Navigation("Availabilities");
-
-                    b.Navigation("FeedBacks");
+                    b.Navigation("ProgramDepartments");
                 });
 #pragma warning restore 612, 618
         }
