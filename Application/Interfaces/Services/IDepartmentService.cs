@@ -1,5 +1,5 @@
 ﻿using Application.Requests.Department;
-using Application.Responses.Department;
+using Application.Responses.Department; 
 
 namespace Application.Interfaces.Services
 {
@@ -24,6 +24,14 @@ namespace Application.Interfaces.Services
         /// </summary>
         /// <param name="addDepartmentRespoRequest"> Model de donnée a recevoir </param>
         /// <returns></returns>
-        public Task AddDepartmentResponsable(AddDepartmentRespoRequest addDepartmentRespoRequest); 
+        public Task AddDepartmentResponsable(AddDepartmentRespoRequest addDepartmentRespoRequest);
+
+        /// <summary>
+        /// Permet d'ajouter un programme dans un ou plusieurs départements 
+        /// </summary>
+        /// <param name="departmentProgramRequest"></param>
+        /// <param name="userAuthId">Id de l'utilisateur connecter</param>
+        /// <returns></returns>
+        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId); 
     }
 }

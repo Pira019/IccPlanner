@@ -13,7 +13,7 @@ namespace Domain.Entities
         public int AvailabilityId { get; set; }
         [MaxLength(255)]
         public required string MemberName { get; set; }
-        public DateOnly ProgramDate { get; set; } // ProgramDepartment
+        public DateOnly ProgramDate { get; set; } // DepartmentProgram
         public Availability Availability { get; set; } = null!;
         public Guid ProgrammedById { get; set; } // Member Id
         public Member ProgrammedBy { get; set; } = null!;

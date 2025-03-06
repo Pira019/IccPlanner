@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using System.Security.Claims;
+using Application.Constants;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -24,7 +25,7 @@ namespace Infrastructure.Repositories
 
         public async Task AddUserRole(User user, string roleName)
         {
-           await _userManager.AddToRoleAsync(user, roleName);
+            await _userManager.AddToRoleAsync(user, roleName);
         }
 
         public Task<IdentityResult> ConfirmAccountEmailAsync(User user, string token)
@@ -52,6 +53,16 @@ namespace Infrastructure.Repositories
             return (_userManager.FindByIdAsync(id));
         }
 
+        public async Task<Domain.Entities.Member?> FindMemberByUserId(string userId)
+        {
+            return await _iccPlannerContext.Members.FirstOrDefaultAsync(x => x.User!.Id == userId);
+        }
+
+        public async Task<Member?> GetAuthMember(Guid? userAuthId)
+        {
+            return await FindMemberByUserId(userAuthId.ToString()!);
+        }
+
         public async Task<IList<string>> GetUserRoles(User user)
         {
             return await _userManager.GetRolesAsync(user);
@@ -65,12 +76,13 @@ namespace Infrastructure.Repositories
 
         public Task<bool> IsMemberExist(string memberId)
         {
-           return _iccPlannerContext.Members.AnyAsync(x => x.Id == Guid.Parse(memberId));
+            return _iccPlannerContext.Members.AnyAsync(x => x.Id == Guid.Parse(memberId));
         }
 
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)
         {
             return _signInManager.PasswordSignInAsync(email, password, isPersistent, true);
         }
+
     }
 }

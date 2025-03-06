@@ -15,6 +15,8 @@ namespace Test.Application.UnitTest.Services
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IDepartmentProgramRepository _departmentProgramRepository;
 
         private readonly DepartmentService _departmentService;
 
@@ -23,8 +25,10 @@ namespace Test.Application.UnitTest.Services
             _departmentRepository = Substitute.For<IDepartmentRepository>();
             _mapper = Substitute.For<IMapper>();
             _postRepository = Substitute.For<IPostRepository>();
+            _accountRepository = Substitute.For<IAccountRepository>();
+            _departmentProgramRepository = Substitute.For<IDepartmentProgramRepository>();
 
-            _departmentService = new DepartmentService(_departmentRepository, _mapper, _postRepository);
+            _departmentService = new DepartmentService(_departmentRepository, _mapper, _postRepository,_accountRepository,_departmentProgramRepository);
         }
 
         [Fact]
