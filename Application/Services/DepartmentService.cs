@@ -75,7 +75,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Liste de <see cref="DepartmentProgram"/></returns>
-        private async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Member? CreatedBy)
+        public virtual async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Member? CreatedBy)
         {
             var departmentIds = request.DepartmentIds.Split(",");
             var endDate = request.EndAt ?? request.StartAt;
