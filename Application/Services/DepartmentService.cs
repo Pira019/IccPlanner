@@ -59,7 +59,7 @@ namespace Application.Services
         public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId)
         {
             var createdBy = await _accountRepository.GetAuthMember(userAuthId);
-            var newDepartmentPrograms = await this.InitializeDepartmentProgramModel(departmentProgramRequest, createdBy);
+            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, createdBy);
 
             await _departmentProgramRepository.BulkInsertOptimizedAsync(newDepartmentPrograms);
         }
@@ -100,7 +100,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="departmentPrograms"></param>
         /// <returns></returns>
-        private async Task<IEnumerable<DepartmentProgram>> GetNonExistingProgramsAsync(IEnumerable<DepartmentProgram> departmentPrograms)
+        public async Task<IEnumerable<DepartmentProgram>> GetNonExistingProgramsAsync(IEnumerable<DepartmentProgram> departmentPrograms)
         {
             var existingPrograms = await _departmentProgramRepository.GetExistingProgramDepartmentsAsync(departmentPrograms);
 

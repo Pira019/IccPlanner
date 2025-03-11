@@ -6,9 +6,17 @@ namespace Application.Helper.Validators
 {
     public class DepartmentIdListExistsAttribute : ValidationAttribute
     {
+        private readonly IDepartmentRepository _repository;
+
+        public DepartmentIdListExistsAttribute() { }
+
+        public DepartmentIdListExistsAttribute(IDepartmentRepository repository)
+        {
+            _repository = repository;
+        }
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var departementRepository = (IDepartmentRepository)validationContext.GetService(typeof(IDepartmentRepository))!;
+            var departementRepository = _repository ?? (IDepartmentRepository)validationContext.GetService(typeof(IDepartmentRepository))!;
 
             if (departementRepository == null && validationContext.Items.ContainsKey(typeof(IDepartmentRepository)))
             {

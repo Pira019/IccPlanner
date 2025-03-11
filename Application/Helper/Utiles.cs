@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using Application.Interfaces.Repositories;
-using Domain.Entities;
 
 namespace Application.Helper
 {
