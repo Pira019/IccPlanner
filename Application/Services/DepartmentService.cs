@@ -1,4 +1,5 @@
 ﻿// Ignore Spelling: Auth 
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
@@ -108,7 +109,7 @@ namespace Application.Services
             {
                 return departmentPrograms;
             }
-             
+
             var existingProgramsSet = new HashSet<(int ProgramId, int DepartmentId, DateOnly StartAt)>(
                 existingPrograms.Select(ep => (ep.ProgramId, ep.DepartmentId, ep.StartAt))
             );
@@ -119,6 +120,17 @@ namespace Application.Services
                     existingProgram.DepartmentId == dp.DepartmentId &&
                     existingProgram.StartAt == dp.StartAt))
                 .ToList();
+        }
+
+        public async Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest)
+        {
+            //convertir la chêne de caractère en tableau de int(ids)
+            var ids = Utiles.ConvertStringToArray(deleteDepartmentProgramRequest.DepartmentProgramIds)
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value) // Convertir int? en int
+                .ToList(); 
+
+            await _departmentProgramRepository.BulkDeleteByIdsAsync(ids);
         }
     }
 }

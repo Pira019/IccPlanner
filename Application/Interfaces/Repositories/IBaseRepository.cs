@@ -28,5 +28,12 @@
         /// <param name="entities"></param>
         /// /// <returns>Un <see cref="Task"/> qui représente l'opération asynchrone </returns>
         public Task BulkInsertOptimizedAsync(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Permet de supprimer par id
+        /// </summary>
+        /// <param name="ids">List des Ids a supprimer</param>
+        /// <returns></returns>
+        public Task BulkDeleteByIdsAsync(IEnumerable<int> ids);
     }
 }

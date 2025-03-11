@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Repositories;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +11,17 @@ namespace Infrastructure.Repositories
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         public readonly IccPlannerContext PlannerContext;
-        protected readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet; 
 
         public BaseRepository(IccPlannerContext plannerContext)
         {
             this.PlannerContext = plannerContext;
-            _dbSet = PlannerContext.Set<TEntity>();
+            _dbSet = PlannerContext.Set<TEntity>(); 
+        }
+
+        public  async Task BulkDeleteByIdsAsync(IEnumerable<int> ids)
+        {
+            await _dbSet.Where(e => ids.Contains(EF.Property<int>(e, "Id"))).DeleteFromQueryAsync();
         }
 
         public async Task BulkInsertOptimizedAsync(IEnumerable<TEntity> entities)

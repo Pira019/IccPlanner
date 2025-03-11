@@ -32,6 +32,13 @@ namespace Application.Interfaces.Services
         /// <param name="departmentProgramRequest"></param>
         /// <param name="userAuthId">Id de l'utilisateur connecter</param>
         /// <returns></returns>
-        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId); 
+        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId);
+
+        /// <summary>
+        /// Permet de supprimer un ou plusieurs DepartmentProgram 
+        /// </summary>
+        /// <param name="deleteDepartmentProgramRequest">Model du corps</param>
+        /// <returns></returns>
+        public Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest); 
     }
 }

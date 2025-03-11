@@ -74,6 +74,18 @@ namespace IccPlanner.Controllers
             await _departmentService.AddDepartmentsProgram(request, userAuthId);
             return Ok();
         }
+        
+        [HttpDelete("department-program")]
+        [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteDepartmentProgram([FromBody] DeleteDepartmentProgramRequest request)
+        {   
+            await _departmentService.DeleteDepartmentProgramByIdsAsync(request);
+            return NoContent();
+        }
 
 
     }
