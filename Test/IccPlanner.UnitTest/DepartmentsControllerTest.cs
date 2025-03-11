@@ -139,5 +139,22 @@ namespace Test.IccPlanner.UnitTest
             var okResult = Assert.IsType<OkResult>(result);
 
         }
+
+        [Fact]
+        public async Task DeleteDepartmentProgram_ShouldReturnNoContent()
+        {
+            //Arrange 
+            var request = new DeleteDepartmentProgramRequest
+            {
+                DepartmentProgramIds = "1,2",
+            };
+
+            //Act
+            var result = await _departmentsController.DeleteDepartmentProgram(request);
+
+            var noContent = Assert.IsType<NoContentResult>(result);
+            noContent.StatusCode.Should().Be(StatusCodes.Status204NoContent);
+
+        }
     }
 }

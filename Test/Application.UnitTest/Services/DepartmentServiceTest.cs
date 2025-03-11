@@ -1,5 +1,6 @@
 ﻿using System;
 using Application.Dtos.Department;
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Requests.Department;
 using Application.Responses.Department;
@@ -263,8 +264,6 @@ namespace Test.Application.UnitTest.Services
                     DepartmentId = 1,
                     ProgramId = 1,
                     StartAt = departmentProgramRequest.StartAt
-
-
                 }
             };
             //Act
@@ -286,8 +285,6 @@ namespace Test.Application.UnitTest.Services
                     DepartmentId = 1,
                     ProgramId = 1,
                     StartAt = DateOnly.Parse("2025-04-20")
-
-
                 }
             };
 
@@ -340,6 +337,22 @@ namespace Test.Application.UnitTest.Services
             // Assert
             result.Should().NotBeNull();  
             result.Should().HaveCount(1);   
+        }
+
+        [Fact]
+        public async Task DeleteDepartmentProgramByIdsAsync_ShouldReturnTask()
+        {
+            //Arrange
+            var ids = new List<int?> { 1, 2 };
+            var request = new DeleteDepartmentProgramRequest
+            {
+                DepartmentProgramIds = "1,2"
+            };
+            //Act
+            await _departmentService.DeleteDepartmentProgramByIdsAsync(request);
+
+            //Assert
+          // await _departmentProgramRepository.Received().BulkDeleteByIdsAsync(ids);
         }
     }
 }
