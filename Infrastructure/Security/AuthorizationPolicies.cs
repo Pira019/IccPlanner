@@ -79,6 +79,12 @@ namespace Infrastructure.Security
                 policy.RequireAssertion(context =>
                     context.User.IsInRole(RolesConstants.ADMIN) ||
                     context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_PROGRAM)
+                    )); 
+            
+            options.AddPolicy(PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.IsInRole(RolesConstants.ADMIN) ||
+                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_DEPARTMENT_PROGRAM)
                     ));
 
             /*Fin Accès Program*/

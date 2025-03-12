@@ -11,8 +11,8 @@ namespace Infrastructure.Configurations
     public class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private readonly AppSetting? _appSetting; 
-        
+        private readonly AppSetting? _appSetting;
+
         public TokenProvider(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -20,15 +20,16 @@ namespace Infrastructure.Configurations
         }
 
         public string Create(User user, ICollection<string> userRolesName)
-        {  
+        {
             string secrteKey = _appSetting?.JwtSetting?.Secret!;
             var secutityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secrteKey));
 
-            var credentials = new SigningCredentials(secutityKey, SecurityAlgorithms.HmacSha256); 
+            var credentials = new SigningCredentials(secutityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub , user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier , user.Id.ToString()),
             };
             userRolesName.ToList().ForEach(roleName => claims.Add(new Claim(ClaimTypes.Role, roleName)));
 

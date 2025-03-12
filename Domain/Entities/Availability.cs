@@ -6,9 +6,9 @@
     public class Availability : BaseEntity
     { 
         public int Id { get; set; }
-        public int ProgramId { get; set; } // ProgramDepartment
+        public int ProgramId { get; set; } // DepartmentProgram
         public int MemberId { get; set; } //DepartmentMember
-        public ProgramDepartment ProgramDepartment { get; set; } = null!;
+        public DepartmentProgram ProgramDepartment { get; set; } = null!;
         public DepartmentMember DepartmentMember { get; set; } = null!;
         public bool IsAvailable { get; set; }  
         public string? Comment { get; set; }

@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Application.Interfaces.Repositories;
+﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,22 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartementId == departmentId);
         }
 
+        public IEnumerable<int?> GetValidDepartmentId(IEnumerable<int?> departmentIds)
+        {
+            // Vérifier si departmentIds est null ou vide
+            if (departmentIds == null || !departmentIds.Any())
+            {
+                return Enumerable.Empty<int?>(); // Retourner une séquence vide si aucun ID n'est fourni
+            }
+
+            var existingDepatmanents = _dbSet.Where(department_ => departmentIds.Contains(department_.Id))
+                                                                             .Select(department => (int?)department.Id)
+                                                                            .ToList();
+
+            return existingDepatmanents;
+
+        }
+
         public async Task<bool> IsDepartmentIdExists(int id)
         {
             return await PlannerContext.Departments.AnyAsync(x => x.Id == id);
@@ -30,8 +45,7 @@ namespace Infrastructure.Repositories
         public async Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember)
         {
             await PlannerContext.DepartmentMembers.AddAsync(departmentMember);
-            PlannerContext.SaveChanges();
-
+            PlannerContext.SaveChanges(); 
             return departmentMember;
         }
 

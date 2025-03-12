@@ -28,6 +28,13 @@ namespace Application.Interfaces.Repositories
         public Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember);
         public Task SaveDepartmentMemberPost(DepartmentMemberPost departmentMemberPost);
 
+        /// <summary>
+        /// Permet de retour les ids valides
+        /// </summary>
+        /// <param name="departmentIds"></param>
+        /// <returns></returns>
+        public IEnumerable<int?> GetValidDepartmentId(IEnumerable<int?> departmentIds);
+
 
     }
 }
