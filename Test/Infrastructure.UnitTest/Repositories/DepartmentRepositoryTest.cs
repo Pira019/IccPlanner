@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Persistence;
-using Infrastructure.Repositories; 
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Test.Infrastructure.UnitTest.Repositories
@@ -56,8 +56,8 @@ namespace Test.Infrastructure.UnitTest.Repositories
 
             //Assert
             result.Should().NotBeNull();
-        } 
-        
+        }
+
         [Fact]
         public async Task SaveDepartmentMember_ShouldReturnDepartmentMember()
         {
@@ -66,26 +66,26 @@ namespace Test.Infrastructure.UnitTest.Repositories
             {
                 DepartementId = 3,
                 MemberId = Guid.NewGuid()
-            }; 
+            };
             //Act
             var result = await _departmentRepository.SaveDepartmentMember(departmentMember);
 
             //Assert
             result.Should().NotBeNull();
-        } 
-        
+        }
+
         [Fact]
         public async Task SaveDepartmentMemberPost_ShouldReturnTask()
         {
             //Arrange 
             var departmentMemberPost = new DepartmentMemberPost
             {
-                Id = 1, 
+                Id = 1,
                 DepartmentMemberId = 1,
                 PosteId = 1,
             };
             //Act
-             await _departmentRepository.SaveDepartmentMemberPost(departmentMemberPost); 
+            await _departmentRepository.SaveDepartmentMemberPost(departmentMemberPost);
         }
 
         [Fact]
@@ -107,6 +107,32 @@ namespace Test.Infrastructure.UnitTest.Repositories
 
             //Assert
             result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetValidDepartmentId_WhenDepartmentIdsAreNullOrEmpty_ShouldReturnNull()
+        {
+            //Arrange
+            var departmentIds = new List<int?> {  };
+
+            //Act
+            var result = _departmentRepository.GetValidDepartmentId(departmentIds);
+
+            //Arrange
+            result.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetValidDepartmentId_WhenValidDepartmentIdParamExists_ShouldReturnValidDepartmentIds()
+        {
+            //Arrange
+            var ids = new List<int?> { 1 };
+
+            //Act
+            var result = _departmentRepository.GetValidDepartmentId(ids.AsEnumerable());
+
+            //Arrange
+            result.Should().NotBeNull();
         }
     }
 }

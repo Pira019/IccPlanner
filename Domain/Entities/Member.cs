@@ -1,9 +1,7 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     /// <summary>
-    /// Cette clase definit un member, ex: un chantre etc ...
+    /// Cette classe définit un member, ex: un chantre etc ...
     /// </summary>
     public class Member : Person
     {

@@ -7,3 +7,10 @@ VALUES
     ('Responsable/Référent', 'Description'),
     ('Planificateur', 'Description');
 
+INSERT INTO "Roles" ("Id","Name", "Description","Discriminator","NormalizedName")
+VALUES 
+    (1,'Admin', 'Description','Role','ADMIN');
+
+
+
+

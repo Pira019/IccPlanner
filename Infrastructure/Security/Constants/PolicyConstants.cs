@@ -15,6 +15,7 @@
         
         
         // Permissions liées aux Programmes  
-        public const string CAN_CREATE_PROGRAM = "CAN_CREATE_PROGRAM"; 
+        public const string CAN_CREATE_PROGRAM = "CAN_CREATE_PROGRAM";
+        public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
     }
 }

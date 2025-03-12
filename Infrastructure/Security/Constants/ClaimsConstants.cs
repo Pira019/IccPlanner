@@ -19,6 +19,7 @@
 
         // Permissions départements 
         public const string CAN_CREATE_PROGRAM = "CanCreateProgram";
+        public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
 
     }
 }

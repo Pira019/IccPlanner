@@ -71,6 +71,17 @@ namespace Application.Interfaces.Repositories
         /// <param name="memberId">L'Id du membre</param>
         /// <returns></returns>
         public Task<bool> IsMemberExist(string memberId);
+        public Task<Member?> FindMemberByUserId(string userId);
+
+        /// <summary>
+        /// Récupérer Member qui est(en cours) authentifier 
+        /// </summary>
+        /// <param name="userAuthId">L'Id du membre</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="Member"/> de l'opération </returns>
+        public Task<Member?> GetAuthMember(Guid? userAuthId);
+
+
 
     }
 }

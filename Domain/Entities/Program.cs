@@ -14,5 +14,6 @@ namespace Domain.Entities
         [MaxLength(50)]
         public string? ShortName { get; set; }
         public List<Department> Departments { get; } = [];
+        public List<DepartmentProgram> ProgramDepartments { get; } = [];
     }
 }

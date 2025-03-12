@@ -234,5 +234,48 @@ namespace Test.Infrastructure.UnitTest.Repositories
             result.Should().BeTrue();
         }
 
+        [Fact]  
+        public async Task FindMemberByUserId_ShouldReturnMember()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            var user = new User
+            {
+               Id = userId.ToString(), 
+            };
+
+            _iccPlannerContext.Users.AddRange(user);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.FindMemberByUserId(userId.ToString());
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]  
+        public async Task GetAuthMember_ShouldReturnMember()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            var user = new User
+            {
+               Id = userId.ToString(), 
+            };
+
+            _iccPlannerContext.Users.AddRange(user);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.GetAuthMember(userId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+         
+
     }
 }

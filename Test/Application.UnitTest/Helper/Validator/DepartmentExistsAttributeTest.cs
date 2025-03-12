@@ -3,7 +3,6 @@ using Application.Helper.Validators;
 using Application.Interfaces.Repositories;
 using Domain.Abstractions;
 using FluentAssertions;
-using Infrastructure.Repositories;
 using NSubstitute;
 
 namespace Test.Application.UnitTest.Helper.Validator
