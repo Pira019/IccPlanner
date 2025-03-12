@@ -18,6 +18,9 @@ using System.Text;
 using Infrastructure.Security;
 using Infrastructure.Configurations.Interface;
 using Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Infrastructure.Configurations.Filter;
 
 
 namespace IccPlanner
@@ -88,6 +91,7 @@ namespace IccPlanner
                 };
 
                 options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securitySchema);
+                options.OperationFilter<AddAcceptLanguageHeaderParameter>();
 
                 var securityRequirement = new OpenApiSecurityRequirement
                 {
@@ -107,25 +111,25 @@ namespace IccPlanner
 
             //Repositories  
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
-            builder.Services.AddScoped<IMinistryRepository, MinistryRepository>(); 
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
-            builder.Services.AddScoped<IPostRepository, PosteRepository>(); 
-            builder.Services.AddScoped<IProgramRepository, ProgramRepository>(); 
-            builder.Services.AddScoped<IDepartmentProgramRepository, DepartmentProgramRepository>(); 
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IMinistryRepository, MinistryRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IPostRepository, PosteRepository>();
+            builder.Services.AddScoped<IProgramRepository, ProgramRepository>();
+            builder.Services.AddScoped<IDepartmentProgramRepository, DepartmentProgramRepository>();
 
 
 
             //Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();  
-            builder.Services.AddScoped<IMinistryService, MinistryService>();  
-            builder.Services.AddScoped<IDepartmentService, DepartmentService>();  
-            builder.Services.AddScoped<IProgramService, ProgramService>();  
+            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IMinistryService, MinistryService>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IProgramService, ProgramService>();
 
-            builder.Services.AddScoped<CustomJwtBearerEventHandler>(); 
+            builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
@@ -184,7 +188,25 @@ namespace IccPlanner
 
             builder.Services.AddRouting(op => op.LowercaseUrls = true);
 
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Infrastructure/Ressources");
+
+            // Définir les cultures acceptées (français et anglais US)
+            var supportedCultures = new[] { "fr", "en-US" };
+            var localizationOptions = new RequestLocalizationOptions()
+                .SetDefaultCulture("en-US")  // Culture par défaut
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+
+            builder.Services.Configure<RequestLocalizationOptions>(option =>
+            {
+                option.DefaultRequestCulture = new RequestCulture("en-US");
+                option.SupportedCultures = supportedCultures.Select(supportedCultures => new CultureInfo(supportedCultures)).ToList();   
+                option.SupportedCultures = supportedCultures.Select(supportedCultures => new CultureInfo(supportedCultures)).ToList();   
+            });
+
             var app = builder.Build();
+
+            app.UseRequestLocalization(localizationOptions);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
