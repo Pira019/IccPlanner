@@ -21,6 +21,13 @@ using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Infrastructure.Configurations.Filter;
+using Application.Helper.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using IccPlanner.Controllers;
+using Microsoft.Extensions.Localization;
+using Shared.Interfaces;
+using Shared;
 
 
 namespace IccPlanner
@@ -40,6 +47,7 @@ namespace IccPlanner
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
+          
             // Configuration
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
@@ -49,7 +57,6 @@ namespace IccPlanner
                 .Build();
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
-
             AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
@@ -129,7 +136,11 @@ namespace IccPlanner
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IProgramService, ProgramService>();
 
+            builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
+
+
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
+
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
@@ -186,33 +197,62 @@ namespace IccPlanner
                 AuthorizationPolicies.AddPolicies(options);
             });
 
-            builder.Services.AddRouting(op => op.LowercaseUrls = true);
+            builder.Services.AddRouting(op => op.LowercaseUrls = true); 
 
-            builder.Services.AddLocalization(options => options.ResourcesPath = "Infrastructure/Ressources");
+            builder.Services.AddValidatorsFromAssemblyContaining<AddDepartmentMemberImportFileRequestValidator>();
+            builder.Services.AddFluentValidationAutoValidation();
+
+
+
+
+            //Localization
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Ressources");
 
             // Définir les cultures acceptées (français et anglais US)
-            var supportedCultures = new[] { "fr", "en-US" };
-            var localizationOptions = new RequestLocalizationOptions()
-                .SetDefaultCulture("en-US")  // Culture par défaut
-                .AddSupportedCultures(supportedCultures)
-                .AddSupportedUICultures(supportedCultures);
+            builder.Services.Configure<RequestLocalizationOptions>(
+               options =>
+               {
+                   var supportedCultures = new List<CultureInfo>
+                   {
+                        new CultureInfo("fr-FR"),
+                        new CultureInfo("en-US")
+                   };
 
-            builder.Services.Configure<RequestLocalizationOptions>(option =>
-            {
-                option.DefaultRequestCulture = new RequestCulture("en-US");
-                option.SupportedCultures = supportedCultures.Select(supportedCultures => new CultureInfo(supportedCultures)).ToList();   
-                option.SupportedCultures = supportedCultures.Select(supportedCultures => new CultureInfo(supportedCultures)).ToList();   
-            });
+                   options.DefaultRequestCulture = new RequestCulture(culture: "fr-FR", uiCulture: "fr-FR");
+                   options.SupportedCultures = supportedCultures;
+                   options.SupportedUICultures = supportedCultures;
+
+                   options.RequestCultureProviders = new List<IRequestCultureProvider>
+                   {
+                        new AcceptLanguageHeaderRequestCultureProvider()
+                   };
+               });
+
 
             var app = builder.Build();
 
-            app.UseRequestLocalization(localizationOptions);
 
-            // Configure the HTTP request pipeline.
+
+            app.UseRequestLocalization();
+
+            // ConfiguInvalidOperationException : 'The service collection cannot be modified because it is read-only.'re the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                app.Use(async (context, next) =>
+                {
+                    var currentCulture = CultureInfo.CurrentCulture.Name;
+                    Console.WriteLine($"Current culture: {currentCulture}");
+                    await next();
+
+                    var localizer = app.Services.GetRequiredService<IStringLocalizer<DepartmentsController>>();
+                    var translation = localizer["Not"];
+                    Console.WriteLine($"Manual translation: {translation}");
+                });
+
+                
             }
             app.UseSwagger(opt =>
             {

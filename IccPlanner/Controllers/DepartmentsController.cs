@@ -8,7 +8,8 @@ using Application.Responses.Errors.Department;
 using Domain.Abstractions;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace IccPlanner.Controllers
 {
@@ -18,11 +19,12 @@ namespace IccPlanner.Controllers
     {
         private readonly IDepartmentService _departmentService;
         private readonly IMinistryService _ministryService;
-
-        public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService)
+        private readonly ILogger<DepartmentsController> _logger;
+        public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService, ILogger<DepartmentsController> logger)
         {
             _departmentService = departmentService;
             _ministryService = ministryService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -84,6 +86,17 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> DeleteDepartmentProgram([FromBody] DeleteDepartmentProgramRequest request)
         {   
             await _departmentService.DeleteDepartmentProgramByIdsAsync(request);
+            return NoContent();
+        }
+        
+        [HttpPost("import-members")]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult ImportMembers([FromForm] AddDepartmentMemberImportFileRequest request)
+        { 
             return NoContent();
         }
 
