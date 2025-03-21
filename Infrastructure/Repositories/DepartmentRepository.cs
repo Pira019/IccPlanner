@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
 
         public async Task<DepartmentMember?> FindDepartmentMember(string memberId, int departmentId)
         {
-            return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartementId == departmentId);
+            return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
         public IEnumerable<int?> GetValidDepartmentId(IEnumerable<int?> departmentIds)

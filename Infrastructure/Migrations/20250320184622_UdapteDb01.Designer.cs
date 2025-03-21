@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    [Migration("20250304134339_Correction")]
-    partial class Correction
+    [Migration("20250320184622_UdapteDb01")]
+    partial class UdapteDb01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -755,6 +755,9 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MemberId")
                         .IsUnique();
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
                     b.HasDiscriminator().HasValue("User");
                 });
 
@@ -855,7 +858,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
-                        .WithMany()
+                        .WithMany("DepartmentMemberPosts")
                         .HasForeignKey("DepartmentMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -880,7 +883,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Department", "Department")
-                        .WithMany("ProgramDepartments")
+                        .WithMany("DepartmentPrograms")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1028,12 +1031,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
-                    b.Navigation("ProgramDepartments");
+                    b.Navigation("DepartmentPrograms");
                 });
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
                     b.Navigation("Availabilities");
+
+                    b.Navigation("DepartmentMemberPosts");
 
                     b.Navigation("FeedBacks");
 

@@ -1,4 +1,5 @@
-﻿using Application.Requests.Department;
+﻿using Application.Helper;
+using Application.Requests.Department;
 using Application.Responses.Department;
 using AutoMapper;
 using Domain.Entities;
@@ -21,10 +22,10 @@ namespace Application.Dtos.Department
             CreateMap<Domain.Entities.Department, AddDepartmentResponse>();
 
             CreateMap<AddDepartmentRespoRequest, Domain.Entities.DepartmentMember>()
-                .ForMember(dest => dest.DepartementId, opt => opt.MapFrom(src => src.DepartmentId))
+                .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.DepartmentId))
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Member, opt => opt.Ignore())
-                .ForMember(dest => dest.Departement, opt => opt.Ignore())
+                .ForMember(dest => dest.Department, opt => opt.Ignore())
                 .ForMember(dest => dest.NickName, opt => opt.Ignore())
                 .ForMember(dest => dest.DateEntry, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
@@ -36,17 +37,17 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 
             CreateMap<AddDepartmentRespoRequest, Domain.Entities.DepartmentMemberPost>()
-                .ForMember(dest => dest.PosteId, opt => opt.Ignore()) 
+                .ForMember(dest => dest.PosteId, opt => opt.Ignore())
                 .ForMember(dest => dest.DepartmentMemberId, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Poste, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Poste, opt => opt.Ignore())
                 .ForMember(dest => dest.DepartmentMember, opt => opt.Ignore());
 
             CreateMap<AddDepartmentProgramRequest, DepartmentProgram>()
                 .ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
                 .ForMember(dest => dest.Program, opt => opt.Ignore())
                 .ForMember(dest => dest.Department, opt => opt.Ignore())
-                .ForMember(dest => dest.CreateById, opt => opt.Ignore()) 
+                .ForMember(dest => dest.CreateById, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdateBy, opt => opt.Ignore())
                 .ForMember(dest => dest.IsRecurring, opt => opt.Ignore())
                 .ForMember(dest => dest.DepartmentMembers, opt => opt.Ignore())
@@ -55,7 +56,7 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.Availabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.CreateBy, opt => opt.Ignore());
+                .ForMember(dest => dest.CreateBy, opt => opt.Ignore()); 
         }
     }
 }

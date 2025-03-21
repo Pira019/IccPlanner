@@ -14,9 +14,6 @@
           "Shared.dll": {}
         },
         "resources": {
-          "en-US/Shared.resources.dll": {
-            "locale": "en-US"
-          },
           "fr-FR/Shared.resources.dll": {
             "locale": "fr-FR"
           }

@@ -69,7 +69,7 @@ namespace Test.Application.UnitTest.Dtos.DepartmentTest
             var result = _mapper.Map<DepartmentMember>(request);
 
             Assert.NotNull(result);
-            Assert.Equal(request.DepartmentId, result.DepartementId);
+            Assert.Equal(request.DepartmentId, result.DepartmentId);
         }
 
         [Fact]

@@ -35,5 +35,10 @@ namespace Application.Helper
             var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return string.IsNullOrEmpty(userId) ? (Guid?)null : Guid.Parse(userId);    
         }
+
+        public static string GeneratedEmail(string text)
+        {
+            return text + "@example.com";
+        }
     }
 }

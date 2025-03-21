@@ -11,6 +11,7 @@
         public Guid? AddedById { get; set; } // Id member
         public Member? AddedBy { get; set; } //  member
         public DateOnly? BirthDate { get; set; } 
-        public List<Department> Departements { get; } = [];
+        public List<Department> Departments { get; } = [];
+        public List<DepartmentMember> DepartmentMembers { get; } = [];
     }
 }

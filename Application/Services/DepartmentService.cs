@@ -1,4 +1,5 @@
 ﻿// Ignore Spelling: Auth 
+using Application.Dtos.Department;
 using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -7,6 +8,8 @@ using Application.Responses.Department;
 using AutoMapper;
 using Domain.Abstractions;
 using Domain.Entities;
+using OfficeOpenXml;
+using Shared.Enums;
 
 namespace Application.Services
 {
@@ -19,15 +22,14 @@ namespace Application.Services
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IDepartmentProgramRepository _departmentProgramRepository;
-
+        private readonly IDepartmentProgramRepository _departmentProgramRepository; 
         public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository, IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
             _postRepository = postRepository;
             _accountRepository = accountRepository;
-            _departmentProgramRepository = departmentProgramRepository;
+            _departmentProgramRepository = departmentProgramRepository; 
         }
         public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
@@ -128,9 +130,54 @@ namespace Application.Services
             var ids = Utiles.ConvertStringToArray(deleteDepartmentProgramRequest.DepartmentProgramIds)
                 .Where(id => id.HasValue)
                 .Select(id => id!.Value) // Convertir int? en int
-                .ToList(); 
+                .ToList();
 
             await _departmentProgramRepository.BulkDeleteByIdsAsync(ids);
         }
+
+        public async Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? authenticatedUser)
+        {
+            var addedBy = await _accountRepository.GetAuthMember(authenticatedUser);
+            var departementMembers = new List<User>();  
+             
+            using (var stream = new MemoryStream())
+            {
+                addDepartmentMemberImportFileRequest.formFile.CopyTo(stream);
+                stream.Position = 0;
+
+                using (var package = new ExcelPackage(stream))
+                {
+                    foreach (var worksheet in package.Workbook.Worksheets)
+                    {
+                        // Récupérer les en-têtes de colonnes et leurs index
+                        var columnIndexes = new Dictionary<string, int>();
+                        for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                        {
+                            var header = worksheet.Cells[1, col].Text.Trim();
+                            if (!string.IsNullOrEmpty(header))
+                            {
+                                columnIndexes[header] = col;
+                            }
+                        }
+
+                        for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                        {
+                            var importData = new ImportMemberDto
+                            {
+                                Contact = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.CONTACT.ToString()]].Text.Trim(),
+                                DepartmentId = addDepartmentMemberImportFileRequest.DepartmentId,
+                                Nom = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.PRENOM.ToString()]].Text,
+                                Sex = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.SEXE.ToString()]].Text.Substring(0,1).ToUpper(),
+                                AddedBy = addedBy!.Id
+                            };
+
+                            departementMembers.Add(_mapper.Map<User>(importData));
+                        }
+                    }
+                }                
+            };
+            //Enregistrer 
+            return await _accountRepository.SaveImportedMembersDepartment(departementMembers); 
+        }  
     }
 }

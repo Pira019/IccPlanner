@@ -125,19 +125,16 @@ namespace IccPlanner
             builder.Services.AddScoped<IPostRepository, PosteRepository>();
             builder.Services.AddScoped<IProgramRepository, ProgramRepository>();
             builder.Services.AddScoped<IDepartmentProgramRepository, DepartmentProgramRepository>();
+            builder.Services.AddScoped<IDepartmentMemberRepository, DepartmentMemberRepository>(); 
 
-
-
-            //Services
+            //Services             
+            builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IMinistryService, MinistryService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IProgramService, ProgramService>();
-
-            builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
-
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -239,20 +236,7 @@ namespace IccPlanner
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
-
-                app.Use(async (context, next) =>
-                {
-                    var currentCulture = CultureInfo.CurrentCulture.Name;
-                    Console.WriteLine($"Current culture: {currentCulture}");
-                    await next();
-
-                    var localizer = app.Services.GetRequiredService<IStringLocalizer<DepartmentsController>>();
-                    var translation = localizer["Not"];
-                    Console.WriteLine($"Manual translation: {translation}");
-                });
-
-                
+                app.UseSwaggerUI();  
             }
             app.UseSwagger(opt =>
             {

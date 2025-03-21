@@ -120,11 +120,29 @@
   <data name="FILE_TOO_LARGE" xml:space="preserve">
     <value>Le fichier est trop volumineux, la taille maximale autorisée est de {0} Mo.</value>
   </data>
+  <data name="INVALID_FILE_DATA" xml:space="preserve">
+    <value>Les données du fichier sont invalides. Vérifiez les colonnes et leur contenu.</value>
+  </data>
   <data name="INVALID_FILE_EXTENSION" xml:space="preserve">
     <value>L'extension du fichier n'est pas autorisée.</value>
   </data>
   <data name="INVALID_FILE_FORMAT" xml:space="preserve">
     <value>Le fichier n'est pas un fichier Excel valide.</value>
+  </data>
+  <data name="INVALID_GENDER" xml:space="preserve">
+    <value>Le sexe doit être H ou F</value>
+  </data>
+  <data name="INVALID_NAME" xml:space="preserve">
+    <value>Le nom doit être composé uniquement de lettres.</value>
+  </data>
+  <data name="INVALID_ON" xml:space="preserve">
+    <value>La ligne {0}</value>
+  </data>
+  <data name="INVALID_PHONE_NUMBER" xml:space="preserve">
+    <value>Le numéro de téléphone doit être composé uniquement de chiffres. </value>
+  </data>
+  <data name="MISSING_REQUIRED_COLUMN" xml:space="preserve">
+    <value>Les colonnes suivantes sont obligatoires : PRENOM, SEXE, CONTACT.</value>
   </data>
   <data name="NOT_NULL" xml:space="preserve">
     <value>Le champ {0} ne peut pas être nul.</value>

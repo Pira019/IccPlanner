@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Application.Helper;
+﻿using Application.Helper;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
@@ -9,7 +8,6 @@ using Domain.Abstractions;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 
 namespace IccPlanner.Controllers
 {
@@ -18,13 +16,11 @@ namespace IccPlanner.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly IDepartmentService _departmentService;
-        private readonly IMinistryService _ministryService;
-        private readonly ILogger<DepartmentsController> _logger;
-        public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService, ILogger<DepartmentsController> logger)
+        private readonly IMinistryService _ministryService; 
+        public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService)
         {
             _departmentService = departmentService;
-            _ministryService = ministryService;
-            _logger = logger;
+            _ministryService = ministryService; 
         }
 
         [HttpPost]
@@ -71,12 +67,12 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request)
-        {  
+        {
             var userAuthId = Utiles.GetUserIdFromClaims(User);
             await _departmentService.AddDepartmentsProgram(request, userAuthId);
             return Ok();
         }
-        
+
         [HttpDelete("department-program")]
         [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
@@ -84,20 +80,22 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteDepartmentProgram([FromBody] DeleteDepartmentProgramRequest request)
-        {   
+        {
             await _departmentService.DeleteDepartmentProgramByIdsAsync(request);
             return NoContent();
         }
-        
+
         [HttpPost("import-members")]
-        [Consumes("multipart/form-data")]
+        [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult ImportMembers([FromForm] AddDepartmentMemberImportFileRequest request)
-        { 
-            return NoContent();
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ImportMembers([FromForm] AddDepartmentMemberImportFileRequest request)
+        {
+            var userAuthId = Utiles.GetUserIdFromClaims(User);
+            var result = await _departmentService.ImportMembersAsync(request, userAuthId);
+            return Ok(result);
         }
 
 

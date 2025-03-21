@@ -70,6 +70,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The file data is invalid. Please check the columns and their content..
+        /// </summary>
+        public static string INVALID_FILE_DATA {
+            get {
+                return ResourceManager.GetString("INVALID_FILE_DATA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The file extension is not allowed..
         /// </summary>
         public static string INVALID_FILE_EXTENSION {
@@ -84,6 +93,51 @@ namespace Shared.Ressources {
         public static string INVALID_FILE_FORMAT {
             get {
                 return ResourceManager.GetString("INVALID_FILE_FORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Gender must be M or F..
+        /// </summary>
+        public static string INVALID_GENDER {
+            get {
+                return ResourceManager.GetString("INVALID_GENDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The name must only contain letters..
+        /// </summary>
+        public static string INVALID_NAME {
+            get {
+                return ResourceManager.GetString("INVALID_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à On line {0}.
+        /// </summary>
+        public static string INVALID_ON {
+            get {
+                return ResourceManager.GetString("INVALID_ON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Phone number must contain only digits. .
+        /// </summary>
+        public static string INVALID_PHONE_NUMBER {
+            get {
+                return ResourceManager.GetString("INVALID_PHONE_NUMBER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The following columns are required: PRENOM, SEXE, CONTACT..
+        /// </summary>
+        public static string MISSING_REQUIRED_COLUMN {
+            get {
+                return ResourceManager.GetString("MISSING_REQUIRED_COLUMN", resourceCulture);
             }
         }
         

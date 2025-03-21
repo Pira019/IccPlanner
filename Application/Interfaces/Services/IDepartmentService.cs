@@ -1,5 +1,6 @@
 ﻿using Application.Requests.Department;
-using Application.Responses.Department; 
+using Application.Responses.Department;
+using Domain.Entities;
 
 namespace Application.Interfaces.Services
 {
@@ -39,6 +40,14 @@ namespace Application.Interfaces.Services
         /// </summary>
         /// <param name="deleteDepartmentProgramRequest">Model du corps</param>
         /// <returns></returns>
-        public Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest); 
+        public Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest);
+
+        /// <summary>
+        /// Permet d'ajouter les member par le fichier excel
+        /// </summary>
+        /// <param name="addDepartmentMemberImportFileRequest"> Model de corps attendu</param>
+        /// <param name="AuthenticatedUser"> L'Id de user qui a ajouter</param>
+        /// <returns>Retourner le nombres des membres enregistrés</returns>
+        public Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? AuthenticatedUser); 
     }
 }

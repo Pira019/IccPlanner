@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    [Migration("20250304134339_Correction")]
-    partial class Correction
+    [Migration("20250320184855_UdapteDb02")]
+    partial class UdapteDb02
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,13 +27,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartmentMember", b =>
                 {
-                    b.Property<int>("DepartementsId")
+                    b.Property<int>("DepartmentsId")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("MembersId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("DepartementsId", "MembersId");
+                    b.HasKey("DepartmentsId", "MembersId");
 
                     b.HasIndex("MembersId");
 
@@ -755,6 +755,9 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MemberId")
                         .IsUnique();
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
                     b.HasDiscriminator().HasValue("User");
                 });
 
@@ -762,7 +765,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Department", null)
                         .WithMany()
-                        .HasForeignKey("DepartementsId")
+                        .HasForeignKey("DepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -825,7 +828,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
-                        .WithMany("Departments")
+                        .WithMany("Departements")
                         .HasForeignKey("MinistryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -855,7 +858,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.DepartmentMemberPost", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
-                        .WithMany()
+                        .WithMany("DepartmentMemberPosts")
                         .HasForeignKey("DepartmentMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -880,7 +883,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Department", "Department")
-                        .WithMany("ProgramDepartments")
+                        .WithMany("DepartmentPrograms")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1028,12 +1031,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
-                    b.Navigation("ProgramDepartments");
+                    b.Navigation("DepartmentPrograms");
                 });
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
                     b.Navigation("Availabilities");
+
+                    b.Navigation("DepartmentMemberPosts");
 
                     b.Navigation("FeedBacks");
 
@@ -1054,7 +1059,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Ministry", b =>
                 {
-                    b.Navigation("Departments");
+                    b.Navigation("Departements");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>
