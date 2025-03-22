@@ -12,6 +12,10 @@ namespace Shared.Abstraction
         INVALID_GENDER,
         INVALID_PHONE_NUMBER,
         INVALID_FILE_DATA,
-        INVALID_ON
+        INVALID_ON,
+
+
+      //Department
+      DEPARTMENT_NOT_EXIST
     }
 }

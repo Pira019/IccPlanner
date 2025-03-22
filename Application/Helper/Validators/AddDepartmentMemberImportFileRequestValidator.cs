@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Validators Validator 
 using System.Text.RegularExpressions;
+using Application.Interfaces.Repositories;
 using Application.Requests.Department;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +15,12 @@ namespace Application.Helper.Validators
         private readonly string[] _allowedExtensions = { ".xls", ".xlsx" };
         private const int MaxFileSize = 5 * 1024 * 1024; // 5 MB
         private readonly IRessourceLocalizer _localizer;
-        public AddDepartmentMemberImportFileRequestValidator(IRessourceLocalizer ressourceLocalizer)
+        private readonly IDepartmentRepository _departmentRepository;
+        public AddDepartmentMemberImportFileRequestValidator(IRessourceLocalizer ressourceLocalizer, IDepartmentRepository departmentRepository)
         {
             this._localizer = ressourceLocalizer;
+            _departmentRepository = departmentRepository;
+
             RuleLevelCascadeMode = CascadeMode.Stop;
             RuleFor(x => x.formFile)
                 .NotNull().WithMessage(_localizer.Localize(ValidationMessage.NOT_NULL.ToString()))
@@ -30,9 +34,21 @@ namespace Application.Helper.Validators
                         return ValidateRequiredColumns(file);
                     }
                     ).WithMessage(file => ErrorMessage ?? _localizer.Localize(ValidationMessage.INVALID_FILE_DATA.ToString()));  // Validation des données dans le fichier
+            
+            RuleFor(x => x.DepartmentId)                  
+                .NotNull() 
+                .NotEmpty()
+                .Must(IsDepartementExist).WithMessage(_localizer.Localize(ValidationMessage.DEPARTMENT_NOT_EXIST.ToString())
+                );
         }
 
         public string? ErrorMessage;
+
+
+        private bool IsDepartementExist(int departmentId)
+        {
+            return _departmentRepository.IsExist(departmentId).Result;
+        }
 
         // Fonction pour valider que le fichier est bien un fichier Excel
         private bool ValidateExcelFile(IFormFile file)

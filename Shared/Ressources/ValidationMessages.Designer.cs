@@ -61,6 +61,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à This department not exist..
+        /// </summary>
+        public static string DEPARTMENT_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The file is too large, the maximum allowed size is {0} MB..
         /// </summary>
         public static string FILE_TOO_LARGE {
