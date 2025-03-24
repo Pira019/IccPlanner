@@ -12,6 +12,8 @@ namespace Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasIndex(x => x.PhoneNumber).IsUnique();
+
             builder.Property(m => m.Status)
                 .HasConversion(
                     v => v.ToString().ToUpper(),

@@ -18,7 +18,7 @@ namespace Application.Interfaces.Repositories
         public Task<User?> FindByEmailAsync(string email);
 
         /// <summary>
-        /// Trouver un compte(User) par l'id
+        /// Trouver un compte(User) par l'Id
         /// </summary>
         /// <param name="id">Id de l'utilisateur</param>
         /// <returns></returns>
@@ -64,6 +64,40 @@ namespace Application.Interfaces.Repositories
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant la liste de roles </returns>
         public Task<IList<string>> GetUserRoles(User user);
+
+        /// <summary>
+        /// Permet de trouver un membre par ID
+        /// </summary>
+        /// <param name="memberId">L'Id du membre</param>
+        /// <returns></returns>
+        public Task<bool> IsMemberExist(string memberId);
+        public Task<Member?> FindMemberByUserId(string userId);
+
+        /// <summary>
+        /// Récupérer Member qui est(en cours) authentifier 
+        /// </summary>
+        /// <param name="userAuthId">L'Id du membre</param>
+        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
+        /// contenant <see cref="Member"/> de l'opération </returns>
+        public Task<Member?> GetAuthMember(Guid? userAuthId);
+
+
+        /// <summary>
+        /// Permet enregistrement les comptes de membres importer
+        /// </summary>
+        /// <param name="users"></param>
+        /// <returns></returns>
+        public Task<int> SaveImportedMembersDepartment(IEnumerable<User> users);
+
+        /// <summary>
+        /// Permet de  filter par numéro de contact pour évité les doublure 
+        /// </summary>
+        /// <param name="users">Liste des utilisateurs</param>
+        /// <returns> les users filtres </returns>
+        public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);
+
+
+
 
     }
 }

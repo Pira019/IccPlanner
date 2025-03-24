@@ -1,0 +1,46 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Shared/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Localization.Abstractions": "10.0.0-preview.1.25120.3"
+        },
+        "runtime": {
+          "Shared.dll": {}
+        },
+        "resources": {
+          "fr-FR/Shared.resources.dll": {
+            "locale": "fr-FR"
+          }
+        }
+      },
+      "Microsoft.Extensions.Localization.Abstractions/10.0.0-preview.1.25120.3": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.12003"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.Localization.Abstractions/10.0.0-preview.1.25120.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BAuVTBEd4eV3g6A4Out5A1kny+42UIntcY5icrHDH0u1oTJCbQua0cnKwvja0TSthw54Uf5J3wEyQVEptVJpFA==",
+      "path": "microsoft.extensions.localization.abstractions/10.0.0-preview.1.25120.3",
+      "hashPath": "microsoft.extensions.localization.abstractions.10.0.0-preview.1.25120.3.nupkg.sha512"
+    }
+  }
+}

@@ -1,10 +1,11 @@
-﻿using System.Data;
-using Application.Constants;
+﻿using Application.Constants;
 using Domain.Entities;
 using FluentAssertions;
+using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 
 namespace Test.Infrastructure.UnitTest.Repositories
@@ -13,6 +14,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IccPlannerContext _iccPlannerContext;
 
         private readonly AccountRepository _accountRepository;
 
@@ -24,7 +26,14 @@ namespace Test.Infrastructure.UnitTest.Repositories
             _userManager = Substitute.For<UserManager<User>>(userStore, null, null, null, null, null, null, null, null);
             _signInManager = Substitute.For<SignInManager<User>>(_userManager, Substitute.For<IHttpContextAccessor>(), Substitute.For<IUserClaimsPrincipalFactory<User>>(), null, null, null, null);
 
-            _accountRepository = new AccountRepository(_userManager, _signInManager);
+
+            var option = new DbContextOptionsBuilder<IccPlannerContext>()
+                   .UseInMemoryDatabase("fakeDb")
+                   .Options;
+
+            _iccPlannerContext = new IccPlannerContext(option);
+
+            _accountRepository = new AccountRepository(_userManager, _signInManager, _iccPlannerContext);
         }
 
         [Fact]
@@ -196,11 +205,77 @@ namespace Test.Infrastructure.UnitTest.Repositories
             _signInManager.PasswordSignInAsync(request.email, request.password, request.isPersistent, true).Returns(Task.FromResult(singIn));
 
             //Act
-            var response = await _accountRepository.SignIn( request.email, request.password, request.isPersistent);
+            var response = await _accountRepository.SignIn(request.email, request.password, request.isPersistent);
 
             //Assert
             response.Should().Be(singIn);
         }
+
+        [Fact]
+        public async Task IsMemberExist_ShouldReturnTrue()
+        {
+            //Arrange
+            var memberId = Guid.NewGuid();
+
+            var member = new Member
+            {
+                Name = "Name",
+                Sexe = "M",
+                Id = memberId
+            };
+
+            _iccPlannerContext.Members.AddRange(member);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.IsMemberExist(memberId.ToString());
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]  
+        public async Task FindMemberByUserId_ShouldReturnMember()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            var user = new User
+            {
+               Id = userId.ToString(), 
+            };
+
+            _iccPlannerContext.Users.AddRange(user);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.FindMemberByUserId(userId.ToString());
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]  
+        public async Task GetAuthMember_ShouldReturnMember()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            var user = new User
+            {
+               Id = userId.ToString(), 
+            };
+
+            _iccPlannerContext.Users.AddRange(user);
+            await _iccPlannerContext.SaveChangesAsync();
+
+            //Act
+            var result = await _accountRepository.GetAuthMember(userId);
+
+            //Assert
+            result.Should().BeNull();
+        }
+         
 
     }
 }

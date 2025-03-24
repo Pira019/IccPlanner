@@ -1,9 +1,7 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     /// <summary>
-    /// Cette clase definit un member, ex: un chantre etc ...
+    /// Cette classe définit un member, ex: un chantre etc ...
     /// </summary>
     public class Member : Person
     {
@@ -13,6 +11,7 @@ namespace Domain.Entities
         public Guid? AddedById { get; set; } // Id member
         public Member? AddedBy { get; set; } //  member
         public DateOnly? BirthDate { get; set; } 
-        public List<Department> Departements { get; } = [];
+        public List<Department> Departments { get; } = [];
+        public List<DepartmentMember> DepartmentMembers { get; } = [];
     }
 }

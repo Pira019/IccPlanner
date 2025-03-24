@@ -18,6 +18,16 @@ using System.Text;
 using Infrastructure.Security;
 using Infrastructure.Configurations.Interface;
 using Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Infrastructure.Configurations.Filter;
+using Application.Helper.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using IccPlanner.Controllers;
+using Microsoft.Extensions.Localization;
+using Shared.Interfaces;
+using Shared;
 
 
 namespace IccPlanner
@@ -37,6 +47,7 @@ namespace IccPlanner
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
+          
             // Configuration
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
@@ -46,7 +57,6 @@ namespace IccPlanner
                 .Build();
 
             builder.Services.Configure<AppSetting>(config.GetRequiredSection("AppSetting"));
-
             AppSetting appSetting = config.GetRequiredSection("AppSetting").Get<AppSetting>()!;
 
             // Add services to the container.
@@ -88,6 +98,7 @@ namespace IccPlanner
                 };
 
                 options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securitySchema);
+                options.OperationFilter<AddAcceptLanguageHeaderParameter>();
 
                 var securityRequirement = new OpenApiSecurityRequirement
                 {
@@ -107,21 +118,26 @@ namespace IccPlanner
 
             //Repositories  
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
-            builder.Services.AddScoped<IMinistryRepository, MinistryRepository>(); 
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IMinistryRepository, MinistryRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IPostRepository, PosteRepository>();
+            builder.Services.AddScoped<IProgramRepository, ProgramRepository>();
+            builder.Services.AddScoped<IDepartmentProgramRepository, DepartmentProgramRepository>();
+            builder.Services.AddScoped<IDepartmentMemberRepository, DepartmentMemberRepository>(); 
 
-
-
-            //Services
+            //Services             
+            builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ISendEmailService, SendEmailService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();  
-            builder.Services.AddScoped<IMinistryService, MinistryService>();  
-            builder.Services.AddScoped<IDepartmentService, DepartmentService>();  
+            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IMinistryService, MinistryService>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IProgramService, ProgramService>();
 
-            builder.Services.AddScoped<CustomJwtBearerEventHandler>(); 
+            builder.Services.AddScoped<CustomJwtBearerEventHandler>();
+
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
@@ -178,15 +194,49 @@ namespace IccPlanner
                 AuthorizationPolicies.AddPolicies(options);
             });
 
-            builder.Services.AddRouting(op => op.LowercaseUrls = true);
+            builder.Services.AddRouting(op => op.LowercaseUrls = true); 
+
+            builder.Services.AddValidatorsFromAssemblyContaining<AddDepartmentMemberImportFileRequestValidator>();
+            builder.Services.AddFluentValidationAutoValidation();
+
+
+
+
+            //Localization
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Ressources");
+
+            // Définir les cultures acceptées (français et anglais US)
+            builder.Services.Configure<RequestLocalizationOptions>(
+               options =>
+               {
+                   var supportedCultures = new List<CultureInfo>
+                   {
+                        new CultureInfo("fr-FR"),
+                        new CultureInfo("en-US")
+                   };
+
+                   options.DefaultRequestCulture = new RequestCulture(culture: "fr-FR", uiCulture: "fr-FR");
+                   options.SupportedCultures = supportedCultures;
+                   options.SupportedUICultures = supportedCultures;
+
+                   options.RequestCultureProviders = new List<IRequestCultureProvider>
+                   {
+                        new AcceptLanguageHeaderRequestCultureProvider()
+                   };
+               });
+
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
+
+            app.UseRequestLocalization();
+
+            // ConfiguInvalidOperationException : 'The service collection cannot be modified because it is read-only.'re the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI();  
             }
             app.UseSwagger(opt =>
             {

@@ -3,7 +3,7 @@
 namespace Domain.Entities
 {
     /// <summary>
-    /// Definit les jours des activité ex: cultes, soiree d'adoration etc
+    /// Définit les jours des activité ex: cultes, soirée d'adoration etc
     /// </summary>
     public class Program
     {
@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string? Description { get; set; }
         [MaxLength(50)]
         public string? ShortName { get; set; }
-        public List<Department> Departements { get; } = [];
+        public List<Department> Departments { get; } = [];
+        public List<DepartmentProgram> ProgramDepartments { get; } = [];
     }
 }

@@ -1,6 +1,9 @@
 /*
-Ce fichier permet de init le profile Admin dans la base de donnee
+Ce fichier permet de init les les donnees dans la base de donnee
 */
 
-INSERT INTO "Profiles" ("Name" , "Description" , "CreatedAt" , "UpdatedAt") 
-VALUES ('ADMIN', 'ADMIN', NOW(), NOW());
+INSERT INTO "Postes" ("Name", "Description")
+VALUES 
+    ('Responsable/Référent', 'Description'),
+    ('Planificateur', 'Description');
+

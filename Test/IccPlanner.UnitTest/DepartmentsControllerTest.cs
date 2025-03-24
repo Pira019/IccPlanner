@@ -1,10 +1,12 @@
-﻿using Application.Interfaces.Services;
-using Application.Requests.Department;
-using Application.Responses.Department;
+﻿using System.Security.Claims;
+using Application.Helper;
+using Application.Interfaces.Services;
+using Application.Requests.Department; 
 using Application.Responses.Errors.Department;
 using Domain.Abstractions;
 using FluentAssertions;
 using IccPlanner.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 
@@ -86,6 +88,73 @@ namespace Test.IccPlanner.UnitTest
             var result = await _departmentsController.Add(addRequest); 
             //Assert
             var createdObject = Assert.IsType<CreatedResult>(result);   
+        }
+        
+        [Fact]
+        public async Task AddResponsable_ShouldReturnOk()
+        {
+            //Arrange
+            var addDepartmentRespoRequest = new AddDepartmentRespoRequest
+            {
+                DepartmentId = 1,
+                MemberId = "123456789",
+                StartAt = DateOnly.Parse("2025-02-02"),
+                EndAt = DateOnly.Parse("2025-02-02"),
+            }; 
+
+            //Act
+            var result = await _departmentsController.AddResponsable(addDepartmentRespoRequest); 
+            
+            //Assert
+            var okResult = Assert.IsType<OkResult>(result);   
+            okResult.StatusCode.Should().Be(StatusCodes.Status200OK); 
+        }
+
+        [Fact]
+        public async Task CreateDepartmentProgram_ShouldReturnOkResult() 
+        {
+            //Arrange 
+            var addDepartmentProgramRequest = new AddDepartmentProgramRequest
+            {
+                DepartmentIds = "1,2",
+                ProgramId = 1,
+                StartAt = DateOnly.Parse("2024-05-20")
+            };
+            var mockUserId = Guid.NewGuid();
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim (ClaimTypes.NameIdentifier, mockUserId.ToString() )
+            }, "mock"));
+
+            _departmentsController.ControllerContext = new ControllerContext 
+            {
+                HttpContext = new DefaultHttpContext { User = userClaims }
+            };
+
+           _departmentService.AddDepartmentsProgram(addDepartmentProgramRequest, mockUserId).Returns(Task.CompletedTask);
+
+            //Act
+            var result = await _departmentsController.CreateDepartmentProgram(addDepartmentProgramRequest);
+
+            var okResult = Assert.IsType<OkResult>(result);
+
+        }
+
+        [Fact]
+        public async Task DeleteDepartmentProgram_ShouldReturnNoContent()
+        {
+            //Arrange 
+            var request = new DeleteDepartmentProgramRequest
+            {
+                DepartmentProgramIds = "1,2",
+            };
+
+            //Act
+            var result = await _departmentsController.DeleteDepartmentProgram(request);
+
+            var noContent = Assert.IsType<NoContentResult>(result);
+            noContent.StatusCode.Should().Be(StatusCodes.Status204NoContent);
+
         }
     }
 }
