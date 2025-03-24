@@ -1,10 +1,7 @@
-﻿using Application.Dtos.Account;
-using Application.Dtos.Department;
+﻿using Application.Dtos.Account; 
 using Application.Dtos.UserDTOs;
-using Application.Requests.Account;
-using Application.Requests.Department;
-using AutoMapper;
-using Domain.Entities;
+using Application.Requests.Account; 
+using AutoMapper; 
 
 namespace Test.Application.UnitTest.Dtos.AccountTest
 {

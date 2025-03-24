@@ -56,6 +56,7 @@ namespace Application.Dtos.UserDTOs
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())
                 .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+                .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
                 .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore())
                 .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
                 .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())

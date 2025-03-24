@@ -15,6 +15,7 @@ namespace Application.Dtos.Department
                     .ForMember(dest => dest.Ministry, opt => opt.Ignore())
                     .ForMember(dest => dest.Members, opt => opt.Ignore())
                     .ForMember(dest => dest.Programs, opt => opt.Ignore())
+                    .ForMember(dest => dest.DepartmentMembers, opt => opt.Ignore())
                     .ForMember(dest => dest.DepartmentPrograms, opt => opt.Ignore())
                     .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                     .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
@@ -30,6 +31,7 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.DateEntry, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.ProgramDepartments, opt => opt.Ignore())
+                .ForMember(dest => dest.DepartmentMemberPosts, opt => opt.Ignore())
                 .ForMember(dest => dest.Postes, opt => opt.Ignore())
                 .ForMember(dest => dest.FeedBacks, opt => opt.Ignore())
                 .ForMember(dest => dest.Availabilities, opt => opt.Ignore())
