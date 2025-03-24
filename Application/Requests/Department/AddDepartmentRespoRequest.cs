@@ -11,8 +11,7 @@ namespace Application.Requests.Department
         [Required]
         [MemberExists]
         public required string MemberId { get; set; }
-        [Required]
-        [DepartmentExists]
+        [Required] 
         public required int DepartmentId { get; set; }
         public DateOnly? StartAt { get; set; }
 

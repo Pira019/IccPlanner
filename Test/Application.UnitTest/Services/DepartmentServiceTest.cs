@@ -19,7 +19,7 @@ namespace Test.Application.UnitTest.Services
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IDepartmentProgramRepository _departmentProgramRepository;
+        private readonly IDepartmentProgramRepository _departmentProgramRepository; 
 
         private readonly DepartmentService _departmentService;
 
@@ -29,7 +29,7 @@ namespace Test.Application.UnitTest.Services
             _mapper = Substitute.For<IMapper>();
             _postRepository = Substitute.For<IPostRepository>();
             _accountRepository = Substitute.For<IAccountRepository>();
-            _departmentProgramRepository = Substitute.For<IDepartmentProgramRepository>();
+            _departmentProgramRepository = Substitute.For<IDepartmentProgramRepository>(); 
 
             _departmentService = new DepartmentService(_departmentRepository, _mapper, _postRepository, _accountRepository, _departmentProgramRepository);
         }
@@ -101,7 +101,7 @@ namespace Test.Application.UnitTest.Services
 
             var departmentMember = new DepartmentMember
             {
-                DepartementId = 1,
+                DepartmentId = 1,
                 NickName = "123",
                 MemberId = Guid.NewGuid()
             };
@@ -153,7 +153,7 @@ namespace Test.Application.UnitTest.Services
 
             var departmentMember = new DepartmentMember
             {
-                DepartementId = 1,
+                DepartmentId = 1,
                 NickName = "123",
                 DateEntry = DateOnly.Parse("2025-02-02")
             };

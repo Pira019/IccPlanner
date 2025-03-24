@@ -1,10 +1,10 @@
-﻿using System.Security.Claims;
-using Application.Constants;
+﻿using Application.Constants;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Z.BulkOperations;
 
 namespace Infrastructure.Repositories
 {
@@ -38,6 +38,18 @@ namespace Infrastructure.Repositories
             return _userManager.CreateAsync(user, password);
         }
 
+        public async Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users)
+        {
+            var phoneNumbersToInsert = new HashSet<string>(users.Select(u => u.PhoneNumber!));
+
+            var existingPhoneNumbers = await _iccPlannerContext.Users
+              .Where(u => phoneNumbersToInsert.Contains(u.PhoneNumber!))
+              .Select(u => u.PhoneNumber)
+              .ToListAsync();
+
+            return users.Where(u => !existingPhoneNumbers.Contains(u.PhoneNumber)).ToList();
+        }
+
         /// <summary>
         /// Trouver un utilisateur par code.
         /// </summary>
@@ -55,7 +67,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Domain.Entities.Member?> FindMemberByUserId(string userId)
         {
-            return await _iccPlannerContext.Members.FirstOrDefaultAsync(x => x.User!.Id == userId);
+            return await _iccPlannerContext.Members.FirstOrDefaultAsync(x => x.User != null && x.User.Id == userId);
         }
 
         public async Task<Member?> GetAuthMember(Guid? userAuthId)
@@ -79,6 +91,16 @@ namespace Infrastructure.Repositories
             return _iccPlannerContext.Members.AnyAsync(x => x.Id == Guid.Parse(memberId));
         }
 
+        public async Task<int> SaveImportedMembersDepartment(IEnumerable<User> users)
+        {
+            var usersImported = await FilterUsersWithUniquePhoneNumbers(users);
+            await _iccPlannerContext.Users.BulkInsertAsync(usersImported, options =>
+            {
+                options.IncludeGraph = true;
+            });
+
+            return usersImported.Count; 
+        }
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)
         {
             return _signInManager.PasswordSignInAsync(email, password, isPersistent, true);

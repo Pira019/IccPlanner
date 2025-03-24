@@ -168,7 +168,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("DateEntry")
                         .HasColumnType("date");
 
-                    b.Property<int>("DepartementId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("MemberId")
@@ -190,7 +190,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.HasIndex("DepartementId", "MemberId")
+                    b.HasIndex("DepartmentId", "MemberId")
                         .IsUnique();
 
                     b.ToTable("DepartmentMembers");
@@ -825,7 +825,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
-                        .WithMany("Departements")
+                        .WithMany("Departments")
                         .HasForeignKey("MinistryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -835,9 +835,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", "Departement")
+                    b.HasOne("Domain.Entities.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartementId")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -847,7 +847,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Departement");
+                    b.Navigation("Department");
 
                     b.Navigation("Member");
                 });
@@ -1047,7 +1047,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Ministry", b =>
                 {
-                    b.Navigation("Departements");
+                    b.Navigation("Departments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>

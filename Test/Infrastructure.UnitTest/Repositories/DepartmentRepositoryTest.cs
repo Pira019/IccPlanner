@@ -44,7 +44,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
 
             var departmentMember = new DepartmentMember
             {
-                DepartementId = departmentId,
+                DepartmentId = departmentId,
                 MemberId = Guid.Parse(memberId)
             };
 
@@ -64,7 +64,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             //Arrange 
             var departmentMember = new DepartmentMember
             {
-                DepartementId = 3,
+                DepartmentId = 3,
                 MemberId = Guid.NewGuid()
             };
             //Act

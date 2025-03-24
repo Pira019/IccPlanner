@@ -15,7 +15,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
                    v => (MemberStatus)Enum.Parse(typeof(MemberStatus), v, true)
                    ).HasMaxLength(15);
 
-            builder.HasIndex(x => new {  x.DepartementId, x.MemberId}).IsUnique();
+            builder.HasIndex(x => new {  x.DepartmentId, x.MemberId}).IsUnique();
         }
     }
 }
