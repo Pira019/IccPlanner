@@ -24,8 +24,6 @@ using Infrastructure.Configurations.Filter;
 using Application.Helper.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using IccPlanner.Controllers;
-using Microsoft.Extensions.Localization;
 using Shared.Interfaces;
 using Shared;
 

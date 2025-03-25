@@ -3,8 +3,6 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
-using Domain.Abstractions;
-using Infrastructure.Configurations;
 using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Mvc;
 
