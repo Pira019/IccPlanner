@@ -61,6 +61,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Bad request.
+        /// </summary>
+        public static string BAD_REQUEST {
+            get {
+                return ResourceManager.GetString("BAD_REQUEST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à This department not exist..
         /// </summary>
         public static string DEPARTMENT_NOT_EXIST {
@@ -70,11 +79,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Unknown error. Please try again later..
+        /// </summary>
+        public static string ERROR_UNDEFINED {
+            get {
+                return ResourceManager.GetString("ERROR_UNDEFINED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The file is too large, the maximum allowed size is {0} MB..
         /// </summary>
         public static string FILE_TOO_LARGE {
             get {
                 return ResourceManager.GetString("FILE_TOO_LARGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Forbidden. You do not have the necessary permissions to access this resource..
+        /// </summary>
+        public static string FORBIDDEN_ACCESS {
+            get {
+                return ResourceManager.GetString("FORBIDDEN_ACCESS", resourceCulture);
             }
         }
         
@@ -111,6 +138,15 @@ namespace Shared.Ressources {
         public static string INVALID_GENDER {
             get {
                 return ResourceManager.GetString("INVALID_GENDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Invalid login attempt..
+        /// </summary>
+        public static string INVALID_LOGIN_ATTEMPT {
+            get {
+                return ResourceManager.GetString("INVALID_LOGIN_ATTEMPT", resourceCulture);
             }
         }
         
@@ -156,6 +192,33 @@ namespace Shared.Ressources {
         public static string NOT_NULL {
             get {
                 return ResourceManager.GetString("NOT_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Unauthorized access..
+        /// </summary>
+        public static string UNAUTHORIZED {
+            get {
+                return ResourceManager.GetString("UNAUTHORIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à User account locked out. Try again in a few minutes..
+        /// </summary>
+        public static string USER_IS_LOCKED_OUT {
+            get {
+                return ResourceManager.GetString("USER_IS_LOCKED_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à One or more validation errors occurred. Please check your input and try again..
+        /// </summary>
+        public static string VALIDATION_FAILED {
+            get {
+                return ResourceManager.GetString("VALIDATION_FAILED", resourceCulture);
             }
         }
     }
