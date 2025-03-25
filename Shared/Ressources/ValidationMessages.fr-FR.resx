@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BAD_REQUEST" xml:space="preserve">
+    <value>Mauvaise requête.</value>
+  </data>
   <data name="DEPARTMENT_NOT_EXIST" xml:space="preserve">
     <value>Ce département n'existe pas.</value>
   </data>
+  <data name="ERROR_UNDEFINED" xml:space="preserve">
+    <value>Erreur inconnue. Veuillez réessayer plus tard.</value>
+  </data>
   <data name="FILE_TOO_LARGE" xml:space="preserve">
     <value>Le fichier est trop volumineux, la taille maximale autorisée est de {0} Mo.</value>
+  </data>
+  <data name="FORBIDDEN_ACCESS" xml:space="preserve">
+    <value>Accès interdit. Vous n'avez pas les permissions nécessaires pour accéder à cette ressource.</value>
   </data>
   <data name="INVALID_FILE_DATA" xml:space="preserve">
     <value>Les données du fichier sont invalides. Vérifiez les colonnes et leur contenu.</value>
@@ -134,6 +143,9 @@
   </data>
   <data name="INVALID_GENDER" xml:space="preserve">
     <value>Le sexe doit être H ou F</value>
+  </data>
+  <data name="INVALID_LOGIN_ATTEMPT" xml:space="preserve">
+    <value>Le mot de passe ou l'e-mail est incorrect.</value>
   </data>
   <data name="INVALID_NAME" xml:space="preserve">
     <value>Le nom doit être composé uniquement de lettres.</value>
@@ -149,5 +161,14 @@
   </data>
   <data name="NOT_NULL" xml:space="preserve">
     <value>Le champ {0} ne peut pas être nul.</value>
+  </data>
+  <data name="UNAUTHORIZED" xml:space="preserve">
+    <value>Accès non autorisé.</value>
+  </data>
+  <data name="USER_IS_LOCKED_OUT" xml:space="preserve">
+    <value>Compte utilisateur verrouillé. Réessayez dans quelques minutes.</value>
+  </data>
+  <data name="VALIDATION_FAILED" xml:space="preserve">
+    <value>Une ou plusieurs erreurs de validation sont survenues. Veuillez vérifier vos données et réessayer.</value>
   </data>
 </root>
