@@ -5,12 +5,10 @@ using Application.Responses.Errors;
 using Domain.Entities;
 using FluentAssertions;
 using IccPlanner.Controllers;
-using Infrastructure.Configurations;
 using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -39,9 +37,7 @@ namespace Test.IccPlanner.UnitTest
         {
             //Arrange
             var signInResult = Microsoft.AspNetCore.Identity.SignInResult.LockedOut;
-
-            var config = Substitute.For<IConfiguration>();
-            var tokenProvider = Substitute.For<TokenProvider>(config);
+            var tokenProvider = Substitute.For<ITokenProvider>();
 
             var requestData = new LoginRequest
             {
@@ -113,9 +109,7 @@ namespace Test.IccPlanner.UnitTest
         {
             //Arrange
             var signInResult = Microsoft.AspNetCore.Identity.SignInResult.Failed;
-
-            var config = Substitute.For<IConfiguration>();
-            var tokenProvider = Substitute.For<TokenProvider>(config);
+            var tokenProvider = Substitute.For<ITokenProvider>();
 
             var requestData = new LoginRequest
             {

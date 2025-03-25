@@ -2,21 +2,19 @@
 using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
-using Infrastructure.Configurations.Interface;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Configurations.Interface; 
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Configurations
 {
     public class TokenProvider : ITokenProvider
-    {
-        private readonly IConfiguration _configuration;
-        private readonly AppSetting? _appSetting;
+    { 
+        private readonly AppSetting _appSetting;
 
-        public TokenProvider(IConfiguration configuration)
+        public TokenProvider(IOptions<AppSetting> options)
         {
-            _configuration = configuration;
-            _appSetting = _configuration.GetRequiredSection("AppSetting").Get<AppSetting>()!;
+             _appSetting = options.Value;
         }
 
         public string Create(User user, ICollection<string> userRolesName)

@@ -1,11 +1,10 @@
-﻿
-using Domain.Abstractions;
+﻿using Domain.Abstractions;
 using Microsoft.AspNetCore.Http; 
 
 namespace Application.Responses.Errors
 {
     /// <summary>
-    /// Cette classe permet de gerer le retour des erreur des actons d'un compte
+    /// Cette classe permet de gérer le retour des erreur des actons d'un compte
     /// </summary>
     public class AccountResponseError : ApiError
     {
@@ -41,7 +40,7 @@ namespace Application.Responses.Errors
         /// Retourne le bon message quand un compte est bloqué
         /// </summary>
         /// <returns>
-        /// Retourn l'erreur login invalid quand un utilisateur est bloqué
+        /// Retourné l'erreur login invalid quand un utilisateur est bloqué
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>
         /// </returns>
         public static ApiErrorResponseModel UserIsLockedOut()

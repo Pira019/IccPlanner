@@ -1,5 +1,4 @@
-﻿using Application.Dtos.Department;
-using Application.Interfaces.Repositories;
+﻿using Application.Dtos.Department; 
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Persistence;
