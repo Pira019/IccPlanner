@@ -26,6 +26,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Shared.Interfaces;
 using Shared;
+using Domain.Abstractions;
 
 
 namespace IccPlanner
@@ -140,6 +141,8 @@ namespace IccPlanner
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
 
+            builder.Services.AddSingleton<AccountErrors>();
+
 
             // Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -195,10 +198,7 @@ namespace IccPlanner
             builder.Services.AddRouting(op => op.LowercaseUrls = true); 
 
             builder.Services.AddValidatorsFromAssemblyContaining<AddDepartmentMemberImportFileRequestValidator>();
-            builder.Services.AddFluentValidationAutoValidation();
-
-
-
+            builder.Services.AddFluentValidationAutoValidation(); 
 
             //Localization
             builder.Services.AddLocalization(options => options.ResourcesPath = "Ressources");
@@ -224,9 +224,18 @@ namespace IccPlanner
                });
 
 
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+            //Autoriser les appels du front
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins, policy =>
+                {
+                    policy.WithOrigins(appSetting.FrontUrl!).AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
-
-
 
             app.UseRequestLocalization();
 
@@ -234,7 +243,7 @@ namespace IccPlanner
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();  
+                app.UseSwaggerUI(); 
             }
             app.UseSwagger(opt =>
             {
@@ -243,6 +252,8 @@ namespace IccPlanner
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
             app.MapControllers();

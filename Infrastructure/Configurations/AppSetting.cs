@@ -35,6 +35,11 @@
         /// </summary>
         public required JwtSetting JwtSetting { get; set; }
 
+        /// <summary>
+        /// Url Frond pour preserver les appels
+        /// </summary>
+        public string? FrontUrl { get; set; }
+
 
     }
 }
