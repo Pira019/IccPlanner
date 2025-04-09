@@ -41,21 +41,24 @@ namespace IccPlanner.Controllers
 
                 if (isAdminUsersExist)
                 {
-                    return BadRequest(AccountResponseError.AdminUserExist());
+                    return BadRequest();
+                   // return BadRequest(AccountResponseError.AdminUserExist());
                 }
                 var result = await _accountService.CreateAccount(request,true);
 
                 if (!result.Succeeded)
                 {
-                    var response = AccountResponseError.ApiIdentityResultResponseError(result);
-                    return BadRequest(response);
+                   // var response = AccountResponseError.ApiIdentityResultResponseError(result);
+                   // return BadRequest(response);
+                    return BadRequest();
                 }
                 return StatusCode(StatusCodes.Status201Created);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, AccountErrors.CREATE_ADMIN_ERROR.Message);
-                return BadRequest(AccountResponseError.InternalServerError(AccountErrors.CREATE_ADMIN_ERROR.Message));
+                //return BadRequest(AccountResponseError.InternalServerError(AccountErrors.CREATE_ADMIN_ERROR.Message));
+                return BadRequest();
             }
         }
     }

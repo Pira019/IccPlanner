@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Responses.Errors;
+using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses.Account;
 using Application.Responses.Errors; 
@@ -19,17 +20,17 @@ namespace Test.IccPlanner.UnitTest
     /// </summary>
     public class AccountControllerTest
     {
-        private readonly ILogger<AccountsController> _logger;
+        private readonly IAccountResponseError _accountResponseError;
         private readonly IAccountService _accountService;
 
         private readonly AccountsController _accountController;
 
         public AccountControllerTest()
         {
-            _logger = Substitute.For<ILogger<AccountsController>>();
+            _accountResponseError = Substitute.For<IAccountResponseError>();
             _accountService = Substitute.For<IAccountService>();
 
-            _accountController = new AccountsController(_accountService, _logger);
+            _accountController = new AccountsController(_accountService, _accountResponseError);
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace Test.IccPlanner.UnitTest
 
             //Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(requestController).Value;
-            badRequestResult.Should().BeEquivalentTo(AccountResponseError.UserIsLockedOut());
+            badRequestResult.Should().BeEquivalentTo(_accountResponseError.UserIsLockedOut());
         }
         
         [Fact]
@@ -125,7 +126,7 @@ namespace Test.IccPlanner.UnitTest
 
             //Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(requestController).Value;
-            badRequestResult.Should().BeEquivalentTo(AccountResponseError.LoginInvalidAttempt());
+            badRequestResult.Should().BeEquivalentTo(_accountResponseError.LoginInvalidAttempt());
         }
 
         [Fact]
@@ -186,7 +187,7 @@ namespace Test.IccPlanner.UnitTest
 
             //Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(response);
-            badRequest.Value.Should().BeEquivalentTo(AccountResponseError.UserNotFound());
+            badRequest.Value.Should().BeEquivalentTo(_accountResponseError.UserNotFound());
         }
 
         [Fact]

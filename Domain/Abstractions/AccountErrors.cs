@@ -7,9 +7,7 @@ namespace Domain.Abstractions
     /// </summary>
     public static class AccountErrors
     {
-        static public readonly Error USER_NOT_FOUND = new("USER_NOT_FOUND", "User not found.");
-        static public readonly Error INVALID_LOGIN_ATTEMPT = new("INVALID_LOGIN_ATTEMPT", ValidationMessages.INVALID_LOGIN_ATTEMPT);
-        static public readonly Error USER_IS_LOCKED_OUT = new("USER_IS_LOCKED_OUT",ValidationMessages.USER_IS_LOCKED_OUT);
+        static public readonly Error USER_NOT_FOUND = new("USER_NOT_FOUND", "User not found."); 
         static public readonly Error ADMIN_USER_EXIST = new("ADMIN_USER_EXIST", "You cannot create an account. Please contact an administrator.");
 
         //Message Logs

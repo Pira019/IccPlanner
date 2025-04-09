@@ -1,14 +1,16 @@
-﻿using Domain.Abstractions;
-using Microsoft.AspNetCore.Http; 
+﻿using Application.Interfaces.Responses.Errors;
+using Domain.Abstractions;
+using Microsoft.AspNetCore.Http;  
+using Shared.Ressources;
 
 namespace Application.Responses.Errors
 {
     /// <summary>
     /// Cette classe permet de gérer le retour des erreur des actons d'un compte
     /// </summary>
-    public class AccountResponseError : ApiError
+    public class AccountResponseError : ApiError, IAccountResponseError
     {
-        public static ApiErrorResponseModel UserNotFound()
+        public ApiErrorResponseModel UserNotFound()
         {
             return new ApiErrorResponseModel
             {
@@ -25,14 +27,13 @@ namespace Application.Responses.Errors
         /// <returns>
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>
         /// </returns>
-        public static ApiErrorResponseModel LoginInvalidAttempt()
+        public ApiErrorResponseModel LoginInvalidAttempt()
         {
             return new ApiErrorResponseModel
             {
-                StatusCode = StatusCodes.Status400BadRequest,
-                ValidationErrors = [AccountErrors.INVALID_LOGIN_ATTEMPT.Code],
-                Message = AccountErrors.INVALID_LOGIN_ATTEMPT.Message,
-                StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
+                StatusCode = StatusCodes.Status400BadRequest, 
+                Message = ValidationMessages.INVALID_LOGIN_ATTEMPT,
+                StatusDescription = ValidationMessages.BAD_REQUEST,
             };
         }
 
@@ -43,18 +44,17 @@ namespace Application.Responses.Errors
         /// Retourné l'erreur login invalid quand un utilisateur est bloqué
         /// Le model d'erreur <see cref="ApiErrorResponseModel"/>
         /// </returns>
-        public static ApiErrorResponseModel UserIsLockedOut()
+        public ApiErrorResponseModel UserIsLockedOut()
         {
             return new ApiErrorResponseModel
             {
-                StatusCode = StatusCodes.Status400BadRequest,
-                ValidationErrors = [AccountErrors.USER_IS_LOCKED_OUT.Code],
-                Message = AccountErrors.USER_IS_LOCKED_OUT.Message,
-                StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
+                StatusCode = StatusCodes.Status400BadRequest, 
+                Message = ValidationMessages.USER_IS_LOCKED_OUT,
+                StatusDescription = ValidationMessages.BAD_REQUEST,
             };
         }
 
-        public static ApiErrorResponseModel AdminUserExist()
+        public ApiErrorResponseModel AdminUserExist()
         {
             return new ApiErrorResponseModel
             {
@@ -63,5 +63,6 @@ namespace Application.Responses.Errors
                 StatusDescription = StatusCodes.Status403Forbidden.ToString()
             };
         }
+         
     }
 }

@@ -13,7 +13,7 @@ namespace Infrastructure.Configurations.Filter
             operation.Parameters.Add(new OpenApiParameter
             {
                 Name = "Accept-Language",  // Nom de l'en-tête
-                In = ParameterLocation.Header,  // Spécifie qu'il s'agit d'un en-tête
+                In = ParameterLocation.Header, 
                 Description = "Langue de la requête (par exemple, en-US, fr, etc.)",
                 Required = false,  // Ne pas obligatoire, car il peut y avoir une langue par défaut
                 Schema = new OpenApiSchema

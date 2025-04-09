@@ -14,8 +14,14 @@ namespace Shared.Abstraction
         INVALID_FILE_DATA,
         INVALID_ON,
 
+        //Account
+        INVALID_LOGIN_ATTEMPT,
 
-      //Department
-      DEPARTMENT_NOT_EXIST
+        //Api
+        BAD_REQUEST,
+
+
+        //Department
+        DEPARTMENT_NOT_EXIST
     }
 }

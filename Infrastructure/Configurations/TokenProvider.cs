@@ -2,7 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
-using Infrastructure.Configurations.Interface; 
+using Infrastructure.Configurations.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,6 +12,7 @@ namespace Infrastructure.Configurations
     public class TokenProvider : ITokenProvider
     { 
         private readonly AppSetting _appSetting;
+        public static readonly string _accessToken = "AccesssToken";
 
         public TokenProvider(IOptions<AppSetting> options)
         {
@@ -44,5 +46,17 @@ namespace Infrastructure.Configurations
 
             return handler.CreateToken(tokenDescriptor);
         }
+
+        public void AddJwtToCookie(HttpResponse httpResponse, string token)
+        {
+            httpResponse.Cookies.Append(_accessToken, token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite =  SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddMinutes((double)_appSetting?.JwtSetting?.ExpirationInMinutes!),
+            });
+        }
+         
     }
 }
