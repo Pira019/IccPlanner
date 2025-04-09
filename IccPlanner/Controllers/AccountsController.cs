@@ -1,10 +1,10 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Responses.Errors;
+using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses;
-using Application.Responses.Account;
-using Application.Responses.Errors;
+using Application.Responses.Account; 
 using Infrastructure.Configurations.Interface;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace IccPlanner.Controllers
 {
@@ -14,14 +14,14 @@ namespace IccPlanner.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
-    {
-        private readonly ILogger<AccountsController> _logger;
+    { 
         private readonly IAccountService _accountService;
+        private readonly IAccountResponseError _accountResponseError;
 
-        public AccountsController(IAccountService accountService, ILogger<AccountsController> logger)
+        public AccountsController(IAccountService accountService, IAccountResponseError accountResponseError)
         {
-            _accountService = accountService;
-            _logger = logger;
+            _accountService = accountService; 
+            _accountResponseError = accountResponseError;
         }
 
         // POST: AccountsController/Create
@@ -40,8 +40,9 @@ namespace IccPlanner.Controllers
 
             if (!result.Succeeded)
             {
-                var response = AccountResponseError.ApiIdentityResultResponseError(result);
-                return BadRequest(response);
+               // var response = AccountResponseError.ApiIdentityResultResponseError(result);
+               // return BadRequest(response);
+                return BadRequest();
             }
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -62,14 +63,15 @@ namespace IccPlanner.Controllers
 
             if (user == null)
             {
-                return BadRequest(AccountResponseError.UserNotFound());
+                return BadRequest(_accountResponseError.UserNotFound());
             }
 
             var result = await _accountService.ConfirmEmailAccount(user, request.Token);
 
             return result.Succeeded
                 ? Ok()
-                : BadRequest(AccountResponseError.ApiIdentityResultResponseError(result));
+                //: BadRequest(AccountResponseError.ApiIdentityResultResponseError(result));
+                : BadRequest();
         }
 
         /// <summary>
@@ -80,19 +82,19 @@ namespace IccPlanner.Controllers
         [HttpPost("login")]
         [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login([FromForm] LoginRequest request, ITokenProvider tokenProvider)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request, ITokenProvider tokenProvider)
         {
             // Authentification
             var resultat = await _accountService.Login(request);
 
             if (resultat.IsLockedOut)
             {
-                return BadRequest(AccountResponseError.UserIsLockedOut());
+                return BadRequest(_accountResponseError.UserIsLockedOut());
             }
 
             if (!resultat.Succeeded)
             {
-                return BadRequest(AccountResponseError.LoginInvalidAttempt());
+                return BadRequest(_accountResponseError.LoginInvalidAttempt());
             }
 
             var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
@@ -104,7 +106,8 @@ namespace IccPlanner.Controllers
                 AccessToken = token
             };
 
-            return Ok(res);
+            tokenProvider.AddJwtToCookie(Response,token);
+            return Ok();
 
         }
     }

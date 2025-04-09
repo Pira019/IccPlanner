@@ -27,6 +27,8 @@ using FluentValidation.AspNetCore;
 using Shared.Interfaces;
 using Shared;
 using Domain.Abstractions;
+using Application.Interfaces.Responses.Errors;
+using Application.Responses.Errors;
 
 
 namespace IccPlanner
@@ -46,7 +48,7 @@ namespace IccPlanner
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
-          
+
             // Configuration
             IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", optional: true, reloadOnChange: true)
@@ -87,16 +89,31 @@ namespace IccPlanner
                         }
                     });
 
-                var securitySchema = new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme,
-                    BearerFormat = "JWT"
-                };
 
-                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securitySchema);
+                options.AddSecurityDefinition("cookie", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = TokenProvider._accessToken,
+                    In = ParameterLocation.Cookie,
+                    Description = "Token d'authentification JWT via cookie"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "cookie"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+
+
                 options.OperationFilter<AddAcceptLanguageHeaderParameter>();
 
                 var securityRequirement = new OpenApiSecurityRequirement
@@ -124,7 +141,9 @@ namespace IccPlanner
             builder.Services.AddScoped<IPostRepository, PosteRepository>();
             builder.Services.AddScoped<IProgramRepository, ProgramRepository>();
             builder.Services.AddScoped<IDepartmentProgramRepository, DepartmentProgramRepository>();
-            builder.Services.AddScoped<IDepartmentMemberRepository, DepartmentMemberRepository>(); 
+            builder.Services.AddScoped<IDepartmentMemberRepository, DepartmentMemberRepository>();
+
+            builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
 
             //Services             
             builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
@@ -140,9 +159,6 @@ namespace IccPlanner
 
             builder.Services.AddSingleton(resolver =>
             resolver.GetRequiredService<IOptions<AppSetting>>().Value);
-
-            builder.Services.AddSingleton<AccountErrors>();
-
 
             // Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -174,7 +190,22 @@ namespace IccPlanner
                 })
                 .AddJwtBearer(o =>
                 {
-                    o.RequireHttpsMetadata = false;
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = contex =>
+                        {
+                            var token = contex.HttpContext.Request.Cookies[TokenProvider._accessToken];
+
+                            if (token != null)
+                            {
+                                contex.Token = token;
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+
+                    o.RequireHttpsMetadata = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -195,10 +226,10 @@ namespace IccPlanner
                 AuthorizationPolicies.AddPolicies(options);
             });
 
-            builder.Services.AddRouting(op => op.LowercaseUrls = true); 
+            builder.Services.AddRouting(op => op.LowercaseUrls = true);
 
             builder.Services.AddValidatorsFromAssemblyContaining<AddDepartmentMemberImportFileRequestValidator>();
-            builder.Services.AddFluentValidationAutoValidation(); 
+            builder.Services.AddFluentValidationAutoValidation();
 
             //Localization
             builder.Services.AddLocalization(options => options.ResourcesPath = "Ressources");
@@ -213,7 +244,7 @@ namespace IccPlanner
                         new CultureInfo("en-US")
                    };
 
-                   options.DefaultRequestCulture = new RequestCulture(culture: "fr-FR", uiCulture: "fr-FR");
+                   options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
                    options.SupportedCultures = supportedCultures;
                    options.SupportedUICultures = supportedCultures;
 
@@ -231,7 +262,7 @@ namespace IccPlanner
             {
                 options.AddPolicy(MyAllowSpecificOrigins, policy =>
                 {
-                    policy.WithOrigins(appSetting.FrontUrl!).AllowAnyMethod().AllowAnyHeader();
+                    policy.WithOrigins(appSetting.FrontUrl!).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                 });
             });
 
@@ -243,7 +274,7 @@ namespace IccPlanner
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(); 
+                app.UseSwaggerUI();
             }
             app.UseSwagger(opt =>
             {
