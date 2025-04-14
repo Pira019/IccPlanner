@@ -80,7 +80,7 @@ namespace IccPlanner.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request, ITokenProvider tokenProvider)
         {

@@ -160,14 +160,10 @@ namespace Test.IccPlanner.UnitTest
             tokenProvider.Create(Arg.Any<User>(), Arg.Any<ICollection<string>>()).Returns(token);
             //Act
             var response = await _accountController.Login(requestData, tokenProvider);
-            var resultAct = new LoginAccountResponse
-            { AccessToken = token };
-
-
+           
             //Assert
-            var okResult = Assert.IsType<OkObjectResult>(response);
-            var result = Assert.IsType<LoginAccountResponse>(okResult.Value);
-            okResult.Value.Should().BeEquivalentTo(resultAct);
+            var okResult = Assert.IsType<OkResult>(response);
+            okResult.StatusCode.Should().Be(StatusCodes.Status200OK);
         }
 
         [Fact]
