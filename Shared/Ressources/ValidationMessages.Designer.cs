@@ -79,6 +79,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Description.
+        /// </summary>
+        public static string DESCRIPTION {
+            get {
+                return ResourceManager.GetString("DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unknown error. Please try again later..
         /// </summary>
         public static string ERROR_UNDEFINED {
@@ -178,6 +187,24 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0} must not exceed {1} characters.
+        /// </summary>
+        public static string MAXLENGTH {
+            get {
+                return ResourceManager.GetString("MAXLENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ministry name .
+        /// </summary>
+        public static string MINISTRY_NAME {
+            get {
+                return ResourceManager.GetString("MINISTRY_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The following columns are required: PRENOM, SEXE, CONTACT..
         /// </summary>
         public static string MISSING_REQUIRED_COLUMN {
@@ -187,7 +214,25 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The field {0} cannot be null..
+        ///   Recherche une chaîne localisée semblable à Name.
+        /// </summary>
+        public static string NAME {
+            get {
+                return ResourceManager.GetString("NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à already taken..
+        /// </summary>
+        public static string NAME_EXISTS {
+            get {
+                return ResourceManager.GetString("NAME_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à cannot be null..
         /// </summary>
         public static string NOT_NULL {
             get {

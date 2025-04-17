@@ -123,6 +123,9 @@
   <data name="DEPARTMENT_NOT_EXIST" xml:space="preserve">
     <value>This department not exist.</value>
   </data>
+  <data name="DESCRIPTION" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="ERROR_UNDEFINED" xml:space="preserve">
     <value>Unknown error. Please try again later.</value>
   </data>
@@ -156,11 +159,23 @@
   <data name="INVALID_PHONE_NUMBER" xml:space="preserve">
     <value>Phone number must contain only digits. </value>
   </data>
+  <data name="MAXLENGTH" xml:space="preserve">
+    <value>{0} must not exceed {1} characters</value>
+  </data>
+  <data name="MINISTRY_NAME" xml:space="preserve">
+    <value>Ministry name </value>
+  </data>
   <data name="MISSING_REQUIRED_COLUMN" xml:space="preserve">
     <value>The following columns are required: PRENOM, SEXE, CONTACT.</value>
   </data>
+  <data name="NAME" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NAME_EXISTS" xml:space="preserve">
+    <value>already taken.</value>
+  </data>
   <data name="NOT_NULL" xml:space="preserve">
-    <value>The field {0} cannot be null.</value>
+    <value>cannot be null.</value>
   </data>
   <data name="UNAUTHORIZED" xml:space="preserve">
     <value>Unauthorized access.</value>
