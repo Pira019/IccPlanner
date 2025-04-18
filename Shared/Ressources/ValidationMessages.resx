@@ -172,7 +172,7 @@
     <value>Name</value>
   </data>
   <data name="NAME_EXISTS" xml:space="preserve">
-    <value>already taken.</value>
+    <value>Already taken.</value>
   </data>
   <data name="NOT_NULL" xml:space="preserve">
     <value>cannot be null.</value>

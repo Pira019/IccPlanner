@@ -48,6 +48,7 @@ namespace Application.Responses.Errors
         {
             return new ApiErrorResponseModel
             {
+                Success = false,
                 StatusCode = isUnauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
                 Message = isUnauthorized ? ApiResponseErrorMessage.UNAUTHORIZED.Message : ApiResponseErrorMessage.FORBIDDEN_ACCESS.Message,
                 StatusDescription = isUnauthorized ? StatusCodes.Status401Unauthorized.ToString() : StatusCodes.Status403Forbidden.ToString()
@@ -58,6 +59,7 @@ namespace Application.Responses.Errors
         {
             return new ApiErrorResponseModel
             {
+                Success = false,
                 StatusCode = StatusCodes.Status400BadRequest,
                 ValidationErrors = [errorMessage.Code],
                 Message = errorMessage.Message,

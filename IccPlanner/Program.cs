@@ -29,6 +29,7 @@ using Shared;
 using Domain.Abstractions;
 using Application.Interfaces.Responses.Errors;
 using Application.Responses.Errors;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 
 namespace IccPlanner
@@ -88,31 +89,6 @@ namespace IccPlanner
                             Email = appSetting?.Contact?.Email,
                         }
                     });
-
-
-                options.AddSecurityDefinition("cookie", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.ApiKey,
-                    Name = TokenProvider._accessToken,
-                    In = ParameterLocation.Cookie,
-                    Description = "Token d'authentification JWT via cookie"
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "cookie"
-                            }
-                        },
-                        new string[] {}
-                    }
-                });
-
 
                 options.OperationFilter<AddAcceptLanguageHeaderParameter>();
 
@@ -182,30 +158,16 @@ namespace IccPlanner
             builder.Services.Configure<DataProtectionTokenProviderOptions>
                (options => options.TokenLifespan = TimeSpan.FromMinutes(20));
 
-            builder.Services.AddAuthentication(
-                op =>
-                {
-                    op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            builder.Services.AddAuthentication(opt =>
+                    {
+                        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+                        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    }
+                )
                 .AddJwtBearer(o =>
                 {
-                    o.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = contex =>
-                        {
-                            var token = contex.HttpContext.Request.Cookies[TokenProvider._accessToken];
-
-                            if (token != null)
-                            {
-                                contex.Token = token;
-                            }
-
-                            return Task.CompletedTask;
-                        }
-                    };
-
-                    o.RequireHttpsMetadata = true;
+                    o.EventsType = typeof(CustomJwtBearerEventHandler);
+                    o.RequireHttpsMetadata = appSetting.SecureToken ?? false;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -218,8 +180,8 @@ namespace IccPlanner
                         ClockSkew = TimeSpan.Zero
                     };
                     o.MapInboundClaims = false;
-                    o.EventsType = typeof(CustomJwtBearerEventHandler);
-                });
+                }
+             );
 
             builder.Services.AddAuthorization(options =>
             {
@@ -281,10 +243,10 @@ namespace IccPlanner
                 opt.SerializeAsV2 = true;
             });
             app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
             app.MapControllers();

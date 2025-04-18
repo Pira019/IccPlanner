@@ -223,7 +223,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à already taken..
+        ///   Recherche une chaîne localisée semblable à Already taken..
         /// </summary>
         public static string NAME_EXISTS {
             get {

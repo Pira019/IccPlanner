@@ -75,5 +75,18 @@ namespace Test.Application.UnitTest.Services
             //Assert 
             result.Should().BeTrue();
         }
+
+        [Fact]
+        public async Task IsMinistryExistsById_ShouldReturnTrue()
+        {
+            //Arrange
+            var id =10;
+            _ministryRepository.IsExist(id).Returns(Task.FromResult(false));
+
+            //Act
+            var result = await _ministryService.IsMinistryExistsById(id);
+            //Assert 
+            result.Should().BeFalse();
+        }
     }
 }

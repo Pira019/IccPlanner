@@ -26,7 +26,7 @@ namespace Application.Helper.Validators.Requests
 
         private bool IsMinistryExist(String ministryName)
         {
-            return _ministryService.IsNameMinistryExists(ministryName).Result;
+            return !_ministryService.IsNameMinistryExists(ministryName).Result;
         }
     }
 }

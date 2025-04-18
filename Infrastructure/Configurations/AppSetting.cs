@@ -40,6 +40,11 @@
         /// </summary>
         public string? FrontUrl { get; set; }
 
+        /// <summary>
+        /// True si en prod
+        /// </summary>
+        public bool? SecureToken { get; set; }
+
 
     }
 }

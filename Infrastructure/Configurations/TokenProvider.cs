@@ -12,7 +12,11 @@ namespace Infrastructure.Configurations
     public class TokenProvider : ITokenProvider
     { 
         private readonly AppSetting _appSetting;
-        public static readonly string _accessToken = "AccesssToken";
+
+        /// <summary>
+        /// Nom du token
+        /// </summary>
+        public const string AccessToken = "accessToken";
 
         public TokenProvider(IOptions<AppSetting> options)
         {
@@ -47,16 +51,18 @@ namespace Infrastructure.Configurations
             return handler.CreateToken(tokenDescriptor);
         }
 
-        public void AddJwtToCookie(HttpResponse httpResponse, string token)
+        public Task AppendUserCookie(string token, HttpResponse httpResponse)
         {
-            httpResponse.Cookies.Append(_accessToken, token, new CookieOptions
+            var cookieOption = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite =  SameSiteMode.Lax,
-                Expires = DateTime.UtcNow.AddMinutes((double)_appSetting?.JwtSetting?.ExpirationInMinutes!),
-            });
+                Secure = _appSetting.SecureToken ?? false,
+                SameSite = SameSiteMode.Lax,
+                MaxAge = TimeSpan.FromDays(1)
+            };
+
+            httpResponse.Cookies.Append(AccessToken, token, cookieOption);
+            return Task.CompletedTask;
         }
-         
     }
 }
