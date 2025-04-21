@@ -224,7 +224,7 @@ namespace IccPlanner
             {
                 options.AddPolicy(MyAllowSpecificOrigins, policy =>
                 {
-                    policy.WithOrigins(appSetting.FrontUrl!).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                    policy.WithOrigins(appSetting.FrontUrl!).AllowCredentials().AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
@@ -245,6 +245,7 @@ namespace IccPlanner
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -56,8 +56,8 @@ namespace Infrastructure.Configurations
             var cookieOption = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = _appSetting.SecureToken ?? false,
-                SameSite = SameSiteMode.Lax,
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 MaxAge = TimeSpan.FromDays(1)
             };
 
@@ -65,4 +65,5 @@ namespace Infrastructure.Configurations
             return Task.CompletedTask;
         }
     }
+
 }

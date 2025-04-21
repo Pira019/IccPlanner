@@ -16,7 +16,7 @@ namespace Application.Helper.Validators.Requests
             RuleFor(X => X.Name)
                 .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.NAME)
                 .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.NAME)
-                .MaximumLength(255).WithMessage(string.Format(ValidationMessages.MAXLENGTH, ValidationMessages.MINISTRY_NAME, 255)).WithName(ValidationMessages.NAME)
+                .MaximumLength(255).WithMessage(string.Format(ValidationMessages.MAXLENGTH, ValidationMessages.MINISTRY_NAME, 255))
                 .Must(IsMinistryExist).WithMessage(ValidationMessages.NAME_EXISTS).WithName(ValidationMessages.MINISTRY_NAME);
 
             RuleFor(X => X.Description)

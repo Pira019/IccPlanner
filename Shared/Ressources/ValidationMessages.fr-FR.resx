@@ -124,7 +124,7 @@
     <value>Ce département n'existe pas.</value>
   </data>
   <data name="DESCRIPTION" xml:space="preserve">
-    <value>Description</value>
+    <value>La description</value>
   </data>
   <data name="ERROR_UNDEFINED" xml:space="preserve">
     <value>Erreur inconnue. Veuillez réessayer plus tard.</value>
@@ -172,10 +172,10 @@
     <value>Nom</value>
   </data>
   <data name="NAME_EXISTS" xml:space="preserve">
-    <value>existe deja.</value>
+    <value>{PropertyName} existe deja.</value>
   </data>
   <data name="NOT_NULL" xml:space="preserve">
-    <value>ne peut pas être nul.</value>
+    <value> {PropertyName} ne peut pas être nul.</value>
   </data>
   <data name="UNAUTHORIZED" xml:space="preserve">
     <value>Accès non autorisé.</value>

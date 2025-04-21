@@ -172,10 +172,10 @@
     <value>Name</value>
   </data>
   <data name="NAME_EXISTS" xml:space="preserve">
-    <value>Already taken.</value>
+    <value> {PropertyName} is already taken.</value>
   </data>
   <data name="NOT_NULL" xml:space="preserve">
-    <value>cannot be null.</value>
+    <value> {PropertyName} cannot be null.</value>
   </data>
   <data name="UNAUTHORIZED" xml:space="preserve">
     <value>Unauthorized access.</value>

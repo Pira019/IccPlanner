@@ -223,7 +223,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Already taken..
+        ///   Recherche une chaîne localisée semblable à  {PropertyName} is already taken..
         /// </summary>
         public static string NAME_EXISTS {
             get {
@@ -232,7 +232,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à cannot be null..
+        ///   Recherche une chaîne localisée semblable à  {PropertyName} cannot be null..
         /// </summary>
         public static string NOT_NULL {
             get {

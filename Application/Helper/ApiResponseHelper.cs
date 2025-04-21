@@ -3,6 +3,7 @@ using Application.Responses;
 using Domain.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Ressources;
 
 namespace Application.Helper
 {
@@ -21,8 +22,8 @@ namespace Application.Helper
             return new ApiErrorResponseModel
             {
                 StatusCode = StatusCodes.Status400BadRequest,
-                StatusDescription = ApiResponseErrorMessage.VALIDATION_FAILED.Code,
-                Message = ApiResponseErrorMessage.VALIDATION_FAILED.Message,
+                StatusDescription = StatusCodes.Status400BadRequest.ToString(),
+                Message = ValidationMessages.VALIDATION_FAILED,
                 ValidationErrors = validationErrors
             };
         }
