@@ -123,6 +123,9 @@
   <data name="DEPARTMENT_NOT_EXIST" xml:space="preserve">
     <value>Ce département n'existe pas.</value>
   </data>
+  <data name="DESCRIPTION" xml:space="preserve">
+    <value>La description</value>
+  </data>
   <data name="ERROR_UNDEFINED" xml:space="preserve">
     <value>Erreur inconnue. Veuillez réessayer plus tard.</value>
   </data>
@@ -156,11 +159,23 @@
   <data name="INVALID_PHONE_NUMBER" xml:space="preserve">
     <value>Le numéro de téléphone doit être composé uniquement de chiffres. </value>
   </data>
+  <data name="MAXLENGTH" xml:space="preserve">
+    <value>{0} ne peut pas dépasser {1} caractères</value>
+  </data>
+  <data name="MINISTRY_NAME" xml:space="preserve">
+    <value>Nom du ministère</value>
+  </data>
   <data name="MISSING_REQUIRED_COLUMN" xml:space="preserve">
     <value>Les colonnes suivantes sont obligatoires : PRENOM, SEXE, CONTACT.</value>
   </data>
+  <data name="NAME" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="NAME_EXISTS" xml:space="preserve">
+    <value>{PropertyName} existe deja.</value>
+  </data>
   <data name="NOT_NULL" xml:space="preserve">
-    <value>Le champ {0} ne peut pas être nul.</value>
+    <value> {PropertyName} ne peut pas être nul.</value>
   </data>
   <data name="UNAUTHORIZED" xml:space="preserve">
     <value>Accès non autorisé.</value>

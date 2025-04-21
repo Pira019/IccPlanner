@@ -1,8 +1,5 @@
 ﻿using Application.Interfaces.Services;
-using Application.Requests.Ministry;
-using Application.Responses.Errors.Ministry;
-using Domain.Abstractions;
-using FluentAssertions;
+using Application.Requests.Ministry;  
 using IccPlanner.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -25,34 +22,12 @@ namespace Test.IccPlanner.UnitTest
         {
             //Arrange
             var requestData = new AddMinistryRequest
-            { Description = "description", Name = "Tes001t" };
-
-            _ministryService.IsNameMinistryExists(Arg.Any<string>()).Returns(Task.FromResult(false));
+            { Description = "description", Name = "Tes001t" }; 
             //Act
             var result = await _ministriesController.Add(requestData);
             //Assert
             Assert.IsType<CreatedResult>(result);
 
-        } 
-        
-        [Fact]
-        public async Task Add_WhenMinistryExists_ShouldReturnBadRequest()
-        {
-            //Arrange
-            var requestData = new AddMinistryRequest
-            { Description = "description", Name = "Tes001t" };
-
-            _ministryService.IsNameMinistryExists(Arg.Any<string>()).Returns(Task.FromResult(true));
-            //Act
-            var result = await _ministriesController.Add(requestData);
-            //Assert
-            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            badRequest.Value.Should().BeEquivalentTo(MinistryResponseError.NameExist());
-
-
-        }
-
-
-
+        }    
     }
 }

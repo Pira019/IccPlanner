@@ -10,7 +10,6 @@ using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace Test.IccPlanner.UnitTest
@@ -82,7 +81,7 @@ namespace Test.IccPlanner.UnitTest
         }
         
         [Fact]
-        public async Task Create_WhenSucceed_ShouldReturnBadRequest()
+        public async Task Create_WhenSucceed_ShouldReturnOkObjectResult()
         {
             //Arrange
             var identity = IdentityResult.Success;
@@ -160,14 +159,17 @@ namespace Test.IccPlanner.UnitTest
             tokenProvider.Create(Arg.Any<User>(), Arg.Any<ICollection<string>>()).Returns(token);
             //Act
             var response = await _accountController.Login(requestData, tokenProvider);
+
+            //Assert
+
             var resultAct = new LoginAccountResponse
             { AccessToken = token };
-
-
             //Assert
             var okResult = Assert.IsType<OkObjectResult>(response);
             var result = Assert.IsType<LoginAccountResponse>(okResult.Value);
             okResult.Value.Should().BeEquivalentTo(resultAct);
+
+
         }
 
         [Fact]

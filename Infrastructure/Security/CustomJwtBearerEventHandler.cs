@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Application.Responses.Errors;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 
@@ -11,16 +12,20 @@ namespace Infrastructure.Security
     public class CustomJwtBearerEventHandler : JwtBearerEvents
     {
         private readonly string ContentType = "application/json";
+
+        public override Task MessageReceived(MessageReceivedContext context)
+        {
+            context.Token = context.Request.Cookies[TokenProvider.AccessToken];
+            return Task.CompletedTask;
+        }
         public override async Task Challenge(JwtBearerChallengeContext context)
         {
             context.HandleResponse();
-
             //configuration
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = ContentType;
             await context.Response.WriteAsync(JsonSerializer.Serialize(ApiError.AuthError(true)));
         }
-
         public override async Task Forbidden(ForbiddenContext context)
         {
             //configuration
