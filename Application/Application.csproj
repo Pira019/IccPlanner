@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helper\Validators\Requests\" />
+    <Folder Include="Responses\Errors\Ministry\" />
   </ItemGroup>
 
 </Project>

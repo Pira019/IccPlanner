@@ -2,7 +2,8 @@
 using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses;
-using Application.Responses.Account; 
+using Application.Responses.Account;
+using Application.Responses.Errors;
 using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Mvc; 
 
@@ -40,9 +41,8 @@ namespace IccPlanner.Controllers
 
             if (!result.Succeeded)
             {
-               // var response = AccountResponseError.ApiIdentityResultResponseError(result);
-               // return BadRequest(response);
-                return BadRequest();
+                 var response = AccountResponseError.ApiIdentityResultResponseError(result);
+                 return BadRequest(response); 
             }
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -70,8 +70,7 @@ namespace IccPlanner.Controllers
 
             return result.Succeeded
                 ? Ok()
-                //: BadRequest(AccountResponseError.ApiIdentityResultResponseError(result));
-                : BadRequest();
+                : BadRequest(AccountResponseError.ApiIdentityResultResponseError(result));
         }
 
         /// <summary>
@@ -80,7 +79,7 @@ namespace IccPlanner.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        [ProducesResponseType<LoginAccountResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request, ITokenProvider tokenProvider)
         {
@@ -100,13 +99,7 @@ namespace IccPlanner.Controllers
             var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
             var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
             var token = tokenProvider.Create(userAuth!, userAuthRoles);
-
-            var res = new LoginAccountResponse
-            {
-                AccessToken = token
-            };
-
-            tokenProvider.AddJwtToCookie(Response,token);
+            await tokenProvider.AppendUserCookie(token, Response);
             return Ok();
 
         }
