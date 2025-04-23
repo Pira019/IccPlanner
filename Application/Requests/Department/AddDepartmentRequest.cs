@@ -8,18 +8,12 @@ namespace Application.Requests.Department
     public class AddDepartmentRequest
     {
         [Required]
-        public required int MinistryId { get; set; }
-        [Required]
-        [MaxLength(255)]
-
+        public required int MinistryId { get; set; } 
         public required string Name { get; set; }
         [MaxLength(55)]
 
         public string? ShortName { get; set; }
-        [Required]
-
-        public required string Description { get; set; }
-        [DataType(DataType.Date)]
+        public required string Description { get; set; } 
         public DateOnly? StartDate { get; set; }
 
     }

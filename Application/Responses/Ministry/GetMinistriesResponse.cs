@@ -1,0 +1,20 @@
+﻿using System.Text.Json.Serialization;
+
+namespace Application.Responses.Ministry
+{
+    /// <summary>
+    /// Model obtenir les ministères 
+    /// </summary>
+    public class GetMinistriesResponse
+    {
+        [JsonPropertyName("id")]
+        public required int Id { get; set; }
+
+        /// <summary>
+        /// Nom du ministère 
+        /// </summary>
+        /// 
+        [JsonPropertyName("name")]
+        public required string Name { get; set; }
+    }
+}

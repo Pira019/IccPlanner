@@ -70,6 +70,24 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The department « {PropertyValue} » already exists..
+        /// </summary>
+        public static string DEPARTMENT_EXIST {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Department name.
+        /// </summary>
+        public static string DEPARTMENT_NAME {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à This department not exist..
         /// </summary>
         public static string DEPARTMENT_NOT_EXIST {
@@ -111,6 +129,15 @@ namespace Shared.Ressources {
         public static string FORBIDDEN_ACCESS {
             get {
                 return ResourceManager.GetString("FORBIDDEN_ACCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} is invalid..
+        /// </summary>
+        public static string INVALID_ENTRY {
+            get {
+                return ResourceManager.GetString("INVALID_ENTRY", resourceCulture);
             }
         }
         
@@ -187,11 +214,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must not exceed {MaxLength} characters..
+        /// </summary>
+        public static string MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {0} must not exceed {1} characters.
         /// </summary>
         public static string MAXLENGTH {
             get {
                 return ResourceManager.GetString("MAXLENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ministry.
+        /// </summary>
+        public static string MINISTRY {
+            get {
+                return ResourceManager.GetString("MINISTRY", resourceCulture);
             }
         }
         
@@ -237,6 +282,15 @@ namespace Shared.Ressources {
         public static string NOT_NULL {
             get {
                 return ResourceManager.GetString("NOT_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The short name .
+        /// </summary>
+        public static string SHORT_NAME {
+            get {
+                return ResourceManager.GetString("SHORT_NAME", resourceCulture);
             }
         }
         
