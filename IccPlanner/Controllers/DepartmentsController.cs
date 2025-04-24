@@ -16,11 +16,11 @@ namespace IccPlanner.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly IDepartmentService _departmentService;
-        private readonly IMinistryService _ministryService; 
+        private readonly IMinistryService _ministryService;
         public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService)
         {
             _departmentService = departmentService;
-            _ministryService = ministryService; 
+            _ministryService = ministryService;
         }
 
         [HttpPost]
@@ -31,21 +31,8 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<AddDepartmentResponse>(StatusCodes.Status201Created)]
         public async Task<IActionResult> Add(AddDepartmentRequest request)
         {
-            var isMinistryExist = await _ministryService.IsMinistryExistsById(request.MinistryId);
-
-            if (!isMinistryExist)
-            {
-                return BadRequest(DepartmentResponseError.ErrorMessage(MinistryError.NAME_NOT_FOUND));
-            }
-
-            var isDepartmentNameExist = await _departmentService.IsNameExists(request.Name);
-
-            if (isDepartmentNameExist)
-            {
-                return BadRequest(DepartmentResponseError.ErrorMessage(DepartmentError.NAME_EXISTS));
-            }
-            var result = await _departmentService.AddDepartment(request);
-            return Created(string.Empty, result);
+            var newDepartment = await _departmentService.AddDepartment(request);
+            return Created(string.Empty, newDepartment);
         }
 
         [HttpPost("responsable")]
