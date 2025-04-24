@@ -30,5 +30,15 @@ namespace IccPlanner.Controllers
             var result = await _ministryService.AddMinistry(request);
             return Created(string.Empty, result);
         }
+
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<GetMinistriesResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll()
+        { 
+            return Ok(await _ministryService.GetAll());
+        }
     }
 }

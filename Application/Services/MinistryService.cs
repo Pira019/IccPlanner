@@ -24,6 +24,11 @@ namespace Application.Services
             return _mapper.Map<AddMinistryResponse>(newMinistry);
         }
 
+        public Task<IEnumerable<GetMinistriesResponse>> GetAll()
+        {
+           return _ministryRepository.GetAll();
+        }
+
         public async Task<bool> IsMinistryExistsById(int id)
         {
             return await _ministryRepository.IsExists(id);

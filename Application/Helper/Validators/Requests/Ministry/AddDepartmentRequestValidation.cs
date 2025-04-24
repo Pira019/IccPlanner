@@ -36,6 +36,9 @@ namespace Application.Helper.Validators.Requests.Ministry
             RuleFor(X => X.Description)
               .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DESCRIPTION)
               .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DESCRIPTION);
+            
+            RuleFor(X => X.StartDate)
+              .Must(date => date == null || date.Value <= DateOnly.FromDateTime(DateTime.Today)).WithMessage(ValidationMessages.VAILID_DATE).WithName(ValidationMessages.DATE);
         }
 
         /// <summary>

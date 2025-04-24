@@ -3,7 +3,7 @@
 namespace Application.Responses.Ministry
 {
     /// <summary>
-    /// Model obtenir les ministères 
+    /// Model obtenir la liste des ministères 
     /// </summary>
     public class GetMinistriesResponse
     {

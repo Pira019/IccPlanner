@@ -120,6 +120,9 @@
   <data name="BAD_REQUEST" xml:space="preserve">
     <value>Bad request</value>
   </data>
+  <data name="DATE" xml:space="preserve">
+    <value>The date</value>
+  </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
     <value>The department « {PropertyValue} » already exists.</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="USER_IS_LOCKED_OUT" xml:space="preserve">
     <value>User account locked out. Try again in a few minutes.</value>
+  </data>
+  <data name="VAILID_DATE" xml:space="preserve">
+    <value>{PropertyName} must be valid and not in the future.</value>
   </data>
   <data name="VALIDATION_FAILED" xml:space="preserve">
     <value>One or more validation errors occurred. Please check your input and try again.</value>

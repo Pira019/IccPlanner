@@ -70,6 +70,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The date.
+        /// </summary>
+        public static string DATE {
+            get {
+                return ResourceManager.GetString("DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The department « {PropertyValue} » already exists..
         /// </summary>
         public static string DEPARTMENT_EXIST {
@@ -309,6 +318,15 @@ namespace Shared.Ressources {
         public static string USER_IS_LOCKED_OUT {
             get {
                 return ResourceManager.GetString("USER_IS_LOCKED_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must be valid and not in the future..
+        /// </summary>
+        public static string VAILID_DATE {
+            get {
+                return ResourceManager.GetString("VAILID_DATE", resourceCulture);
             }
         }
         
