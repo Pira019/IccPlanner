@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using Shared.Abstraction;
 using Shared.Interfaces;
+using Shared.Ressources;
 
 namespace Application.Helper.Validators
 {
@@ -14,32 +15,29 @@ namespace Application.Helper.Validators
     {
         private readonly string[] _allowedExtensions = { ".xls", ".xlsx" };
         private const int MaxFileSize = 5 * 1024 * 1024; // 5 MB
-        private readonly IRessourceLocalizer _localizer;
         private readonly IDepartmentRepository _departmentRepository;
         public AddDepartmentMemberImportFileRequestValidator(IRessourceLocalizer ressourceLocalizer, IDepartmentRepository departmentRepository)
         {
-            this._localizer = ressourceLocalizer;
-            _departmentRepository = departmentRepository;
+             _departmentRepository = departmentRepository;
 
             RuleLevelCascadeMode = CascadeMode.Stop;
             RuleFor(x => x.formFile)
-                .NotNull().WithMessage(_localizer.Localize(ValidationMessage.NOT_NULL.ToString()))
-                .Must(file => file.Length > 0).WithMessage(_localizer.Localize(ValidationMessage.NOT_NULL.ToString()))
-                .Must(file => _allowedExtensions.Contains(System.IO.Path.GetExtension(file.FileName))).WithMessage(_localizer.Localize(ValidationMessage.INVALID_FILE_EXTENSION.ToString()))
-                .Must(ValidateExcelFile).WithMessage(_localizer.Localize(ValidationMessage.INVALID_FILE_EXTENSION.ToString()))
-                .Must(file => file.Length < MaxFileSize).WithMessage(string.Format(_localizer.Localize(ValidationMessage.FILE_TOO_LARGE.ToString()), MaxFileSize))
+                .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.FILE)
+                .Must(file => file.Length > 0).WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.FILE)
+                .Must(file => _allowedExtensions.Contains(System.IO.Path.GetExtension(file.FileName))).WithMessage(ValidationMessages.INVALID_FILE_EXTENSION)
+                .Must(ValidateExcelFile).WithMessage(ValidationMessages.INVALID_FILE_EXTENSION)
+                .Must(file => file.Length < MaxFileSize).WithMessage(string.Format(ValidationMessages.FILE_TOO_LARGE, MaxFileSize))
                 .Must(file =>
                     {
                         ErrorMessage = null;
                         return ValidateRequiredColumns(file);
                     }
-                    ).WithMessage(file => ErrorMessage ?? _localizer.Localize(ValidationMessage.INVALID_FILE_DATA.ToString()));  // Validation des données dans le fichier
-            
-            RuleFor(x => x.DepartmentId)                  
-                .NotNull() 
-                .NotEmpty()
-                .Must(IsDepartementExist).WithMessage(_localizer.Localize(ValidationMessage.DEPARTMENT_NOT_EXIST.ToString())
-                );
+                    ).WithMessage(file => ErrorMessage ?? ValidationMessages.INVALID_FILE_DATA);  // Validation des données dans le fichier
+
+            RuleFor(x => x.DepartmentId)
+                .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT)
+                .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT)
+                .Must(IsDepartementExist).WithMessage(ValidationMessages.DEPARTMENT_NOT_EXIST);
         }
 
         public string? ErrorMessage;
@@ -73,7 +71,7 @@ namespace Application.Helper.Validators
         {
             var requiredColumns = new Dictionary<string, string>
             {
-                { "prenom", "PRENOM" },
+                { "prénom", "PRENOM" },
                 { "sexe", "SEXE" },
                 { "contact", "CONTACT" }
             };
@@ -97,7 +95,7 @@ namespace Application.Helper.Validators
                             int index = columns.IndexOf(requiredColumns[key].ToLower());
                             if (index == -1)
                             {
-                                ErrorMessage = _localizer.Localize(ValidationMessage.MISSING_REQUIRED_COLUMN.ToString());
+                                ErrorMessage = ValidationMessages.MISSING_REQUIRED_COLUMN;
                                 return false;
                             }
                             columnIndexes[key] = index + 1; // Excel est indexé à 1
@@ -106,16 +104,16 @@ namespace Application.Helper.Validators
                         // Vérifier chaque ligne de données
                         for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                         {
-                            var nom = worksheet.Cells[row, columnIndexes["prenom"]].Text;
+                            var nom = worksheet.Cells[row, columnIndexes["prénom"]].Text;
                             var sexe = worksheet.Cells[row, columnIndexes["sexe"]].Text.Trim();
                             var numero = worksheet.Cells[row, columnIndexes["contact"]].Text.Trim();
 
-                            var errorOn = string.Format(_localizer.Localize(ValidationMessage.INVALID_ON.ToString()), row);
+                            var errorOn = string.Format(ValidationMessages.INVALID_ON, row);
 
                             // Validation du prénom (autorise les espaces et apostrophes)
                             if (string.IsNullOrEmpty(nom) || !Regex.IsMatch(nom, @"^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$"))
                             {
-                                ErrorMessage = _localizer.Localize(ValidationMessage.INVALID_NAME.ToString()) + errorOn;
+                                ErrorMessage = ValidationMessages.INVALID_NAME + " " + errorOn;
                                 return false;
                             }
 
@@ -123,14 +121,14 @@ namespace Application.Helper.Validators
                             var validGenders = new HashSet<string> { "h", "homme", "m", "masculin", "f", "femme", "féminin" };
                             if (string.IsNullOrEmpty(sexe) || !validGenders.Contains(sexe.ToLower()))
                             {
-                                ErrorMessage = _localizer.Localize(ValidationMessage.INVALID_GENDER.ToString()) + errorOn;
+                                ErrorMessage =  ValidationMessage.INVALID_GENDER + " " + errorOn;
                                 return false;
                             }
 
                             // Validation du numéro de téléphone (uniquement chiffres)
                             if (string.IsNullOrEmpty(numero) || !numero.All(char.IsDigit))
                             {
-                                ErrorMessage = _localizer.Localize(ValidationMessage.INVALID_PHONE_NUMBER.ToString()) + errorOn;
+                                ErrorMessage = ValidationMessages.INVALID_PHONE_NUMBER + " " + errorOn; ;
                                 return false;
                             }
                         }

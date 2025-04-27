@@ -79,6 +79,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The department.
+        /// </summary>
+        public static string DEPARTMENT {
+            get {
+                return ResourceManager.GetString("DEPARTMENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The department « {PropertyValue} » already exists..
         /// </summary>
         public static string DEPARTMENT_EXIST {
@@ -120,6 +129,24 @@ namespace Shared.Ressources {
         public static string ERROR_UNDEFINED {
             get {
                 return ResourceManager.GetString("ERROR_UNDEFINED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} « {PropertyValue} » already exist..
+        /// </summary>
+        public static string EXIST {
+            get {
+                return ResourceManager.GetString("EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The file.
+        /// </summary>
+        public static string FILE {
+            get {
+                return ResourceManager.GetString("FILE", resourceCulture);
             }
         }
         
@@ -286,11 +313,20 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à  {PropertyName} cannot be null..
+        ///   Recherche une chaîne localisée semblable à {PropertyName} cannot be null..
         /// </summary>
         public static string NOT_NULL {
             get {
                 return ResourceManager.GetString("NOT_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The program name.
+        /// </summary>
+        public static string PROGRAM_NAME {
+            get {
+                return ResourceManager.GetString("PROGRAM_NAME", resourceCulture);
             }
         }
         

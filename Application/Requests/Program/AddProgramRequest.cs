@@ -3,11 +3,10 @@
 namespace Application.Requests.Program
 {
     /// <summary>
-    /// Model de donnée pour ajouter un programmes
+    /// Model de donnée pour ajouter un programme
     /// </summary>
     public class AddProgramRequest
-    {
-        [Required]
+    { 
         public required string Name { get; set; }
         /// <summary>
         /// Abréviation ou nom court (ex: APP)

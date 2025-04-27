@@ -123,6 +123,9 @@
   <data name="DATE" xml:space="preserve">
     <value>La date</value>
   </data>
+  <data name="DEPARTMENT" xml:space="preserve">
+    <value>Le département</value>
+  </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
     <value>Le département « {PropertyValue} » existe déjà.</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="ERROR_UNDEFINED" xml:space="preserve">
     <value>Erreur inconnue. Veuillez réessayer plus tard.</value>
+  </data>
+  <data name="EXIST" xml:space="preserve">
+    <value>{PropertyName} « {PropertyValue} » existe déjà.</value>
+  </data>
+  <data name="FILE" xml:space="preserve">
+    <value>Le fichier</value>
   </data>
   <data name="FILE_TOO_LARGE" xml:space="preserve">
     <value>Le fichier est trop volumineux, la taille maximale autorisée est de {0} Mo.</value>
@@ -194,6 +203,9 @@
   </data>
   <data name="NOT_NULL" xml:space="preserve">
     <value>{PropertyName} ne peut pas être nul.</value>
+  </data>
+  <data name="PROGRAM_NAME" xml:space="preserve">
+    <value>Le nom de programme</value>
   </data>
   <data name="SHORT_NAME" xml:space="preserve">
     <value>Le nom court</value>

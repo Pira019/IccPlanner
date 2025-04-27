@@ -123,6 +123,9 @@
   <data name="DATE" xml:space="preserve">
     <value>The date</value>
   </data>
+  <data name="DEPARTMENT" xml:space="preserve">
+    <value>The department</value>
+  </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
     <value>The department « {PropertyValue} » already exists.</value>
   </data>
@@ -137,6 +140,12 @@
   </data>
   <data name="ERROR_UNDEFINED" xml:space="preserve">
     <value>Unknown error. Please try again later.</value>
+  </data>
+  <data name="EXIST" xml:space="preserve">
+    <value>{PropertyName} « {PropertyValue} » already exist.</value>
+  </data>
+  <data name="FILE" xml:space="preserve">
+    <value>The file</value>
   </data>
   <data name="FILE_TOO_LARGE" xml:space="preserve">
     <value>The file is too large, the maximum allowed size is {0} MB.</value>
@@ -193,7 +202,10 @@
     <value> {PropertyName} is already taken.</value>
   </data>
   <data name="NOT_NULL" xml:space="preserve">
-    <value> {PropertyName} cannot be null.</value>
+    <value>{PropertyName} cannot be null.</value>
+  </data>
+  <data name="PROGRAM_NAME" xml:space="preserve">
+    <value>The program name</value>
   </data>
   <data name="SHORT_NAME" xml:space="preserve">
     <value>The short name </value>

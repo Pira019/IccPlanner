@@ -1,10 +1,12 @@
 ﻿using Application.Interfaces.Services;
 using Application.Requests.Program;
-using Application.Responses; 
+using Application.Responses;
+using Application.Responses.Errors;
 using Application.Responses.Program;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Ressources; 
 
 namespace IccPlanner.Controllers
 {
@@ -12,11 +14,11 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class ProgramsController : ControllerBase
     {
-        private readonly IProgramService programService;
+        private readonly IProgramService _programService;
 
         public ProgramsController(IProgramService programService)
         {
-            this.programService = programService;
+            this._programService = programService;
         }
 
         [HttpPost]
@@ -27,8 +29,13 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<AddProgramResponse>(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateProgram([FromBody] AddProgramRequest request)
         {
-            var result = await programService.Add(request);
+            bool isProgramexist = await _programService.IsNameExists(request.Name);
 
+            if (isProgramexist) 
+            { 
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.EXIST,ValidationMessages.PROGRAM_NAME,request.Name));
+            }            
+            var result = await _programService.Add(request);
             return Created(string.Empty, result);
         }
     }

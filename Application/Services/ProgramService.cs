@@ -24,5 +24,10 @@ namespace Application.Services
 
             return _mapper.Map<AddProgramResponse>(newProgram);
         }
+
+        public async Task<bool> IsNameExists(string programName)
+        {
+            return await _IProgramRepository.IsNameExistsAsync(programName);
+        }
     }
 }

@@ -26,10 +26,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Shared.Interfaces;
 using Shared;
-using Domain.Abstractions;
 using Application.Interfaces.Responses.Errors;
 using Application.Responses.Errors;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Application.Helper.Validators.Requests.Prg;
 
 
 namespace IccPlanner
@@ -131,6 +130,8 @@ namespace IccPlanner
             builder.Services.AddScoped<IProgramService, ProgramService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
+
+            //Validation
 
 
             builder.Services.AddSingleton(resolver =>
