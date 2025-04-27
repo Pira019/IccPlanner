@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shared.Ressources;
 
 namespace Application.Responses.Errors
@@ -56,15 +57,32 @@ namespace Application.Responses.Errors
             };
         }
 
-        public static ApiErrorResponseModel ErrorMessage(Error errorMessage)
+        /// <summary>
+        /// Retour le message d'erreur 
+        /// </summary>
+        /// <param name="errorMessage">
+        /// Le message d'erreur 
+        /// </param>
+        /// <param name="propertyName">
+        /// Nom de la propriété
+        /// </param>
+        /// <param name="propertyValue">
+        /// Valuer
+        /// </param>
+        /// <returns></returns>
+        public static ApiErrorResponseModel ErrorMessage(string errorMessage, string? propertyName, string? propertyValue)
         {
+            var formattageMessage = errorMessage
+                .Replace("{PropertyName}", propertyName)
+                .Replace("{PropertyValue}", propertyValue);
+
             return new ApiErrorResponseModel
             {
                 Success = false,
                 StatusCode = StatusCodes.Status400BadRequest,
-                ValidationErrors = [errorMessage.Code],
-                Message = errorMessage.Message,
-                StatusDescription = ApiResponseErrorMessage.BAD_REQUEST.Message
+                ValidationErrors = null,
+                Message = formattageMessage,
+                StatusDescription = ValidationMessages.BAD_REQUEST
             };
         }
     }

@@ -25,6 +25,14 @@ namespace Application.Interfaces.Services
         /// <param name="id">L'Id du ministère</param> 
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant la valeur <see cref="bool"/> de l'opération </returns>>
-        public Task<bool> IsMinistryExistsById(int id); 
+        public Task<bool> IsMinistryExistsById(int id);
+
+        /// <summary>
+        /// Obtenir la liste de ministères
+        /// </summary>
+        /// <returns>
+        /// Liste de ministère <see cref="GetMinistriesResponse"/> 
+        /// </returns>
+        public Task<IEnumerable<GetMinistriesResponse>> GetAll();
     }
 }
