@@ -70,11 +70,47 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must not contain any null values..
+        /// </summary>
+        public static string CANNOT_CONTAIN_NULL {
+            get {
+                return ResourceManager.GetString("CANNOT_CONTAIN_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The date.
         /// </summary>
         public static string DATE {
             get {
                 return ResourceManager.GetString("DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The date(s) are required when the program is punctual..
+        /// </summary>
+        public static string DATES_REQUIRED {
+            get {
+                return ResourceManager.GetString("DATES_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Days.
+        /// </summary>
+        public static string DAYS {
+            get {
+                return ResourceManager.GetString("DAYS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à One or more days are required when the program is recurring..
+        /// </summary>
+        public static string DAYS_REQUIRED {
+            get {
+                return ResourceManager.GetString("DAYS_REQUIRED", resourceCulture);
             }
         }
         
@@ -88,11 +124,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Department.
+        /// </summary>
+        public static string DEPARTMENT_ {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The department « {PropertyValue} » already exists..
         /// </summary>
         public static string DEPARTMENT_EXIST {
             get {
                 return ResourceManager.GetString("DEPARTMENT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à One or more department identifiers are invalid..
+        /// </summary>
+        public static string DEPARTMENT_INVALID_IDS {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_INVALID_IDS", resourceCulture);
             }
         }
         
@@ -111,6 +165,15 @@ namespace Shared.Ressources {
         public static string DEPARTMENT_NOT_EXIST {
             get {
                 return ResourceManager.GetString("DEPARTMENT_NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The department « {0} » already has a program «{1} » of type « {2} »..
+        /// </summary>
+        public static string DEPARTMENT_PROGRAM_EXIST {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_PROGRAM_EXIST", resourceCulture);
             }
         }
         
@@ -165,6 +228,24 @@ namespace Shared.Ressources {
         public static string FORBIDDEN_ACCESS {
             get {
                 return ResourceManager.GetString("FORBIDDEN_ACCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Each date must be in a valid format (yyyy-MM-dd)..
+        /// </summary>
+        public static string INVALID_DATE {
+            get {
+                return ResourceManager.GetString("INVALID_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} &apos;{CollectionIndex}&apos; is invalid..
+        /// </summary>
+        public static string INVALID_ENTRIES {
+            get {
+                return ResourceManager.GetString("INVALID_ENTRIES", resourceCulture);
             }
         }
         
@@ -250,6 +331,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Invalid program type. Allowed values are:  Recurring ,Punctual .
+        /// </summary>
+        public static string INVALID_PRG_TYPE {
+            get {
+                return ResourceManager.GetString("INVALID_PRG_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} must not exceed {MaxLength} characters..
         /// </summary>
         public static string MAX_LENGTH {
@@ -264,6 +354,15 @@ namespace Shared.Ressources {
         public static string MAXLENGTH {
             get {
                 return ResourceManager.GetString("MAXLENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must be greater than or equal to {ComparisonValue}..
+        /// </summary>
+        public static string MIN_VALUE {
+            get {
+                return ResourceManager.GetString("MIN_VALUE", resourceCulture);
             }
         }
         
@@ -295,6 +394,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please select one or more {PropertyName}.
+        /// </summary>
+        public static string MUST_CHOOSE {
+            get {
+                return ResourceManager.GetString("MUST_CHOOSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Name.
         /// </summary>
         public static string NAME {
@@ -313,6 +421,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The number of service(s).
+        /// </summary>
+        public static string NBR_SERVICE {
+            get {
+                return ResourceManager.GetString("NBR_SERVICE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} cannot be null..
         /// </summary>
         public static string NOT_NULL {
@@ -327,6 +444,15 @@ namespace Shared.Ressources {
         public static string PROGRAM_NAME {
             get {
                 return ResourceManager.GetString("PROGRAM_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The program type.
+        /// </summary>
+        public static string PROGRAM_TYPE {
+            get {
+                return ResourceManager.GetString("PROGRAM_TYPE", resourceCulture);
             }
         }
         
@@ -363,6 +489,15 @@ namespace Shared.Ressources {
         public static string VAILID_DATE {
             get {
                 return ResourceManager.GetString("VAILID_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Each day must be a valid day of the week (e.g., Monday, Tuesday, etc.) when the program is recurring. Please enter the days in English..
+        /// </summary>
+        public static string VALID_DAYS {
+            get {
+                return ResourceManager.GetString("VALID_DAYS", resourceCulture);
             }
         }
         

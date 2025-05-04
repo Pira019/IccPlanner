@@ -120,14 +120,23 @@
   <data name="BAD_REQUEST" xml:space="preserve">
     <value>Mauvaise requête.</value>
   </data>
+  <data name="CANNOT_CONTAIN_NULL" xml:space="preserve">
+    <value>{PropertyName} ne doit contenir aucune valeur nulle.</value>
+  </data>
   <data name="DATE" xml:space="preserve">
     <value>La date</value>
   </data>
   <data name="DEPARTMENT" xml:space="preserve">
     <value>Le département</value>
   </data>
+  <data name="DEPARTMENT_" xml:space="preserve">
+    <value>Départements</value>
+  </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
     <value>Le département « {PropertyValue} » existe déjà.</value>
+  </data>
+  <data name="DEPARTMENT_INVALID_IDS" xml:space="preserve">
+    <value>Un ou plusieurs identifiants de départements sont invalides.</value>
   </data>
   <data name="DEPARTMENT_NAME" xml:space="preserve">
     <value>Le nom du département</value>
@@ -152,6 +161,9 @@
   </data>
   <data name="FORBIDDEN_ACCESS" xml:space="preserve">
     <value>Accès interdit. Vous n'avez pas les permissions nécessaires pour accéder à cette ressource.</value>
+  </data>
+  <data name="INVALID_PRG_TYPE" xml:space="preserve">
+    <value>Type de programme invalide. Les valeurs autorisées sont : Récurrent, Ponctuel.</value>
   </data>
   <data name="INVALID_ENTRY" xml:space="preserve">
     <value>{PropertyName} n’est pas valide.</value>
@@ -195,6 +207,9 @@
   <data name="MISSING_REQUIRED_COLUMN" xml:space="preserve">
     <value>Les colonnes suivantes sont obligatoires : PRENOM, SEXE, CONTACT.</value>
   </data>
+  <data name="MUST_CHOOSE" xml:space="preserve">
+    <value>Veuillez sélectionner un ou plusieurs {PropertyName}.</value>
+  </data>
   <data name="NAME" xml:space="preserve">
     <value>Nom</value>
   </data>
@@ -206,6 +221,9 @@
   </data>
   <data name="PROGRAM_NAME" xml:space="preserve">
     <value>Le nom de programme</value>
+  </data>
+  <data name="PROGRAM_TYPE" xml:space="preserve">
+    <value>Le type de programme</value>
   </data>
   <data name="SHORT_NAME" xml:space="preserve">
     <value>Le nom court</value>
@@ -221,5 +239,32 @@
   </data>
   <data name="VALIDATION_FAILED" xml:space="preserve">
     <value>Une ou plusieurs erreurs de validation sont survenues. Veuillez vérifier vos données et réessayer.</value>
+  </data>
+  <data name="DAYS" xml:space="preserve">
+    <value>Les jours</value>
+  </data>
+  <data name="DAYS_REQUIRED" xml:space="preserve">
+    <value>Un ou plusieurs jours sont requis lorsque le programme est récurrent.</value>
+  </data>
+  <data name="VALID_DAYS" xml:space="preserve">
+    <value>Chaque jour doit être un jour valide de la semaine (ex. : Monday, Tuesday, etc.) lorsque le programme est récurrent. Veuillez entrer les jours en anglais.</value>
+  </data>
+  <data name="DATES_REQUIRED" xml:space="preserve">
+    <value>La ou les dates sont requises lorsque le programme est ponctuel.</value>
+  </data>
+  <data name="INVALID_ENTRIES" xml:space="preserve">
+    <value>{PropertyName} '{CollectionIndex}' est pas invalide.</value>
+  </data>
+  <data name="INVALID_DATE" xml:space="preserve">
+    <value>Chaque date doit être dans un format valide (aaaa-MM-jj).</value>
+  </data>
+  <data name="MIN_VALUE" xml:space="preserve">
+    <value>{PropertyName} doit être supérieur ou égal à {ComparisonValue}.</value>
+  </data>
+  <data name="NBR_SERVICE" xml:space="preserve">
+    <value>Le nombre de services</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
+    <value>Le département « {0} » a déjà un programme « {1} » de type « {2} ».</value>
   </data>
 </root>

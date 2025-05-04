@@ -1,5 +1,8 @@
 ﻿
 
+
+// Ignore Spelling: Prg
+
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -13,7 +16,13 @@ namespace Infrastructure.Persistence
         public DbSet<Ministry> Ministries { get; set; } 
         public DbSet<DepartmentMemberPost> DepartmentMemberPosts { get; set; } 
         public DbSet<Poste> Postes { get; set; } 
-        public DbSet<Department> Departments { get; set; } 
+        public DbSet<Department> Departments { get; set; }  
+        public DbSet<PrgDate> PrgDates { get; set; }  
+
+        /// <summary>
+        /// Detail de programme dans un département
+        /// </summary>
+        public DbSet<PrgDepartmentInfo> PrgDepartmentInfos { get; set; } 
         public DbSet<Program> Programs { get; set; }
 #pragma warning disable CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<User> Users { get; set; }

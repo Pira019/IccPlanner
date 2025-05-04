@@ -120,14 +120,23 @@
   <data name="BAD_REQUEST" xml:space="preserve">
     <value>Bad request</value>
   </data>
+  <data name="CANNOT_CONTAIN_NULL" xml:space="preserve">
+    <value>{PropertyName} must not contain any null values.</value>
+  </data>
   <data name="DATE" xml:space="preserve">
     <value>The date</value>
   </data>
   <data name="DEPARTMENT" xml:space="preserve">
     <value>The department</value>
   </data>
+  <data name="DEPARTMENT_" xml:space="preserve">
+    <value>Department</value>
+  </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
     <value>The department « {PropertyValue} » already exists.</value>
+  </data>
+  <data name="DEPARTMENT_INVALID_IDS" xml:space="preserve">
+    <value>One or more department identifiers are invalid.</value>
   </data>
   <data name="DEPARTMENT_NAME" xml:space="preserve">
     <value>Department name</value>
@@ -152,6 +161,9 @@
   </data>
   <data name="FORBIDDEN_ACCESS" xml:space="preserve">
     <value>Forbidden. You do not have the necessary permissions to access this resource.</value>
+  </data>
+  <data name="INVALID_PRG_TYPE" xml:space="preserve">
+    <value>Invalid program type. Allowed values are:  Recurring ,Punctual </value>
   </data>
   <data name="INVALID_ENTRY" xml:space="preserve">
     <value>{PropertyName} is invalid.</value>
@@ -195,6 +207,9 @@
   <data name="MISSING_REQUIRED_COLUMN" xml:space="preserve">
     <value>The following columns are required: PRENOM, SEXE, CONTACT.</value>
   </data>
+  <data name="MUST_CHOOSE" xml:space="preserve">
+    <value>Please select one or more {PropertyName}</value>
+  </data>
   <data name="NAME" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -206,6 +221,9 @@
   </data>
   <data name="PROGRAM_NAME" xml:space="preserve">
     <value>The program name</value>
+  </data>
+  <data name="PROGRAM_TYPE" xml:space="preserve">
+    <value>The program type</value>
   </data>
   <data name="SHORT_NAME" xml:space="preserve">
     <value>The short name </value>
@@ -221,5 +239,32 @@
   </data>
   <data name="VALIDATION_FAILED" xml:space="preserve">
     <value>One or more validation errors occurred. Please check your input and try again.</value>
+  </data>
+  <data name="DAYS" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="DAYS_REQUIRED" xml:space="preserve">
+    <value>One or more days are required when the program is recurring.</value>
+  </data>
+  <data name="VALID_DAYS" xml:space="preserve">
+    <value>Each day must be a valid day of the week (e.g., Monday, Tuesday, etc.) when the program is recurring. Please enter the days in English.</value>
+  </data>
+  <data name="DATES_REQUIRED" xml:space="preserve">
+    <value>The date(s) are required when the program is punctual.</value>
+  </data>
+  <data name="INVALID_ENTRIES" xml:space="preserve">
+    <value>{PropertyName} '{CollectionIndex}' is invalid.</value>
+  </data>
+  <data name="INVALID_DATE" xml:space="preserve">
+    <value>Each date must be in a valid format (yyyy-MM-dd).</value>
+  </data>
+  <data name="MIN_VALUE" xml:space="preserve">
+    <value>{PropertyName} must be greater than or equal to {ComparisonValue}.</value>
+  </data>
+  <data name="NBR_SERVICE" xml:space="preserve">
+    <value>The number of service(s)</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
+    <value>The department « {0} » already has a program «{1} » of type « {2} ».</value>
   </data>
 </root>

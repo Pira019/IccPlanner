@@ -20,8 +20,7 @@ namespace Application.Helper.Validators.Requests.Ministry
 
             RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(x => x.Name)
-                .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT_NAME)
+            RuleFor(x => x.Name) 
                 .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT_NAME)
                 .MaximumLength(255).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.DEPARTMENT_NAME)
                 .Must(IsDepartmentNameExists).WithMessage(ValidationMessages.DEPARTMENT_EXIST);
@@ -33,8 +32,7 @@ namespace Application.Helper.Validators.Requests.Ministry
             RuleFor(x => x.ShortName)
                .MaximumLength(55).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.SHORT_NAME);
 
-            RuleFor(X => X.Description)
-              .NotNull().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DESCRIPTION)
+            RuleFor(X => X.Description) 
               .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DESCRIPTION);
             
             RuleFor(X => X.StartDate)

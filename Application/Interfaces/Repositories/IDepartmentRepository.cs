@@ -33,8 +33,9 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <param name="departmentIds"></param>
         /// <returns></returns>
-        public IEnumerable<int?> GetValidDepartmentId(IEnumerable<int?> departmentIds);
-
-
+        /// <remarks>
+        /// La liste ne gère pas les doublons
+        /// </remarks>
+        public Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds);  
     }
 }

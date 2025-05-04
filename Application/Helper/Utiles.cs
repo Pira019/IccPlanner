@@ -29,11 +29,13 @@ namespace Application.Helper
         /// Pour récupérer l'ID de l'utilisateur authentifier à partir de claims
         /// </summary>
         /// <param name="claimsPrincipal"></param>
-        /// <returns></returns>
-        public static Guid? GetUserIdFromClaims(ClaimsPrincipal claimsPrincipal)
+        /// <returns>
+        /// id de user connecter
+        /// </returns>
+        public static Guid GetUserIdFromClaims(ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return string.IsNullOrEmpty(userId) ? (Guid?)null : Guid.Parse(userId);    
+            var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)!.Value; 
+            return Guid.Parse(userId);
         }
 
         public static string GeneratedEmail(string text)

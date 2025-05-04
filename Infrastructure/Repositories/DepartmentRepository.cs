@@ -16,7 +16,7 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
-        public IEnumerable<int?> GetValidDepartmentId(IEnumerable<int?> departmentIds)
+        public async Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds)
         {
             // Vérifier si departmentIds est null ou vide
             if (departmentIds == null || !departmentIds.Any())
@@ -24,12 +24,9 @@ namespace Infrastructure.Repositories
                 return Enumerable.Empty<int?>(); // Retourner une séquence vide si aucun ID n'est fourni
             }
 
-            var existingDepatmanents = _dbSet.Where(department_ => departmentIds.Contains(department_.Id))
+            return await _dbSet.Where(department_ => departmentIds.Contains(department_.Id))
                                                                              .Select(department => (int?)department.Id)
-                                                                            .ToList();
-
-            return existingDepatmanents;
-
+                                                                            .ToListAsync(); 
         }
 
         public async Task<bool> IsDepartmentIdExists(int id)
@@ -40,8 +37,7 @@ namespace Infrastructure.Repositories
         public async Task<bool> IsNameExistsAsync(string name)
         {
             return await PlannerContext.Departments.AnyAsync(x => x.Name == name);
-        }
-
+        } 
         public async Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember)
         {
             await PlannerContext.DepartmentMembers.AddAsync(departmentMember);

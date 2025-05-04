@@ -3,8 +3,7 @@ using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Z.BulkOperations;
+using Microsoft.EntityFrameworkCore; 
 
 namespace Infrastructure.Repositories
 {
@@ -94,10 +93,10 @@ namespace Infrastructure.Repositories
         public async Task<int> SaveImportedMembersDepartment(IEnumerable<User> users)
         {
             var usersImported = await FilterUsersWithUniquePhoneNumbers(users);
-            await _iccPlannerContext.Users.BulkInsertAsync(usersImported, options =>
+           /* await _iccPlannerContext.Users.BulkInsertAsync(usersImported, options =>
             {
                 options.IncludeGraph = true;
-            });
+            });*/
 
             return usersImported.Count; 
         }

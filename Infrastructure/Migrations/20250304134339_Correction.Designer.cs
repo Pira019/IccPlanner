@@ -111,7 +111,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Availabilities");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Department", b =>
+            modelBuilder.Entity("Domain.Entities.AddDepartmentProgramRequestValidation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -760,7 +760,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", null)
+                    b.HasOne("Domain.Entities.AddDepartmentProgramRequestValidation", null)
                         .WithMany()
                         .HasForeignKey("DepartementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -790,7 +790,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DepartmentProgram", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", null)
+                    b.HasOne("Domain.Entities.AddDepartmentProgramRequestValidation", null)
                         .WithMany()
                         .HasForeignKey("DepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -811,7 +811,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartment")
+                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartmentConfiguration")
                         .WithMany("Availabilities")
                         .HasForeignKey("ProgramDepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -819,10 +819,10 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("DepartmentMember");
 
-                    b.Navigation("ProgramDepartment");
+                    b.Navigation("ProgramDepartmentConfiguration");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Department", b =>
+            modelBuilder.Entity("Domain.Entities.AddDepartmentProgramRequestValidation", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
                         .WithMany("Departments")
@@ -835,7 +835,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
-                    b.HasOne("Domain.Entities.Department", "Department")
+                    b.HasOne("Domain.Entities.AddDepartmentProgramRequestValidation", "AddDepartmentProgramRequestValidation")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -847,7 +847,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("AddDepartmentProgramRequestValidation");
 
                     b.Navigation("Member");
                 });
@@ -879,7 +879,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Department", "Department")
+                    b.HasOne("Domain.Entities.AddDepartmentProgramRequestValidation", "AddDepartmentProgramRequestValidation")
                         .WithMany("ProgramDepartments")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -897,7 +897,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("CreateBy");
 
-                    b.Navigation("Department");
+                    b.Navigation("AddDepartmentProgramRequestValidation");
 
                     b.Navigation("Program");
 
@@ -912,7 +912,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartment")
+                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartmentConfiguration")
                         .WithMany("FeedBacks")
                         .HasForeignKey("ProgramDepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -920,7 +920,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("DepartmentMember");
 
-                    b.Navigation("ProgramDepartment");
+                    b.Navigation("ProgramDepartmentConfiguration");
                 });
 
             modelBuilder.Entity("Domain.Entities.Member", b =>
@@ -1026,7 +1026,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Department", b =>
+            modelBuilder.Entity("Domain.Entities.AddDepartmentProgramRequestValidation", b =>
                 {
                     b.Navigation("ProgramDepartments");
                 });

@@ -16,3 +16,4 @@ Test/coverage-report
 Tests/bin
 Tests/.config
 IccPlanner/appsettings.Development.json
+Shared/bin

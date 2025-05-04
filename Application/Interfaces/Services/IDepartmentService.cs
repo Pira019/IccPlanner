@@ -1,6 +1,6 @@
-﻿using Application.Requests.Department;
-using Application.Responses.Department;
-using Domain.Entities;
+﻿using Application.Interfaces.Repositories;
+using Application.Requests.Department;
+using Application.Responses.Department; 
 
 namespace Application.Interfaces.Services
 {
@@ -33,7 +33,7 @@ namespace Application.Interfaces.Services
         /// <param name="departmentProgramRequest"></param>
         /// <param name="userAuthId">Id de l'utilisateur connecter</param>
         /// <returns></returns>
-        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId);
+        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId);
 
         /// <summary>
         /// Permet de supprimer un ou plusieurs DepartmentProgram 
@@ -48,6 +48,20 @@ namespace Application.Interfaces.Services
         /// <param name="addDepartmentMemberImportFileRequest"> Model de corps attendu</param>
         /// <param name="AuthenticatedUser"> L'Id de user qui a ajouter</param>
         /// <returns>Retourner le nombres des membres enregistrés</returns>
-        public Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? AuthenticatedUser); 
+        public Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? AuthenticatedUser);
+
+        /// <summary>
+        /// Vérifie les ids qui existent dans DB 
+        /// </summary>
+        /// <param name="departmentIds"> Listes des Ids</param>
+        /// <returns>
+        /// Retourne une valeur <see cref="bool"/>
+        /// </returns>
+        /// <remarks>
+        /// <code>True</code> si la liste existe
+        /// </remarks>
+        public Task<bool> IsValidDepartmentIds(IEnumerable<int> departmentIds);
+
+
     }
 }

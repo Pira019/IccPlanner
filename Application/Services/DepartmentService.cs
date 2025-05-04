@@ -59,12 +59,10 @@ namespace Application.Services
             await _departmentRepository.SaveDepartmentMemberPost(departmentMemberPost);
         }
 
-        public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid? userAuthId)
-        {
-            var createdBy = await _accountRepository.GetAuthMember(userAuthId);
-            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, createdBy);
-
-            await _departmentProgramRepository.BulkInsertOptimizedAsync(newDepartmentPrograms);
+        public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId)
+        { 
+           var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId); 
+           await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
         }
 
         public async Task<bool> IsNameExists(string name)
@@ -77,51 +75,46 @@ namespace Application.Services
         /// pour preparer l'enregistrement en masse
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="createdByUserGuid"></param>
         /// <returns>Liste de <see cref="DepartmentProgram"/></returns>
-        public virtual async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Member? CreatedBy)
-        {
-            var departmentIds = request.DepartmentIds.Split(",");
-            var endDate = request.EndAt ?? request.StartAt;
+        public async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Guid createdByUserGuid)
+        { 
+            var member = await _accountRepository.FindMemberByUserId(createdByUserGuid.ToString());
 
-            var departmentPrograms = departmentIds.SelectMany(departmetId =>
-                Enumerable.Range(0, (endDate.DayNumber - request.StartAt.DayNumber + 1))
-                           .Select(offset => new DepartmentProgram
-                           {
-                               DepartmentId = Int32.Parse(departmetId),
-                               ProgramId = request.ProgramId,
-                               StartAt = request.StartAt.AddDays(offset),
-                               Localisation = request.Localisation,
-                               Comment = request.Comment,
-                               CreateById = CreatedBy!.Id
-                           }));
-
-            return await GetNonExistingProgramsAsync(departmentPrograms);
-        }
-
-        /// <summary>
-        /// Permet d’éviter les doublons lors de l’insertion de la DB
-        /// </summary>
-        /// <param name="departmentPrograms"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<DepartmentProgram>> GetNonExistingProgramsAsync(IEnumerable<DepartmentProgram> departmentPrograms)
-        {
-            var existingPrograms = await _departmentProgramRepository.GetExistingProgramDepartmentsAsync(departmentPrograms);
-
-            if (!existingPrograms.Any())
+            //
+            if(request.TypePrg == ProgramType.Recurring.ToString())
             {
-                return departmentPrograms;
+                // Un programme récurrent n'utilise pas de dates précises
+                request.Date?.Clear();
+            }
+            else
+            {
+                // Un programme ponctuel n'utilise pas de jours récurrent
+                request.Days?.Clear();
             }
 
-            var existingProgramsSet = new HashSet<(int ProgramId, int DepartmentId, DateOnly StartAt)>(
-                existingPrograms.Select(ep => (ep.ProgramId, ep.DepartmentId, ep.StartAt))
-            );
-
-            return departmentPrograms
-                .Where(dp => !existingProgramsSet.Any(existingProgram =>
-                    existingProgram.ProgramId == dp.ProgramId &&
-                    existingProgram.DepartmentId == dp.DepartmentId &&
-                    existingProgram.StartAt == dp.StartAt))
+            var data = request.DepartmentIds.Distinct()
+                .Select(departmentId => 
+                    new DepartmentProgram
+                        {
+                            DepartmentId = departmentId,
+                            ProgramId = request.ProgramId,
+                            CreateById  = member!.Id,
+                            Comment = request.Comment,
+                            Type = request.TypePrg,
+                            PrgDepartmentInfo = new PrgDepartmentInfo 
+                            { 
+                                Dates = request.Date?.Select(d=> DateOnly.ParseExact(d,"yyyy-MM-dd")).ToList(),
+                                Days = request.Days,
+                                PrgDate = request.Date?.Select(d => new PrgDate
+                                {
+                                    Date = DateOnly.ParseExact(d, "yyyy-MM-dd")
+                                }).ToList() ?? []
+                            }
+                        }
+                    )
                 .ToList();
+            return data;    
         }
 
         public async Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest)
@@ -178,6 +171,18 @@ namespace Application.Services
             };
             //Enregistrer 
             return await _accountRepository.SaveImportedMembersDepartment(departementMembers); 
-        }  
+        }
+
+        public async Task<bool> IsValidDepartmentIds(IEnumerable<int> departmentIds)
+        {
+            if (departmentIds == null)
+            {
+                return false;
+            }
+            var distinctDepartmentIds = departmentIds.Distinct().ToList();
+            var existingIds = await _departmentRepository.GetValidDepartmentIds(distinctDepartmentIds);
+
+            return distinctDepartmentIds.All(id => existingIds.Contains(id));
+        }
     }
-}
+} 
