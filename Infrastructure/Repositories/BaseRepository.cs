@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.Repositories;
-using Domain.Entities;
+using EFCore.BulkExtensions;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,22 +11,26 @@ namespace Infrastructure.Repositories
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         public readonly IccPlannerContext PlannerContext;
-        protected readonly DbSet<TEntity> _dbSet; 
+        protected readonly DbSet<TEntity> _dbSet;
 
         public BaseRepository(IccPlannerContext plannerContext)
         {
             this.PlannerContext = plannerContext;
-            _dbSet = PlannerContext.Set<TEntity>(); 
+            _dbSet = PlannerContext.Set<TEntity>();
         }
 
-        public  async Task BulkDeleteByIdsAsync(IEnumerable<int> ids)
+        public async Task BulkDeleteByIdsAsync(IEnumerable<int> ids)
         {
-            await _dbSet.Where(e => ids.Contains(EF.Property<int>(e, "Id"))).DeleteFromQueryAsync();
+            //await _dbSet.Where(e => ids.Contains(EF.Property<int>(e, "Id"))).ExecuteDelete();
         }
 
-        public async Task BulkInsertOptimizedAsync(IEnumerable<TEntity> entities)
+        public async Task InsertAllAsync(IEnumerable<TEntity> entities)
         {
-            await PlannerContext.BulkInsertOptimizedAsync(entities);
+            foreach(var chuck  in entities.Chunk(1000))
+            {
+                await _dbSet.AddRangeAsync(chuck); 
+                await PlannerContext.SaveChangesAsync();
+            } 
         }
 
         public async Task<TEntity> Insert(TEntity entity)

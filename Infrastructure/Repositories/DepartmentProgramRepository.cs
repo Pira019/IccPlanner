@@ -1,7 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
-using Application.Dtos.Department;
-using Application.Interfaces.Repositories;
+﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,27 +11,13 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<DepartmentProgramExistingDto>> GetExistingProgramDepartmentsAsync(IEnumerable<DepartmentProgram> departmentPrograms)
+        public async Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds, int programId, string programType)
         {
-            // Extract lists for filtering (improves performance)
-            var programIds = departmentPrograms.Select(dp => dp.ProgramId).ToHashSet();
-            var departmentIds = departmentPrograms.Select(dp => dp.DepartmentId).ToHashSet();
-            var startAtDates = departmentPrograms.Select(dp => dp.StartAt).ToHashSet();
-
-            var result = await _dbSet
-                .Where(dp => programIds.Contains(dp.ProgramId) &&
-                             departmentIds.Contains(dp.DepartmentId) &&
-                             startAtDates.Contains(dp.StartAt)) 
-                .Select(dp => new DepartmentProgramExistingDto
-                {
-                    ProgramId = dp.ProgramId,
-                    DepartmentId = dp.DepartmentId,
-                    StartAt = dp.StartAt
-                })
-                .ToListAsync();
-
-            return result;
+            return await _dbSet.Where(dp => departmentIds.Contains(dp.DepartmentId) &&
+                   programId == dp.ProgramId && dp.Type == programType)
+                   .Include(dp => dp.Department)
+                   .Include(dp => dp.Program)
+                   .FirstOrDefaultAsync();
         }
-
     }
 }

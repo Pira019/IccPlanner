@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Ignore Spelling: Prg
+
+using System.ComponentModel.DataAnnotations;
+using Shared.Enums;
 
 namespace Domain.Entities
 {
@@ -10,16 +13,15 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int DepartmentId { get; set; }
         public int ProgramId { get; set; }
+        public PrgDepartmentInfo? PrgDepartmentInfo { get; set; }
         public Program Program { get; set; } = null!;
-        public  Department Department { get; set; } = null!;
-        public DateOnly StartAt { get; set; }  
-        [MaxLength(255)]
-        public string? Localisation { get; set; }
+        public  Department Department { get; set; } = null!;        
+        [MaxLength(25)]
+        public required string Type { get; set; }       
         public string? Comment { get; set; } 
         public required Guid CreateById { get; set; }
-        public Member CreateBy { get; set; } = null!;
+        public Member? CreateBy { get; set; } = null!;
         public Member? UpdateBy { get; set; }
-        public bool IsRecurring { get; set; } = false;
         public List<DepartmentMember> DepartmentMembers { get; } = [];
         public List<FeedBack>? FeedBacks{ get; set; }
         public List<Availability> Availabilities { get; } = [];

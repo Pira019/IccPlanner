@@ -1,13 +1,16 @@
 ﻿using Application.Helper;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
 using Application.Responses.Department;
+using Application.Responses.Errors;
 using Application.Responses.Errors.Department;
 using Domain.Abstractions;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Ressources;
 
 namespace IccPlanner.Controllers
 {
@@ -15,12 +18,10 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
-        private readonly IDepartmentService _departmentService;
-        private readonly IMinistryService _ministryService;
-        public DepartmentsController(IDepartmentService departmentService, IMinistryService ministryService)
+        private readonly IDepartmentService _departmentService; 
+        public DepartmentsController(IDepartmentService departmentService)
         {
-            _departmentService = departmentService;
-            _ministryService = ministryService;
+            _departmentService = departmentService; 
         }
 
         [HttpPost]
@@ -52,12 +53,31 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, IDepartmentProgramRepository departmentProgramRepository)
         {
-            var userAuthId = Utiles.GetUserIdFromClaims(User);
+            //Check si les départements sont vides
+            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds)) 
+            {
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS,null, null));
+            }
+            //Check si le programme existe
+            if (!await programRepository.IsExist(request.ProgramId))
+            {
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.INVALID_ENTRY, ValidationMessages.PROGRAM_NAME, null));
+            }
+
+            //Check si le programme existe
+            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);            
+            
+            if (isDepartmentProgramExisting != null)
+            {
+                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST,isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name,request.TypePrg), null, null));
+            }
+
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
             await _departmentService.AddDepartmentsProgram(request, userAuthId);
-            return Ok();
+            return Created(string.Empty,string.Empty);
         }
 
         [HttpDelete("department-program")]

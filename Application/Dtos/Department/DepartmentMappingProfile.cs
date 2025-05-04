@@ -51,7 +51,7 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.Department, opt => opt.Ignore())
                 .ForMember(dest => dest.CreateById, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdateBy, opt => opt.Ignore())
-                .ForMember(dest => dest.IsRecurring, opt => opt.Ignore())
+                .ForMember(dest => dest.Type, opt => opt.Ignore())
                 .ForMember(dest => dest.DepartmentMembers, opt => opt.Ignore())
                 .ForMember(dest => dest.FeedBacks, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
