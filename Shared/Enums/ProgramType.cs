@@ -19,6 +19,6 @@ namespace Shared.Enums
         /// <summary>
         /// un programme qui se déroule de manière exceptionnelle , ou à un événement particulier
         /// </summary>
-        ty, 
+        Punctual, 
     }
 }
