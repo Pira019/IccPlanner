@@ -13,5 +13,6 @@ namespace Domain.Entities
         public DateOnly? Date { get; set; }
         public int PrgDepartmentInfoId { get; set; }
         public PrgDepartmentInfo PrgDepartmentInfo { get; set; } = null!;
+        public ICollection<TabServices> Services { get;} = new List<TabServices>();
     }
 }

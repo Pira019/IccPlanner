@@ -4,7 +4,6 @@ using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
-using Z.EntityFramework.Extensions;
 
 namespace Test.Infrastructure.UnitTest.Repositories
 {
@@ -20,7 +19,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             _iccPlannerContext = new IccPlannerContext(option);
 
             _baseRepository = new BaseRepository<User>(_iccPlannerContext);
-            EntityFrameworkManager.ContextFactory = context => new IccPlannerContext(option);
+            //EntityFrameworkManager.ContextFactory = context => new IccPlannerContext(option);
 
         }
 

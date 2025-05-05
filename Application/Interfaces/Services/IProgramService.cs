@@ -1,5 +1,7 @@
-﻿using Application.Requests.Program;
-using Application.Responses.Program;
+﻿using Application.Dtos;
+using Application.Dtos.Program;
+using Application.Requests.Program;
+using Application.Responses.Program; 
 
 namespace Application.Interfaces.Services
 {
@@ -20,5 +22,17 @@ namespace Application.Interfaces.Services
         /// Retourne une valeur <see cref="bool"/>
         /// </returns>
         public Task<bool> IsNameExists(string programName);
+
+        /// <summary>
+        ///     Obtenir la liste de programme en pagination
+        /// </summary>
+        /// <param name="pageIndex">Index de la page</param>
+        /// <param name="pageSize"></param>
+        /// <returns>
+        ///     Un objet DTO <see cref="PaginatedDto{ProgramDto}"/>
+        /// </returns>
+        public Task<PaginatedDto<ProgramDto>> GetPaginatedProgram(int pageIndex, int pageSize);
+
+
     }
 }

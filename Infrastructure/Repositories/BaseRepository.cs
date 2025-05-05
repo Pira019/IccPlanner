@@ -54,5 +54,10 @@ namespace Infrastructure.Repositories
 
             return await _dbSet.AnyAsync(x => EF.Property<object>(x, "Id") == id);
         }
+
+        public IQueryable<TEntity> QueryAll()
+        {
+           return _dbSet.AsQueryable();
+        }
     }
 }
