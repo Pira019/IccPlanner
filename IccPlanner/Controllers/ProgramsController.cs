@@ -1,4 +1,6 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Dtos;
+using Application.Dtos.Program;
+using Application.Interfaces.Services;
 using Application.Requests.Program;
 using Application.Responses;
 using Application.Responses.Errors;
@@ -37,6 +39,17 @@ namespace IccPlanner.Controllers
             }            
             var result = await _programService.Add(request);
             return Created(string.Empty, result);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = PolicyConstants.CAN_CREATE_PROGRAM)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)] 
+        [ProducesResponseType<PaginatedDto<ProgramDto>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProgram(int page=1,int pageSize = 25)
+        {
+            var result = await _programService.GetPaginatedProgram(page,pageSize);
+            return Ok(result);
         }
     }
 }

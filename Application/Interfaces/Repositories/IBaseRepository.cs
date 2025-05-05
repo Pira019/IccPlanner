@@ -35,5 +35,13 @@
         /// <param name="ids">List des Ids a supprimer</param>
         /// <returns></returns>
         public Task BulkDeleteByIdsAsync(IEnumerable<int> ids);
+
+        /// <summary>
+        /// Récupère toutes les entités de type <typeparamref name="T"/> depuis la source de données.
+        /// </summary>
+        /// <returns>
+        /// Une collection contenant toutes les entités de type <typeparamref name="T"/>.
+        /// </returns>
+        public IQueryable<T> QueryAll();
     }
 }
