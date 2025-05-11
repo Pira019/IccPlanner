@@ -14,6 +14,14 @@
         /// <returns>
         ///     Définit une classe Response
         /// </returns>
-        public Task<Object> Add (Object requestBody);  
+        public Task<Object> Add (Object requestBody); 
+        
+        /// <summary>
+        ///     Obtenir tous les objets enregistres 
+        /// </summary>
+        /// <returns>
+        ///    Un objet Response(DTO)
+        /// </returns>
+        public Task<IEnumerable<Object>> GetAll ();  
     }
 } 

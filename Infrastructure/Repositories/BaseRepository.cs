@@ -58,5 +58,10 @@ namespace Infrastructure.Repositories
         {
             return _dbSet.AsQueryable();
         }
+
+        public async Task<IEnumerable<TEntity>> GetAll()
+        {
+            return await _dbSet.ToListAsync();
+        }
     }
 }
