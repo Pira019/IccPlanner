@@ -267,4 +267,28 @@
   <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
     <value>The department « {0} » already has a program «{1} » of type « {2} ».</value>
   </data>
+  <data name="START_TIME" xml:space="preserve">
+    <value>Start time</value>
+  </data>
+  <data name="END_TIME" xml:space="preserve">
+    <value>End time</value>
+  </data>
+  <data name="GREATER_THEN" xml:space="preserve">
+    <value>{PropertyName} must be greater than {ComparisonValue}.</value>
+  </data>
+  <data name="MEMBER_ARIVAL_TIME" xml:space="preserve">
+    <value>The member's arrival time is invalid or must not exceed the program start time.</value>
+  </data>
+  <data name="MEMBER" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="DISPLAY_NAME" xml:space="preserve">
+    <value>Service display name</value>
+  </data>
+  <data name="COMMENT" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="SERVICE_EXISTS" xml:space="preserve">
+    <value>Unable to register this service: a service named «{0}» already exists between {1} and {2}.</value>
+  </data>
 </root>

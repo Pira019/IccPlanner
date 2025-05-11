@@ -1,5 +1,8 @@
 ﻿// Ignore Spelling: Prg
 
+using System.ComponentModel.DataAnnotations;
+using Shared.Utiles;
+
 namespace Domain.Entities
 {
     public class TabServices
@@ -12,14 +15,20 @@ namespace Domain.Entities
         /// Heure d'arriver des membres
         /// </summary>
         public TimeOnly? ArrivalTimeOfMember { get; set; }
-        public int PrgDateId { get; set; }
-        public PrgDate PrgDate { get; set; }   = null!;
 
         /// <summary>
         /// Text a afficher
         /// </summary>
-        public required string DisplayName { get; set; }
+        /// 
+        [MaxLength(55)]
+        public required string DisplayName { 
+            get => _displayName;
+            set => _displayName = Utiles.CapitalizeFirstLetter(value);
+        }
+
         public string? Notes { get; set; }
 
+        private string _displayName = string.Empty;
+
     }
-}
+} 

@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.Repositories;
-using EFCore.BulkExtensions;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,11 +25,11 @@ namespace Infrastructure.Repositories
 
         public async Task InsertAllAsync(IEnumerable<TEntity> entities)
         {
-            foreach(var chuck  in entities.Chunk(1000))
+            foreach (var chuck in entities.Chunk(1000))
             {
-                await _dbSet.AddRangeAsync(chuck); 
+                await _dbSet.AddRangeAsync(chuck);
                 await PlannerContext.SaveChangesAsync();
-            } 
+            }
         }
 
         public async Task<TEntity> Insert(TEntity entity)
@@ -57,7 +56,7 @@ namespace Infrastructure.Repositories
 
         public IQueryable<TEntity> QueryAll()
         {
-           return _dbSet.AsQueryable();
+            return _dbSet.AsQueryable();
         }
     }
 }

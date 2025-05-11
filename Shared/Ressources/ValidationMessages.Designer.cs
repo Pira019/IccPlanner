@@ -79,6 +79,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Comment.
+        /// </summary>
+        public static string COMMENT {
+            get {
+                return ResourceManager.GetString("COMMENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The date.
         /// </summary>
         public static string DATE {
@@ -187,6 +196,24 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Service display name.
+        /// </summary>
+        public static string DISPLAY_NAME {
+            get {
+                return ResourceManager.GetString("DISPLAY_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à End time.
+        /// </summary>
+        public static string END_TIME {
+            get {
+                return ResourceManager.GetString("END_TIME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unknown error. Please try again later..
         /// </summary>
         public static string ERROR_UNDEFINED {
@@ -228,6 +255,15 @@ namespace Shared.Ressources {
         public static string FORBIDDEN_ACCESS {
             get {
                 return ResourceManager.GetString("FORBIDDEN_ACCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must be greater than {ComparisonValue}..
+        /// </summary>
+        public static string GREATER_THEN {
+            get {
+                return ResourceManager.GetString("GREATER_THEN", resourceCulture);
             }
         }
         
@@ -358,6 +394,24 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Members.
+        /// </summary>
+        public static string MEMBER {
+            get {
+                return ResourceManager.GetString("MEMBER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The member&apos;s arrival time is invalid or must not exceed the program start time..
+        /// </summary>
+        public static string MEMBER_ARIVAL_TIME {
+            get {
+                return ResourceManager.GetString("MEMBER_ARIVAL_TIME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} must be greater than or equal to {ComparisonValue}..
         /// </summary>
         public static string MIN_VALUE {
@@ -457,11 +511,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Unable to register this service: a service named «{0}» already exists between {1} and {2}..
+        /// </summary>
+        public static string SERVICE_EXISTS {
+            get {
+                return ResourceManager.GetString("SERVICE_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The short name .
         /// </summary>
         public static string SHORT_NAME {
             get {
                 return ResourceManager.GetString("SHORT_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Start time.
+        /// </summary>
+        public static string START_TIME {
+            get {
+                return ResourceManager.GetString("START_TIME", resourceCulture);
             }
         }
         

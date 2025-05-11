@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250510075824_AddService")]
+    partial class AddService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -579,8 +582,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                        .HasColumnType("text");
 
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time without time zone");
@@ -588,13 +590,15 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
+                    b.Property<int?>("PrgDateId")
+                        .HasColumnType("integer");
+
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time without time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StartTime", "EndTime", "DisplayName")
-                        .IsUnique();
+                    b.HasIndex("PrgDateId");
 
                     b.ToTable("TabServices");
                 });
@@ -1071,6 +1075,13 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.TabServices", b =>
+                {
+                    b.HasOne("Domain.Entities.PrgDate", null)
+                        .WithMany("Services")
+                        .HasForeignKey("PrgDateId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1170,6 +1181,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Ministry", b =>
                 {
                     b.Navigation("Departements");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+                {
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>

@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Security.Constants
+﻿using System.Runtime.Intrinsics.X86;
+
+namespace Infrastructure.Security.Constants
 {
     public static class PolicyConstants
     {
@@ -17,5 +19,8 @@
         // Permissions liées aux Programmes  
         public const string CAN_CREATE_PROGRAM = "CAN_CREATE_PROGRAM";
         public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
+
+        // Permissions liées aux Service 
+        public const string MANAGER_SERVICE = "ManagerService";
     }
 }

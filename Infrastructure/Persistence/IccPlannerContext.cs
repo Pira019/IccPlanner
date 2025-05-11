@@ -36,6 +36,7 @@ namespace Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
 #pragma warning restore CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<TabServices> TabServices { get; set; }
 
 
         public IccPlannerContext(DbContextOptions<IccPlannerContext> options)

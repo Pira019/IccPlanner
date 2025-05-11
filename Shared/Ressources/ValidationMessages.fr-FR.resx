@@ -267,4 +267,28 @@
   <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
     <value>Le département « {0} » a déjà un programme « {1} » de type « {2} ».</value>
   </data>
+  <data name="START_TIME" xml:space="preserve">
+    <value>Heure de début</value>
+  </data>
+  <data name="END_TIME" xml:space="preserve">
+    <value>Heure de fin</value>
+  </data>
+  <data name="GREATER_THEN" xml:space="preserve">
+    <value>{PropertyName} doit être supérieure à {ComparisonValue}.</value>
+  </data>
+  <data name="MEMBER_ARIVAL_TIME" xml:space="preserve">
+    <value>L'heure d'arrivée du membre ne doit pas dépasser l'heure de début du service, ou elle est invalide.</value>
+  </data>
+  <data name="MEMBER" xml:space="preserve">
+    <value>Membres</value>
+  </data>
+  <data name="DISPLAY_NAME" xml:space="preserve">
+    <value>Nom affiché du service</value>
+  </data>
+  <data name="COMMENT" xml:space="preserve">
+    <value>Commentaire </value>
+  </data>
+  <data name="SERVICE_EXISTS" xml:space="preserve">
+    <value>Impossible d’enregistrer ce service : un service «{0}» existe déjà entre {1} et {2}.</value>
+  </data>
 </root>
