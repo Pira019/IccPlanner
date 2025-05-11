@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250510080400_AddServices")]
+    partial class AddServices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -579,8 +582,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                        .HasColumnType("text");
 
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time without time zone");
@@ -592,9 +594,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("time without time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StartTime", "EndTime", "DisplayName")
-                        .IsUnique();
 
                     b.ToTable("TabServices");
                 });

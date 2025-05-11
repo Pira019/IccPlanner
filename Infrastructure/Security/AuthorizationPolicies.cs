@@ -88,6 +88,13 @@ namespace Infrastructure.Security
                     ));
 
             /*Fin Accès Program*/
+
+            //Service
+            options.AddPolicy(PolicyConstants.MANAGER_SERVICE, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.IsInRole(RolesConstants.ADMIN) ||
+                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.MANAGER_SERVICE)));
+
         }
     }
 }
