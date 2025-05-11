@@ -4,9 +4,9 @@ using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Application.Requests.ServiceTab;
 using Application.Interfaces.Services;
-using Application.Interfaces.Repositories;
 using Application.Responses.Errors;
 using Shared.Ressources;
+using Application.Responses.TabService;
 
 
 namespace IccPlanner.Controllers
@@ -46,6 +46,21 @@ namespace IccPlanner.Controllers
 
             var resultat = await _serviceTabService.Add(serviceRequest);
             return Created(string.Empty, resultat);
+        }
+
+        /// <summary>
+        ///     Obtenir tous les services
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<IEnumerable<GetTabServiceListResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get()
+        {  
+            return Ok(await _serviceTabService.GetAll());
         }
     }
 }

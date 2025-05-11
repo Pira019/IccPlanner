@@ -24,5 +24,10 @@ namespace Application.Services
             var newEntity = _mapper.Map<TEntity>(requestBody);
             return await _baseRepository.Insert(newEntity);
         }
+
+        public virtual async Task<IEnumerable<Object>> GetAll()
+        {
+            return await _baseRepository.GetAll();
+        }
     }
 }

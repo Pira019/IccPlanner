@@ -43,5 +43,13 @@
         /// Une collection contenant toutes les entités de type <typeparamref name="T"/>.
         /// </returns>
         public IQueryable<T> QueryAll();
+
+        /// <summary>
+        ///     Obtenir toute la liste
+        /// </summary>
+        /// <returns>
+        ///     Une liste des elements 
+        /// </returns>
+        public Task<IEnumerable<T>> GetAll();
     }
 }
