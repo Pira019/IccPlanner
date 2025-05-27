@@ -25,12 +25,12 @@ namespace Application.Helper.Validators.Requests.Department
              .IsEnumName(typeof(ProgramType), caseSensitive: false).WithMessage(ValidationMessages.INVALID_PRG_TYPE);
 
             // Validation 1 : Si le programme est récurrent, Days ne doit pas être vide
-            RuleFor(x => x.Days)
+            RuleFor(x => x.Day)
                 .NotEmpty()
                 .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.DAYS_REQUIRED);
 
             // Validation 2 : Pour chaque jour, vérifier que ce n'est pas null si le programme est récurrent et Pour chaque jour, vérifier qu'il est valide
-            RuleForEach(x => x.Days)
+            RuleFor(x => x.Day)
                .NotEmpty()
                .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.CANNOT_CONTAIN_NULL).WithName(ValidationMessages.DAYS)
                .Must(day => Enum.TryParse(typeof(ValidDaysOfWeek), day, true, out _))

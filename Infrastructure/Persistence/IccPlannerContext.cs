@@ -1,7 +1,7 @@
 ﻿
 
 
-// Ignore Spelling: Prg
+// Ignore Spelling: Prg Prgs
 
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +37,7 @@ namespace Infrastructure.Persistence
 #pragma warning restore CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<TabServices> TabServices { get; set; }
+        public DbSet<TabServicePrg> TabServicePrgs { get; set; }
 
 
         public IccPlannerContext(DbContextOptions<IccPlannerContext> options)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250525033846_UpdatePrgDB001")]
+    partial class UpdatePrgDB001
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -494,7 +497,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("Day")
+                    b.Property<string>("Days")
                         .HasColumnType("text");
 
                     b.Property<int>("PrgDepartmentInfoId")
@@ -524,8 +527,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date[]");
 
                     b.Property<string>("Days")
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                        .HasColumnType("text");
 
                     b.Property<int>("DepartmentProgramId")
                         .HasColumnType("integer");
@@ -606,10 +608,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TabServicesId");
+                    b.HasIndex("PrgDateId");
 
-                    b.HasIndex("PrgDateId", "TabServicesId")
-                        .IsUnique();
+                    b.HasIndex("TabServicesId");
 
                     b.ToTable("TabServicePrgs");
                 });

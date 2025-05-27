@@ -291,4 +291,28 @@
   <data name="SERVICE_EXISTS" xml:space="preserve">
     <value>Unable to register this service: a service named «{0}» already exists between {1} and {2}.</value>
   </data>
+  <data name="SERVICE" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="PROGRAM" xml:space="preserve">
+    <value>The program</value>
+  </data>
+  <data name="MEMBER_ARRIVAL" xml:space="preserve">
+    <value>The member's arrival time</value>
+  </data>
+  <data name="ENGLISH_DAY" xml:space="preserve">
+    <value>Please enter the days in English. (e.g., Monday, Tuesday, etc.) </value>
+  </data>
+  <data name="NOT_EXIST" xml:space="preserve">
+    <value> {0} : No matching entry found for the specified value.</value>
+  </data>
+  <data name="PROGRAM_" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="SERVICE_" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="PGM_SERVICE_EXIST" xml:space="preserve">
+    <value>Cannot add this service: the program already has one scheduled on this date and at this time.</value>
+  </data>
 </root>
