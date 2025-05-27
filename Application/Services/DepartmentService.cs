@@ -90,7 +90,7 @@ namespace Application.Services
             else
             {
                 // Un programme ponctuel n'utilise pas de jours récurrent
-                request.Days?.Clear();
+                request.Day = null;
             }
 
             var data = request.DepartmentIds.Distinct()
@@ -105,7 +105,7 @@ namespace Application.Services
                             PrgDepartmentInfo = new PrgDepartmentInfo 
                             { 
                                 Dates = request.Date?.Select(d=> DateOnly.ParseExact(d,"yyyy-MM-dd")).ToList(),
-                                Days = request.Days,
+                                Days = request.Day,
                                 PrgDate = request.Date?.Select(d => new PrgDate
                                 {
                                     Date = DateOnly.ParseExact(d, "yyyy-MM-dd")

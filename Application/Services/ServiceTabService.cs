@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Requests.ServiceTab;
 using Application.Responses;
 using Application.Responses.TabService;
 using AutoMapper;
@@ -34,6 +35,6 @@ namespace Application.Services
         public override async Task<IEnumerable<object>> GetAll()
         {
             return _mapper.Map<List<GetTabServiceListResponse>>(await base.GetAll()); 
-        }
+        } 
     }
 }

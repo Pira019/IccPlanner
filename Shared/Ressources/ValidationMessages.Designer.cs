@@ -214,6 +214,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please enter the days in English. (e.g., Monday, Tuesday, etc.) .
+        /// </summary>
+        public static string ENGLISH_DAY {
+            get {
+                return ResourceManager.GetString("ENGLISH_DAY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unknown error. Please try again later..
         /// </summary>
         public static string ERROR_UNDEFINED {
@@ -412,6 +421,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The member&apos;s arrival time.
+        /// </summary>
+        public static string MEMBER_ARRIVAL {
+            get {
+                return ResourceManager.GetString("MEMBER_ARRIVAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} must be greater than or equal to {ComparisonValue}..
         /// </summary>
         public static string MIN_VALUE {
@@ -484,11 +502,47 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à  {0} : No matching entry found for the specified value..
+        /// </summary>
+        public static string NOT_EXIST {
+            get {
+                return ResourceManager.GetString("NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} cannot be null..
         /// </summary>
         public static string NOT_NULL {
             get {
                 return ResourceManager.GetString("NOT_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Cannot add this service: the program already has one scheduled on this date and at this time..
+        /// </summary>
+        public static string PGM_SERVICE_EXIST {
+            get {
+                return ResourceManager.GetString("PGM_SERVICE_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The program.
+        /// </summary>
+        public static string PROGRAM {
+            get {
+                return ResourceManager.GetString("PROGRAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Program.
+        /// </summary>
+        public static string PROGRAM_ {
+            get {
+                return ResourceManager.GetString("PROGRAM_", resourceCulture);
             }
         }
         
@@ -507,6 +561,24 @@ namespace Shared.Ressources {
         public static string PROGRAM_TYPE {
             get {
                 return ResourceManager.GetString("PROGRAM_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Service.
+        /// </summary>
+        public static string SERVICE {
+            get {
+                return ResourceManager.GetString("SERVICE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Service.
+        /// </summary>
+        public static string SERVICE_ {
+            get {
+                return ResourceManager.GetString("SERVICE_", resourceCulture);
             }
         }
         

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\TabServicePrgDto\" />
     <Folder Include="Responses\Errors\Ministry\" />
   </ItemGroup>
 

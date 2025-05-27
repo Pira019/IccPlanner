@@ -1,4 +1,5 @@
-﻿namespace Application.Interfaces.Services
+﻿
+namespace Application.Interfaces.Services
 {
     public interface IServiceTabService : IBaseService
     {
@@ -17,6 +18,6 @@
         /// <returns>
         ///     Retourne une <see cref="bool"/>
         /// </returns>
-        public Task<bool> IsServiceExist(string startTime, string endTime, string displayServiceName);
+        public Task<bool> IsServiceExist(string startTime, string endTime, string displayServiceName); 
     }
 }

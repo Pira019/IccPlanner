@@ -23,12 +23,13 @@ namespace Domain.Entities
         [MaxLength(55)]
         public required string DisplayName { 
             get => _displayName;
-            set => _displayName = Utiles.CapitalizeFirstLetter(value);
+            set => _displayName = SharedUtiles.CapitalizeFirstLetter(value);
         }
 
         public string? Notes { get; set; }
 
         private string _displayName = string.Empty;
+        public List<TabServicePrg> ServicePrgDepartments { get; }  = [];
 
     }
 } 

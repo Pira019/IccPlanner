@@ -14,7 +14,7 @@ namespace Domain.Entities
         [MaxLength(255)]
         public required string Name { 
             get => _name;
-            set => _name = Utiles.CapitalizeFirstLetter(value); 
+            set => _name = SharedUtiles.CapitalizeFirstLetter(value); 
         }
         public string? Description { get; set; }
         [MaxLength(50)]

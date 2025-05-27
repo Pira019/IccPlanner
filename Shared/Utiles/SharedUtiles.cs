@@ -1,6 +1,6 @@
 ﻿namespace Shared.Utiles
 {
-    public class Utiles
+    public class SharedUtiles
     {
         public static string CapitalizeFirstLetter(string input)
         {
@@ -14,6 +14,17 @@
             return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
 
-
+        public static bool BeAValidTimeOnly(string time)
+        {
+            try
+            {
+                // Vérification basique si l'heure est un TimeOnly valide
+                return TimeOnly.Parse(time) != default(TimeOnly);
+            }
+            catch
+            {
+                return false; // Retourner faux si une exception se produit
+            }
+        } 
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250511061932_UpdateDB")]
+    partial class UpdateDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -494,9 +497,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("Day")
-                        .HasColumnType("text");
-
                     b.Property<int>("PrgDepartmentInfoId")
                         .HasColumnType("integer");
 
@@ -523,9 +523,8 @@ namespace Infrastructure.Migrations
                     b.PrimitiveCollection<List<DateOnly>>("Dates")
                         .HasColumnType("date[]");
 
-                    b.Property<string>("Days")
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                    b.PrimitiveCollection<List<string>>("Days")
+                        .HasColumnType("text[]");
 
                     b.Property<int>("DepartmentProgramId")
                         .HasColumnType("integer");
@@ -584,18 +583,16 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Days")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                    b.Property<DateOnly?>("Date")
+                        .HasColumnType("date");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
+                    b.Property<string>("Days")
                         .HasColumnType("text");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<int>("PrgDateId")
+                    b.Property<int>("PrgDepartmentInfoId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TabServicesId")
@@ -606,12 +603,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PrgDepartmentInfoId");
+
                     b.HasIndex("TabServicesId");
 
-                    b.HasIndex("PrgDateId", "TabServicesId")
-                        .IsUnique();
-
-                    b.ToTable("TabServicePrgs");
+                    b.ToTable("ServicePrgDepartments");
                 });
 
             modelBuilder.Entity("Domain.Entities.TabServices", b =>
@@ -1112,20 +1108,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
                 {
-                    b.HasOne("Domain.Entities.DepartmentProgram", "DepartmentProgram")
+                    b.HasOne("Domain.Entities.DepartmentProgram", null)
                         .WithOne("PrgDepartmentInfo")
                         .HasForeignKey("Domain.Entities.PrgDepartmentInfo", "DepartmentProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("DepartmentProgram");
                 });
 
             modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
                 {
-                    b.HasOne("Domain.Entities.PrgDate", "PrgDate")
+                    b.HasOne("Domain.Entities.PrgDepartmentInfo", "PrgDepartmentInfo")
                         .WithMany("ServicePrgDepartments")
-                        .HasForeignKey("PrgDateId")
+                        .HasForeignKey("PrgDepartmentInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1135,7 +1129,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PrgDate");
+                    b.Navigation("PrgDepartmentInfo");
 
                     b.Navigation("TabServices");
                 });
@@ -1241,14 +1235,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Departements");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
-                {
-                    b.Navigation("ServicePrgDepartments");
-                });
-
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
                 {
                     b.Navigation("PrgDate");
+
+                    b.Navigation("ServicePrgDepartments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>
