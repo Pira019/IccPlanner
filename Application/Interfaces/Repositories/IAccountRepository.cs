@@ -79,7 +79,7 @@ namespace Application.Interfaces.Repositories
         /// <param name="userAuthId">L'Id du membre</param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="Member"/> de l'opération </returns>
-        public Task<Member?> GetAuthMember(Guid? userAuthId);
+        public Task<Member?> GetAuthMemberAsync(Guid? userAuthId);
 
 
         /// <summary>
@@ -94,10 +94,6 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <param name="users">Liste des utilisateurs</param>
         /// <returns> les users filtres </returns>
-        public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);
-
-
-
-
+        public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);  
     }
 }

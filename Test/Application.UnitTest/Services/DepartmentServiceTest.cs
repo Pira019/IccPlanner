@@ -211,7 +211,7 @@ namespace Test.Application.UnitTest.Services
                 Sexe = "M"
             };
 
-            _accountRepository.GetAuthMember(guid).Returns(Task.FromResult((Member?)member));
+            _accountRepository.GetAuthMemberAsync(guid).Returns(Task.FromResult((Member?)member));
 
             var departmentPrograms = new List<DepartmentProgram>
             {
@@ -252,7 +252,7 @@ namespace Test.Application.UnitTest.Services
                 Sexe = "M"
             };
 
-            _accountRepository.GetAuthMember(guid).Returns(Task.FromResult((Member?)member));
+            _accountRepository.GetAuthMemberAsync(guid).Returns(Task.FromResult((Member?)member));
 
             var departmentPrograms = new List<DepartmentProgram>
             {

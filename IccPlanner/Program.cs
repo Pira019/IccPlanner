@@ -121,6 +121,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPrgDateRepository, PrgDateRepository>();
             builder.Services.AddScoped<ITabServicePrgRepository, TabServicePrgRepository>();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 
             builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
 
@@ -134,6 +135,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IProgramService, ProgramService>();
             builder.Services.AddScoped<IServiceTabService, ServiceTabService>();
             builder.Services.AddScoped<ITabServicePrgService, TabServicePrgService>();
+            builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 

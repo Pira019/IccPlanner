@@ -24,7 +24,6 @@ namespace Domain.Entities
         public Member? UpdateBy { get; set; }
         public List<DepartmentMember> DepartmentMembers { get; } = [];
         public List<FeedBack>? FeedBacks{ get; set; }
-        public List<Availability> Availabilities { get; } = [];
 
 
     }

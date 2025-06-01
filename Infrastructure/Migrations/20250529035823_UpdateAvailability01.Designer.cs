@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20250529035823_UpdateAvailability01")]
+    partial class UpdateAvailability01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,6 +85,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DepartmentMemberId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("DepartmentProgramId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -93,10 +99,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TabServicePrgId");
+                    b.HasIndex("DepartmentMemberId");
 
-                    b.HasIndex("DepartmentMemberId", "TabServicePrgId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentProgramId");
+
+                    b.HasIndex("TabServicePrgId");
 
                     b.ToTable("Availabilities");
                 });
@@ -938,6 +945,10 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.DepartmentProgram", null)
+                        .WithMany("Availabilities")
+                        .HasForeignKey("DepartmentProgramId");
+
                     b.HasOne("Domain.Entities.TabServicePrg", "TabServicePrg")
                         .WithMany()
                         .HasForeignKey("TabServicePrgId")
@@ -1212,6 +1223,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
                 {
+                    b.Navigation("Availabilities");
+
                     b.Navigation("FeedBacks");
 
                     b.Navigation("PrgDepartmentInfo");
