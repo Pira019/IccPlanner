@@ -18,6 +18,5 @@ namespace Domain.Entities
         public List<Poste> Postes { get; } = [];
         public List<DepartmentMemberPost> DepartmentMemberPosts { get; } = [];
         public List<FeedBack> FeedBacks { get; } = [];
-        public List<Availability> Availabilities { get; } = [];
     }
 }

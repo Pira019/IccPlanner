@@ -270,7 +270,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             await _iccPlannerContext.SaveChangesAsync();
 
             //Act
-            var result = await _accountRepository.GetAuthMember(userId);
+            var result = await _accountRepository.GetAuthMemberAsync(userId);
 
             //Assert
             result.Should().BeNull();

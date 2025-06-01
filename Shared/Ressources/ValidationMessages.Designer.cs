@@ -583,11 +583,38 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Your availability for this service has already been recorded..
+        /// </summary>
+        public static string SERVICE_ALREADY_CHOSEN {
+            get {
+                return ResourceManager.GetString("SERVICE_ALREADY_CHOSEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unable to register this service: a service named «{0}» already exists between {1} and {2}..
         /// </summary>
         public static string SERVICE_EXISTS {
             get {
                 return ResourceManager.GetString("SERVICE_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à You cannot set your availability for this time slot because you are not part of the associated department..
+        /// </summary>
+        public static string SERVICE_NOT_AVAILABITY {
+            get {
+                return ResourceManager.GetString("SERVICE_NOT_AVAILABITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Service Identifier.
+        /// </summary>
+        public static string SERVICE_PRG {
+            get {
+                return ResourceManager.GetString("SERVICE_PRG", resourceCulture);
             }
         }
         
@@ -624,6 +651,15 @@ namespace Shared.Ressources {
         public static string USER_IS_LOCKED_OUT {
             get {
                 return ResourceManager.GetString("USER_IS_LOCKED_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Error: User not found..
+        /// </summary>
+        public static string USER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("USER_NOT_FOUND", resourceCulture);
             }
         }
         

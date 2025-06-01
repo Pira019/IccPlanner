@@ -34,7 +34,6 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.DepartmentMemberPosts, opt => opt.Ignore())
                 .ForMember(dest => dest.Postes, opt => opt.Ignore())
                 .ForMember(dest => dest.FeedBacks, opt => opt.Ignore())
-                .ForMember(dest => dest.Availabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 
@@ -56,7 +55,6 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.FeedBacks, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.Availabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreateBy, opt => opt.Ignore()); 
         }

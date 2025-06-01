@@ -315,4 +315,16 @@
   <data name="PGM_SERVICE_EXIST" xml:space="preserve">
     <value>Impossible d’ajouter ce service : ce programme en a déjà un prévu à cette date et à cette heure.</value>
   </data>
+  <data name="SERVICE_PRG" xml:space="preserve">
+    <value>Identifiant du service</value>
+  </data>
+  <data name="USER_NOT_FOUND" xml:space="preserve">
+    <value>Erreur : Utilisateur non trouvé. </value>
+  </data>
+  <data name="SERVICE_NOT_AVAILABITY" xml:space="preserve">
+    <value>Vous ne pouvez pas indiquer vos disponibilités sur ce créneau, car vous ne faites pas partie du département concerné.</value>
+  </data>
+  <data name="SERVICE_ALREADY_CHOSEN" xml:space="preserve">
+    <value>Vos disponibilités pour ce service ont déjà été enregistrées.</value>
+  </data>
 </root>

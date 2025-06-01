@@ -130,7 +130,7 @@ namespace Application.Services
 
         public async Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? authenticatedUser)
         {
-            var addedBy = await _accountRepository.GetAuthMember(authenticatedUser);
+            var addedBy = await _accountRepository.GetAuthMemberAsync(authenticatedUser);
             var departementMembers = new List<User>();  
              
             using (var stream = new MemoryStream())

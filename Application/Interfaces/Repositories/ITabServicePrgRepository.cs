@@ -21,5 +21,16 @@ namespace Application.Interfaces.Repositories
         ///     Une valeur <see cref="bool"/> 
         /// </returns>
         public Task<bool> IsServicePrgExist(int tabServiceId, int prgDateId);
+
+        /// <summary>
+        ///     Permet de récupérer l'id du département par depuis ID de la table TabServicePrg.     
+        /// </summary>
+        /// <param name="servicePrgId">
+        ///     Id du service programme id.
+        /// </param>
+        /// <returns>
+        ///     Id du département. 
+        /// </returns>
+        public Task<int?> GetDepartmentIdByServicePrgId(int servicePrgId);
     }
 }

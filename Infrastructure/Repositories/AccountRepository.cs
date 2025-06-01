@@ -69,7 +69,7 @@ namespace Infrastructure.Repositories
             return await _iccPlannerContext.Members.FirstOrDefaultAsync(x => x.User != null && x.User.Id == userId);
         }
 
-        public async Task<Member?> GetAuthMember(Guid? userAuthId)
+        public async Task<Member?> GetAuthMemberAsync(Guid? userAuthId)
         {
             return await FindMemberByUserId(userAuthId.ToString()!);
         }

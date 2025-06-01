@@ -315,4 +315,16 @@
   <data name="PGM_SERVICE_EXIST" xml:space="preserve">
     <value>Cannot add this service: the program already has one scheduled on this date and at this time.</value>
   </data>
+  <data name="SERVICE_PRG" xml:space="preserve">
+    <value>Service Identifier</value>
+  </data>
+  <data name="USER_NOT_FOUND" xml:space="preserve">
+    <value>Error: User not found.</value>
+  </data>
+  <data name="SERVICE_NOT_AVAILABITY" xml:space="preserve">
+    <value>You cannot set your availability for this time slot because you are not part of the associated department.</value>
+  </data>
+  <data name="SERVICE_ALREADY_CHOSEN" xml:space="preserve">
+    <value>Your availability for this service has already been recorded.</value>
+  </data>
 </root>

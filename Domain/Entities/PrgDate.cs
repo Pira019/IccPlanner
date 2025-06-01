@@ -5,7 +5,7 @@
 namespace Domain.Entities
 {
     /// <summary>
-    /// Date de programme
+    ///     Date de programme.
     /// </summary>
     public class PrgDate
     {
