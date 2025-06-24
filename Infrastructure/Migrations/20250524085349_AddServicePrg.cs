@@ -13,22 +13,22 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_ServicePrgDepartments_PrgDepartmentInfos_PrgDepartmentInfoId",
-                table: "ServicePrgDepartments");
+                table: "TabServicePrgs");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_ServicePrgDepartments_TabServices_TabServicesId",
-                table: "ServicePrgDepartments");
+                table: "TabServicePrgs");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_ServicePrgDepartments",
-                table: "ServicePrgDepartments");
+                table: "TabServicePrgs");
 
             migrationBuilder.DropColumn(
                 name: "Date",
-                table: "ServicePrgDepartments");
+                table: "TabServicePrgs");
 
             migrationBuilder.RenameTable(
-                name: "ServicePrgDepartments",
+                name: "TabServicePrgs",
                 newName: "TabServicePrgs");
 
             migrationBuilder.RenameColumn(
@@ -105,26 +105,26 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.RenameTable(
                 name: "TabServicePrgs",
-                newName: "ServicePrgDepartments");
+                newName: "TabServicePrgs");
 
             migrationBuilder.RenameColumn(
                 name: "PrgDateId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 newName: "PrgDepartmentInfoId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_TabServicePrgs_TabServicesId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 newName: "IX_ServicePrgDepartments_TabServicesId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_TabServicePrgs_PrgDateId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 newName: "IX_ServicePrgDepartments_PrgDepartmentInfoId");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Days",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 type: "text",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -134,18 +134,18 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.AddColumn<DateOnly>(
                 name: "Date",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 type: "date",
                 nullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ServicePrgDepartments",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ServicePrgDepartments_PrgDepartmentInfos_PrgDepartmentInfoId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 column: "PrgDepartmentInfoId",
                 principalTable: "PrgDepartmentInfos",
                 principalColumn: "Id",
@@ -153,7 +153,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ServicePrgDepartments_TabServices_TabServicesId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 column: "TabServicesId",
                 principalTable: "TabServices",
                 principalColumn: "Id",

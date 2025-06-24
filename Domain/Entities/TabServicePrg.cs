@@ -19,6 +19,8 @@ namespace Domain.Entities
 
         [MaxLength(15)]
         public string? Days { get; set; }
-        public string? Notes { get; set; }
+        public string? Notes { get; set;}
+        public List<DepartmentMember> DepartmentMembers { get; } = []; 
+        public List<Availability> Availabilities { get; } = []; 
     }
 }

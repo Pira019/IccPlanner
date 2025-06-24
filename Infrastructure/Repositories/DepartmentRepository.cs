@@ -1,4 +1,6 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Dtos.TabServicePrgDto;
+using Application.Interfaces.Repositories;
+using Application.Responses.TabService;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,36 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
+        ///inheritdoc />
+        public async Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly datePrg)
+        {
+            return await _dbSet.Where(department => department.Members.Any(member => member.Id == userId))
+                .Select(department => new GetServicesListResponse
+                {
+                    DepartmentName = department.Name,
+                    ServicePrograms = department.DepartmentPrograms
+                   .Where(dp => dp.PrgDepartmentInfo != null)
+                   .SelectMany(dp => dp.PrgDepartmentInfo!.PrgDate
+                        .Where(pd => pd.Date == datePrg)
+                       .SelectMany(pd =>
+                        pd.TabServicePrgs.Select(service =>
+                        new ServiceProgramDto
+                        {
+                            ProgramName = dp.Program.Name,
+                            ProgramShortName = dp.Program.ShortName,
+                            ServiceProgramId = service.Id,
+                            DisplayName = service.DisplayName,
+                            ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
+                            StartTime = service.TabServices.StartTime,
+                            EndTime = service.TabServices.EndTime.ToString(),
+                            IsAvialable = service.Availabilities.Any()
+
+                        })))
+                   .OrderBy(X => X.StartTime).ToList()
+                }).Where(dpt => dpt.ServicePrograms.Any()) 
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds)
         {
             // Vérifier si departmentIds est null ou vide
@@ -26,7 +58,7 @@ namespace Infrastructure.Repositories
 
             return await _dbSet.Where(department_ => departmentIds.Contains(department_.Id))
                                                                              .Select(department => (int?)department.Id)
-                                                                            .ToListAsync(); 
+                                                                            .ToListAsync();
         }
 
         public async Task<bool> IsDepartmentIdExists(int id)
@@ -37,11 +69,11 @@ namespace Infrastructure.Repositories
         public async Task<bool> IsNameExistsAsync(string name)
         {
             return await PlannerContext.Departments.AnyAsync(x => x.Name == name);
-        } 
+        }
         public async Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember)
         {
             await PlannerContext.DepartmentMembers.AddAsync(departmentMember);
-            PlannerContext.SaveChanges(); 
+            PlannerContext.SaveChanges();
             return departmentMember;
         }
 

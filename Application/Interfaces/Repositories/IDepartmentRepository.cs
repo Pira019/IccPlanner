@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Responses.TabService;
+using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
 {
@@ -37,5 +38,12 @@ namespace Application.Interfaces.Repositories
         /// La liste ne gère pas les doublons
         /// </remarks>
         public Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds);  
+
+        /// <summary>
+        ///     Obtient la liste des services des départements d'un utilisateur par date
+        /// </summary>
+        /// <param name="dateOnly"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly);  
     }
 }

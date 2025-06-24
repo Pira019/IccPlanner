@@ -14,6 +14,6 @@ namespace Domain.Entities
         public string? Day { get; set; }
         public int PrgDepartmentInfoId { get; set; }
         public PrgDepartmentInfo PrgDepartmentInfo { get; set; } = null!;
-        public List<TabServicePrg> ServicePrgDepartments { get; } = [];
+        public List<TabServicePrg> TabServicePrgs { get; } = [];
     }
 }

@@ -11,23 +11,24 @@ using Shared.Ressources;
 using Application.Responses.TabService;
 using Application.Interfaces.Repositories;
 
-
 namespace IccPlanner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServicesController : ControllerBase
+    public class ServicesController : PlannerBaseController
     {
         private IServiceTabService _serviceTabService;
         private ITabServicePrgService _tabServicePrgService;
         private ITabServicePrgRepository _tabServicePrgRepository;
+        private IDepartmentRepository _departmentRepository;
 
-        public ServicesController(IServiceTabService serviceTabService, ITabServicePrgService tabServicePrgService,
-            ITabServicePrgRepository tabServicePrgRepository)
+        public ServicesController(IAccountRepository accountRepository, IServiceTabService serviceTabService, ITabServicePrgService tabServicePrgService,
+            ITabServicePrgRepository tabServicePrgRepository, IDepartmentRepository departmentRepository) : base(accountRepository)
         {
             _serviceTabService = serviceTabService;
             _tabServicePrgService = tabServicePrgService;
             _tabServicePrgRepository = tabServicePrgRepository;
+            _departmentRepository = departmentRepository;
         }
 
         /// <summary>
@@ -71,6 +72,29 @@ namespace IccPlanner.Controllers
         {
             return Ok(await _serviceTabService.GetAll());
         }
+
+        [HttpGet("dates/{month:int}/{year:int}")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<IEnumerable<GetDatesResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetServiceDate(int? month,int? year)
+        { 
+            return Ok(await _tabServicePrgService.GetDates(await GetMemberAuthIdAsync(), month, year));
+        }
+
+        [HttpGet("department-services/{datePrg}")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<IEnumerable<GetServicesListResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetServiceByDate(DateOnly datePrg)
+        {
+            return Ok( await _departmentRepository.GetDepartmentServicesByDate(await GetMemberAuthIdAsync(), datePrg));
+        }
+
 
         /// <summary>
         ///      Ajouter un service d'un programme d'un département

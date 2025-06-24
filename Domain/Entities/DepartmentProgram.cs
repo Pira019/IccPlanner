@@ -22,7 +22,6 @@ namespace Domain.Entities
         public required Guid CreateById { get; set; }
         public Member? CreateBy { get; set; } = null!;
         public Member? UpdateBy { get; set; }
-        public List<DepartmentMember> DepartmentMembers { get; } = [];
         public List<FeedBack>? FeedBacks{ get; set; }
 
 
