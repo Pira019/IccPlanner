@@ -61,6 +61,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Availability not found. Please try again later or contact the support team..
+        /// </summary>
+        public static string AVAILAIBILITY_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("AVAILAIBILITY_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Bad request.
         /// </summary>
         public static string BAD_REQUEST {
@@ -75,6 +84,15 @@ namespace Shared.Ressources {
         public static string CANNOT_CONTAIN_NULL {
             get {
                 return ResourceManager.GetString("CANNOT_CONTAIN_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à You can no longer modify this availability because the event date has passed..
+        /// </summary>
+        public static string CANT_DELETE_AVAIBILITY {
+            get {
+                return ResourceManager.GetString("CANT_DELETE_AVAIBILITY", resourceCulture);
             }
         }
         

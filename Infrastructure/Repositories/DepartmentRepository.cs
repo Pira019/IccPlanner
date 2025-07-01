@@ -40,7 +40,7 @@ namespace Infrastructure.Repositories
                             ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
                             StartTime = service.TabServices.StartTime,
                             EndTime = service.TabServices.EndTime.ToString(),
-                            IsAvialable = service.Availabilities.Any()
+                            IsAvailable = service.Availabilities.Any( x=> x.DepartmentMember.Member.Id == userId)
 
                         })))
                    .OrderBy(X => X.StartTime).ToList()
