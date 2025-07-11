@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Requests.Program;
+using Application.Responses.Program;
+using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
 {
@@ -11,5 +13,14 @@ namespace Application.Interfaces.Repositories
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant la valeur <see cref="bool"/> de l'opération </returns>>
         public Task<bool> IsNameExistsAsync(string name);
+
+        /// <summary>
+        ///     Récupérer tous les programmes par un filter <see cref="GetProgramFilterRequest"/>
+        /// </summary>
+        /// <param name="getProgramFilter">
+        ///     Filtre pour récupérer les programmes
+        /// </param>
+        /// <returns></returns>
+        public Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest getProgramFilter);
     }
 }

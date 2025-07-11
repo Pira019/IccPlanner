@@ -70,8 +70,8 @@ namespace IccPlanner.Controllers
             {
                 return BadRequest(ApiError.ErrorMessage(ValidationMessages.SERVICE_ALREADY_CHOSEN, null, null));
             }
-
-            return Created(string.Empty, await _availabilityService.Add(addAvailabilityRequest, (int)departMemberId));
+            await _availabilityService.Add(addAvailabilityRequest, (int)departMemberId);
+            return Created(string.Empty, null);
         }
 
         [HttpDelete("{idTabServicePrg}")]

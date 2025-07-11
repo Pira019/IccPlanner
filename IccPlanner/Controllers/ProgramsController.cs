@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Dtos.Program;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Program;
 using Application.Responses;
@@ -17,10 +18,12 @@ namespace IccPlanner.Controllers
     public class ProgramsController : ControllerBase
     {
         private readonly IProgramService _programService;
+        private readonly IProgramRepository _programRepository;
 
-        public ProgramsController(IProgramService programService)
+        public ProgramsController(IProgramService programService, IProgramRepository programRepository)
         {
             this._programService = programService;
+            this._programRepository = programRepository;
         }
 
         [HttpPost]
@@ -50,6 +53,15 @@ namespace IccPlanner.Controllers
         {
             var result = await _programService.GetPaginatedProgram(page,pageSize);
             return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<GetProgramFilterResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProgramFilterAsync([FromBody] GetProgramFilterRequest filter)
+        {
+            return Ok( await _programRepository.GetProgramFilterAsync(filter) );
         }
     }
 }

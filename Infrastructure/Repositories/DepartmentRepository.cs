@@ -43,7 +43,7 @@ namespace Infrastructure.Repositories
                             IsAvailable = service.Availabilities.Any( x=> x.DepartmentMember.Member.Id == userId)
 
                         })))
-                   .OrderBy(X => X.StartTime).ToList()
+                            .OrderBy(X => X.StartTime).ToList()
                 }).Where(dpt => dpt.ServicePrograms.Any()) 
                 .ToListAsync();
         }

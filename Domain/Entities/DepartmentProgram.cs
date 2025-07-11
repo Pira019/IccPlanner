@@ -1,7 +1,6 @@
 ﻿// Ignore Spelling: Prg
 
-using System.ComponentModel.DataAnnotations;
-using Shared.Enums;
+using System.ComponentModel.DataAnnotations; 
 
 namespace Domain.Entities
 {
