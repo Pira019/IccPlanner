@@ -23,51 +23,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DepartmentMember", b =>
-                {
-                    b.Property<int>("DepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("MembersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("DepartmentsId", "MembersId");
-
-                    b.HasIndex("MembersId");
-
-                    b.ToTable("DepartmentMember");
-                });
-
-            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
-                {
-                    b.Property<int>("DepartmentMembersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramDepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartmentMembersId", "ProgramDepartmentsId");
-
-                    b.HasIndex("ProgramDepartmentsId");
-
-                    b.ToTable("DepartmentMemberDepartmentProgram");
-                });
-
-            modelBuilder.Entity("DepartmentProgram", b =>
-                {
-                    b.Property<int>("DepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartmentsId", "ProgramsId");
-
-                    b.HasIndex("ProgramsId");
-
-                    b.ToTable("DepartmentProgram");
-                });
-
             modelBuilder.Entity("Domain.Entities.Availability", b =>
                 {
                     b.Property<int>("Id")
@@ -885,61 +840,16 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("DepartmentMember", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Member", null)
-                        .WithMany()
-                        .HasForeignKey("MembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.DepartmentMember", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentMembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.DepartmentProgram", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramDepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Program", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.Availability", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
-                        .WithMany()
+                        .WithMany("Availabilities")
                         .HasForeignKey("DepartmentMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.TabServicePrg", "TabServicePrg")
-                        .WithMany()
+                        .WithMany("Availabilities")
                         .HasForeignKey("TabServicePrgId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1116,7 +1026,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
                 {
                     b.HasOne("Domain.Entities.PrgDate", "PrgDate")
-                        .WithMany("ServicePrgDepartments")
+                        .WithMany("TabServicePrgs")
                         .HasForeignKey("PrgDateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1203,6 +1113,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentMember", b =>
                 {
+                    b.Navigation("Availabilities");
+
                     b.Navigation("DepartmentMemberPosts");
 
                     b.Navigation("FeedBacks");
@@ -1231,7 +1143,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.PrgDate", b =>
                 {
-                    b.Navigation("ServicePrgDepartments");
+                    b.Navigation("TabServicePrgs");
                 });
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
@@ -1242,6 +1154,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Program", b =>
                 {
                     b.Navigation("ProgramDepartments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
+                {
+                    b.Navigation("Availabilities");
                 });
 
             modelBuilder.Entity("Domain.Entities.TabServices", b =>

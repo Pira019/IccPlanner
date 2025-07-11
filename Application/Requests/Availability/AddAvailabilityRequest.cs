@@ -8,6 +8,6 @@ namespace Application.Requests.Availability
     public class AddAvailabilityRequest
     {
         public int ServicePrgId { get; set; }
-        public required string Notes { get; set; }
+        public string? Notes { get; set; }
     }
 }

@@ -37,7 +37,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServicePrgDepartments",
+                name: "TabServicePrgs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -75,12 +75,12 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServicePrgDepartments_PrgDepartmentInfoId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 column: "PrgDepartmentInfoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServicePrgDepartments_TabServicesId",
-                table: "ServicePrgDepartments",
+                table: "TabServicePrgs",
                 column: "TabServicesId");
         }
 
@@ -91,7 +91,7 @@ namespace Infrastructure.Migrations
                 name: "PrgDepartmentInfoTabServices");
 
             migrationBuilder.DropTable(
-                name: "ServicePrgDepartments");
+                name: "TabServicePrgs");
         }
     }
 }

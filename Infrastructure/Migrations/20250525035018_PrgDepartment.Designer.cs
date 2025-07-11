@@ -1126,13 +1126,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
                 {
                     b.HasOne("Domain.Entities.PrgDate", "PrgDate")
-                        .WithMany("ServicePrgDepartments")
+                        .WithMany("TabServicePrgs")
                         .HasForeignKey("PrgDateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.TabServices", "TabServices")
-                        .WithMany("ServicePrgDepartments")
+                        .WithMany("TabServicePrgs")
                         .HasForeignKey("TabServicesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1245,7 +1245,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.PrgDate", b =>
                 {
-                    b.Navigation("ServicePrgDepartments");
+                    b.Navigation("TabServicePrgs");
                 });
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
@@ -1260,7 +1260,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.TabServices", b =>
                 {
-                    b.Navigation("ServicePrgDepartments");
+                    b.Navigation("TabServicePrgs");
                 });
 #pragma warning restore 612, 618
         }

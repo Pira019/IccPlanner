@@ -51,5 +51,12 @@
         ///     Une liste des elements 
         /// </returns>
         public Task<IEnumerable<T>> GetAll();
+
+        /// <summary>
+        ///     Supprimer une entité par son identifiant.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task DeleteAsync(int id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Prg
 
+using Application.Dtos.AvailabilityDto;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -21,5 +22,19 @@ namespace Application.Interfaces.Repositories
         ///     Une valeur booléenne indiquant si le membre a déjà choisi une disponibilité pour le service spécifié.
         /// </returns>
         public Task<bool> HasAlreadyChosenAvailability(int servicePrgId, int departmentMemberId);
+
+        /// <summary>
+        ///     Retrouve l'ID d'un service programme spécifique.
+        /// </summary>
+        /// <param name="tabServicePrgId">
+        ///     Id du service programme pour lequel on veut obtenir l'ID.
+        /// </param>
+        /// <param name="userId">
+        ///     Id de l'utilisateur pour lequel on veut obtenir l'ID de la disponibilité.
+        /// </param>
+        /// <returns>
+        ///     Retourne l'Id de la table Availability si trouvé, sinon null.
+        /// </returns>
+        public Task<GetAvailabityDto?> GetIdByAsync(int tabServicePrgId, Guid userId);
     }
 }

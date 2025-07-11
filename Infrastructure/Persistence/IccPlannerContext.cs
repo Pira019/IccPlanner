@@ -47,11 +47,38 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {            
-            //// Appliquer toutes les configurations d'entité 
+            //// Appliquer toutes les configurations t'entité 
             builder.ApplyConfigurationsFromAssembly(typeof(IccPlannerContext).Assembly);
             base.OnModelCreating(builder);
 
-            // Renommer les tables d'identité
+            //map ProgmamDepartments
+            builder.Entity<Program>()
+               .HasMany(p => p.Departments)
+               .WithMany(d => d.Programs)
+               .UsingEntity<DepartmentProgram>(
+                    r => r.HasOne<Department>(d => d.Department).WithMany(dp => dp.DepartmentPrograms).HasForeignKey(dp => dp.DepartmentId), 
+                    l => l.HasOne<Program>(p => p.Program).WithMany(dp => dp.ProgramDepartments).HasForeignKey(dp => dp.ProgramId) 
+                );
+
+            //map Departments
+            builder.Entity<Member>()
+               .HasMany(p => p.Departments)
+               .WithMany(d => d.Members)
+               .UsingEntity<DepartmentMember>(
+                    r => r.HasOne<Department>(d => d.Department).WithMany(dm => dm.DepartmentMembers).HasForeignKey(d => d.DepartmentId),
+                    l => l.HasOne<Member>(d => d.Member).WithMany(dm => dm.DepartmentMembers).HasForeignKey(d => d.MemberId)
+                );
+
+            //map Departments
+            builder.Entity<TabServicePrg>()
+               .HasMany(d => d.DepartmentMembers)
+               .WithMany(t => t.TabServicePrgs)
+               .UsingEntity<Availability>(
+                    r => r.HasOne<DepartmentMember>(d => d.DepartmentMember).WithMany(dm => dm.Availabilities).HasForeignKey(a => a.DepartmentMemberId),
+                    l => l.HasOne<TabServicePrg>(t => t.TabServicePrg).WithMany(a => a.Availabilities).HasForeignKey(a => a.TabServicePrgId)
+                );
+
+            // Renommer les tables t'identité
             builder.Entity<IdentityUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");

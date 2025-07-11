@@ -63,5 +63,10 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet.ToListAsync();
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _dbSet.Where(x => EF.Property<int>(x, "Id") == id).ExecuteDeleteAsync();
+        } 
     }
 }

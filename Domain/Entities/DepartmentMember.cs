@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Ignore Spelling: Prg
+
+using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
 namespace Domain.Entities
@@ -14,8 +16,9 @@ namespace Domain.Entities
         public string? NickName {  get; set; }
         public DateOnly? DateEntry { get; set; }
         public MemberStatus Status { get; set; } = MemberStatus.Active;      
-        public List<DepartmentProgram> ProgramDepartments { get; } = [];
         public List<Poste> Postes { get; } = [];
+        public List<TabServicePrg> TabServicePrgs { get; } = [];
+        public List<Availability> Availabilities { get; } = [];
         public List<DepartmentMemberPost> DepartmentMemberPosts { get; } = [];
         public List<FeedBack> FeedBacks { get; } = [];
     }
