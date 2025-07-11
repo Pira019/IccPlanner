@@ -327,4 +327,10 @@
   <data name="SERVICE_ALREADY_CHOSEN" xml:space="preserve">
     <value>Vos disponibilités pour ce service ont déjà été enregistrées.</value>
   </data>
+  <data name="CANT_DELETE_AVAIBILITY" xml:space="preserve">
+    <value>La modification de cette disponibilité n’est plus possible, car la date de l’activité est dépassée.</value>
+  </data>
+  <data name="AVAILAIBILITY_NOT_FOUND" xml:space="preserve">
+    <value>Disponibilité non trouvée. Veuillez réessayer plus tard ou contacter l’équipe de soutien.</value>
+  </data>
 </root>

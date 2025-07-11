@@ -327,4 +327,10 @@
   <data name="SERVICE_ALREADY_CHOSEN" xml:space="preserve">
     <value>Your availability for this service has already been recorded.</value>
   </data>
+  <data name="CANT_DELETE_AVAIBILITY" xml:space="preserve">
+    <value>You can no longer modify this availability because the event date has passed.</value>
+  </data>
+  <data name="AVAILAIBILITY_NOT_FOUND" xml:space="preserve">
+    <value>Availability not found. Please try again later or contact the support team.</value>
+  </data>
 </root>

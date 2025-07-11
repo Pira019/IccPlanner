@@ -13,7 +13,7 @@ namespace Application.Dtos.TabServicePrgDto
         public string? ServantArrivalTime { get; set; }  
         public TimeOnly? StartTime { get; set; }  
         public string? EndTime { get; set; }  
-        public bool? IsAvialable { get; set; }  
+        public bool? IsAvailable { get; set; }  
 
     }
 }
