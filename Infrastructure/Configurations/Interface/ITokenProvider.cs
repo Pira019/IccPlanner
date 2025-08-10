@@ -14,10 +14,13 @@ namespace Infrastructure.Configurations.Interface
         /// <param name="userRolesName">
         /// LListe de roles
         /// </param>
+        /// <param name="rememberMe">
+        ///  Indique si l'utilisateur veut rester connecté ou pas
+        /// </param>
         /// <returns>
         ///  Retourner le token 
         /// </returns>
-        public string Create(User user, ICollection<string> userRolesName);
+        public string Create(User user, ICollection<string> userRolesName, bool rememberMe);
 
         /// <summary>
         /// Stocker le token dans le cookie
@@ -25,9 +28,12 @@ namespace Infrastructure.Configurations.Interface
         /// <param name="token">
         /// JWT token généré
         /// </param>
+        /// <param name="token">
+        ///      Indique si l'utilisateur veut rester connecté ou pas
+        /// </param>
         /// <returns>
         /// Retourner un <see cref="Task"/>
         /// </returns>
-        public Task AppendUserCookie(string token, HttpResponse httpResponse);
+        public Task AppendUserCookie(string token, HttpResponse httpResponse, bool rememberMe);
     }
 }

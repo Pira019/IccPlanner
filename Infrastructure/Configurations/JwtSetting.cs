@@ -12,6 +12,11 @@ namespace Infrastructure.Configurations
         /// Durer d'expiration du jeton
         /// </summary>
         public int? ExpirationInMinutes { get; set; }
+
+        /// <summary>
+        ///     Durer d'expiration du jeton pour se souvenir de moi
+        /// </summary>
+        public int? RememberExpirationInMinutes { get; set; }
         public string? Audiance { get; set; }
         public string? Issuer { get; set; }
     }

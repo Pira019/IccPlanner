@@ -5,7 +5,7 @@ using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
 using Infrastructure.Configurations.Interface;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
 {
@@ -15,13 +15,13 @@ namespace IccPlanner.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
-    { 
+    {
         private readonly IAccountService _accountService;
         private readonly IAccountResponseError _accountResponseError;
 
         public AccountsController(IAccountService accountService, IAccountResponseError accountResponseError)
         {
-            _accountService = accountService; 
+            _accountService = accountService;
             _accountResponseError = accountResponseError;
         }
 
@@ -41,8 +41,8 @@ namespace IccPlanner.Controllers
 
             if (!result.Succeeded)
             {
-                 var response = AccountResponseError.ApiIdentityResultResponseError(result);
-                 return BadRequest(response); 
+                var response = AccountResponseError.ApiIdentityResultResponseError(result);
+                return BadRequest(response);
             }
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -98,8 +98,8 @@ namespace IccPlanner.Controllers
 
             var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
             var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
-            var token = tokenProvider.Create(userAuth!, userAuthRoles);
-            await tokenProvider.AppendUserCookie(token, Response);
+            var token = tokenProvider.Create(userAuth!, userAuthRoles, request.Remember);
+            await tokenProvider.AppendUserCookie(token, Response, request.Remember);
             return Ok();
 
         }

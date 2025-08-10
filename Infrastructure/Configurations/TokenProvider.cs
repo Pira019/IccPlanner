@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure.Configurations
 {
     public class TokenProvider : ITokenProvider
-    { 
+    {
         private readonly AppSetting _appSetting;
 
         /// <summary>
@@ -20,10 +20,10 @@ namespace Infrastructure.Configurations
 
         public TokenProvider(IOptions<AppSetting> options)
         {
-             _appSetting = options.Value;
+            _appSetting = options.Value;
         }
 
-        public string Create(User user, ICollection<string> userRolesName)
+        public string Create(User user, ICollection<string> userRolesName, bool rememberMe)
         {
             string secrteKey = _appSetting?.JwtSetting?.Secret!;
             var secutityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secrteKey));
@@ -40,7 +40,7 @@ namespace Infrastructure.Configurations
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes((double)_appSetting?.JwtSetting?.ExpirationInMinutes!),
+                Expires = DateTime.UtcNow.AddMinutes((double)GetExpirationInMinutes(rememberMe)),
                 SigningCredentials = credentials,
                 Issuer = _appSetting.JwtSetting.Issuer,
                 Audience = _appSetting.JwtSetting.Audiance,
@@ -51,18 +51,31 @@ namespace Infrastructure.Configurations
             return handler.CreateToken(tokenDescriptor);
         }
 
-        public Task AppendUserCookie(string token, HttpResponse httpResponse)
+        public Task AppendUserCookie(string token, HttpResponse httpResponse, bool rememberMe)
         {
             var cookieOption = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                MaxAge = TimeSpan.FromDays(1)
+                MaxAge = TimeSpan.FromMinutes((GetExpirationInMinutes(rememberMe))),
             };
 
             httpResponse.Cookies.Append(AccessToken, token, cookieOption);
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Obtenir la durée d'expiration du token en minutes
+        /// </summary>
+        /// <param name="rememberMe"></param>
+        /// <returns></returns>
+        private int GetExpirationInMinutes(bool rememberMe)
+        {
+            var minutes = rememberMe
+                ? _appSetting.JwtSetting.RememberExpirationInMinutes
+                : _appSetting.JwtSetting.ExpirationInMinutes;
+            return (int)minutes!;
         }
     }
 
