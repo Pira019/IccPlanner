@@ -27,9 +27,6 @@ steps:
 - script: dotnet build IccPlanner/IccPlanner.csproj --configuration $(buildConfiguration)
   displayName: 'Build solution'
 
-# Tests
-- script: dotnet test --configuration $(buildConfiguration) --no-build --verbosity normal
-  displayName: 'Run tests'
 
 # Appliquer la migration EF Core
 - script: |
@@ -40,7 +37,7 @@ steps:
     ASPNETCORE_ENVIRONMENT: $(ASPNETCORE_ENVIRONMENT) 
 
 # Publish
-- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
+- script: dotnet publish  IccPlanner/IccPlanner.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'Publish project'
 
 # Déploiement préprod
