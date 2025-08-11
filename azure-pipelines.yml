@@ -7,7 +7,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  ASPNETCORE_ENVIRONMENT: $[eq(variables['Build.SourceBranch'], 'refs/heads/preprod') ? 'Preprod' : 'Production']
+  ASPNETCORE_ENVIRONMENT: 'Preprod'
 
 steps:
 - task: UseDotNet@2
@@ -47,8 +47,8 @@ steps:
 - task: AzureWebApp@1
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/preprod')
   inputs:
-    azureSubscription: 'MaConnexionAzure'
-    appName: 'mon-api-preprod'
+    azureSubscription: 'ApiIccRessource'
+    appName: 'IccStartPlanning'
     package: '$(Build.ArtifactStagingDirectory)/publish'
 
 # Déploiement prod
