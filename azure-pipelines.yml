@@ -1,0 +1,60 @@
+trigger:
+#- master
+- preprod
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  ASPNETCORE_ENVIRONMENT: $[eq(variables['Build.SourceBranch'], 'refs/heads/preprod') ? 'Preprod' : 'Production']
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+
+# Installer l'outil EF Core globalement
+- script: dotnet tool install --global dotnet-ef
+  displayName: 'Install EF Core Tools'
+
+# Restore
+- script: dotnet restore
+  displayName: 'Restore NuGet packages'
+
+# Build
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'Build solution'
+
+# Tests
+- script: dotnet test --configuration $(buildConfiguration) --no-build --verbosity normal
+  displayName: 'Run tests'
+
+# Appliquer la migration EF Core
+- script: |
+    export PATH="$PATH:/root/.dotnet/tools"
+    dotnet ef database update --startup-project ../IccPlanner
+  displayName: 'Run EF Core migrations'
+  env:
+    ASPNETCORE_ENVIRONMENT: $(ASPNETCORE_ENVIRONMENT) 
+
+# Publish
+- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
+  displayName: 'Publish project'
+
+# Déploiement préprod
+- task: AzureWebApp@1
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/preprod')
+  inputs:
+    azureSubscription: 'MaConnexionAzure'
+    appName: 'mon-api-preprod'
+    package: '$(Build.ArtifactStagingDirectory)/publish'
+
+# Déploiement prod
+#- task: AzureWebApp@1
+#  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+#  inputs:
+#    azureSubscription: 'MaConnexionAzure'
+#    appName: 'mon-api-prod'
+#    package: '$(Build.ArtifactStagingDirectory)/publish'#
