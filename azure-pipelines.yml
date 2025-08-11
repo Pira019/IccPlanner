@@ -20,11 +20,11 @@ steps:
   displayName: 'Install EF Core Tools'
 
 # Restore
-- script: dotnet restore
+- script: dotnet restore IccPlanner/IccPlanner.csproj
   displayName: 'Restore NuGet packages'
 
 # Build
-- script: dotnet build --configuration $(buildConfiguration)
+- script: dotnet build IccPlanner/IccPlanner.csproj --configuration $(buildConfiguration)
   displayName: 'Build solution'
 
 # Tests
@@ -34,7 +34,7 @@ steps:
 # Appliquer la migration EF Core
 - script: |
     export PATH="$PATH:/root/.dotnet/tools"
-    dotnet ef database update --startup-project ../IccPlanner
+    dotnet ef database update --project Infrastructure/Infrastructure.csproj --startup-project IccPlanner/IccPlanner.csproj
   displayName: 'Run EF Core migrations'
   env:
     ASPNETCORE_ENVIRONMENT: $(ASPNETCORE_ENVIRONMENT) 
