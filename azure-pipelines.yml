@@ -44,7 +44,7 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'ApiIccRessource'
-    app-name: 'IccStartPlannrApiV01'
+    appname: 'IccStartPlannrApiV01'
     package: '$(Build.ArtifactStagingDirectory)/publish'
 
 # Déploiement prod
