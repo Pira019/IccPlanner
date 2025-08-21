@@ -3,10 +3,18 @@
 namespace Domain.Entities
 {
     /// <summary>
-    /// Représente les roles d'un utilisateur
+    ///      Représente les roles d'un utilisateur
     /// </summary>
     public class Role : IdentityRole
-    { 
-        public required string Description { get; set; }  
+    {
+        /// <summary>
+        ///     Description du rôle.
+        /// </summary>
+        public required string Description { get; set; } 
+
+        /// <summary>
+        ///     Liste des permissions associées à ce rôle.
+        /// </summary>
+        public List<Permission> Permissions { get; } = []; 
     }
 }

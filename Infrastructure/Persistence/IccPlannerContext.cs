@@ -81,6 +81,9 @@ namespace Infrastructure.Persistence
             // Renommer les tables t'identité
             builder.Entity<IdentityUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
+            builder.Entity<IdentityUserRole<string>>()
+            .ToTable("UserRoles")               // Utiliser la table existante
+            .HasKey(ur => new { ur.UserId, ur.RoleId });
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");

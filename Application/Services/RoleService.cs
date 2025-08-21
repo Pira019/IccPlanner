@@ -29,14 +29,6 @@ namespace Application.Services
             var role = new Role { Name = createRoleRequest.Name, Description = createRoleRequest.Description };
             return _roleRepository.CreateAsync(role);
         }
-
-        public async Task<ICollection<GetRolesDto>> GetAll()
-        {
-            var roles = await _roleRepository.GetAllRoles();
-
-            return _mapper.Map<ICollection<GetRolesDto>>(roles);
-        }
-
         public async Task<CreateRoleResponse> GetRoleByName(string roleName)
         {
             var role = await _roleRepository.GetRoleByNameAsync(roleName);

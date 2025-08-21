@@ -1,4 +1,5 @@
 ﻿
+using Application.Dtos.Role;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -21,7 +22,7 @@ namespace Application.Interfaces.Repositories
         /// Récupérer tout les roles
         /// </summary>
         /// <returns></returns>
-        public Task<List<Role>> GetAllRoles();
+        public Task<List<GetRolesDto>> GetAllRoles();
 
         /// <summary>
         /// Récupérer l'Id d'un role
