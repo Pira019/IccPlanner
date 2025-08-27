@@ -31,10 +31,17 @@ steps:
  #Appliquer la migration EF Core
 - script: |
    export PATH="$PATH:/root/.dotnet/tools"
-   dotnet ef database update --project Infrastructure/Infrastructure.csproj --startup-project IccPlanner/IccPlanner.csproj  --environment $(ASPNETCORE_ENVIRONMENT)
+   dotnet ef migrations script -o migrations.sql --project Infrastructure/Infrastructure.csproj --startup-project IccPlanner/IccPlanner.csproj 
   displayName: 'Run EF Core migrations'
   env:
    ASPNETCORE_ENVIRONMENT: $(ASPNETCORE_ENVIRONMENT) 
+
+# Publier le script comme artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'migrations.sql'
+    ArtifactName: 'EFMigrationScript'
+    publishLocation: 'Container'   
 
 # Publish
 - script: dotnet publish  IccPlanner/IccPlanner.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
