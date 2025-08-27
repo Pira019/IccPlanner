@@ -36,6 +36,9 @@ steps:
   env:
    ASPNETCORE_ENVIRONMENT: $(ASPNETCORE_ENVIRONMENT) 
 
+- script: cp migrations.sql $(Build.ArtifactStagingDirectory)
+  displayName: 'Copy migrations.sql to artifact staging directory'
+
 # Publier le script comme artifact
 - task: PublishBuildArtifacts@1
   inputs:
