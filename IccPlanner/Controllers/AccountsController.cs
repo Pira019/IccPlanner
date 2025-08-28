@@ -1,10 +1,13 @@
-﻿using Application.Interfaces.Responses.Errors;
+﻿using System.Security.Claims;
+using Application.Interfaces.Responses.Errors;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
+using Domain.Enums;
 using Infrastructure.Configurations.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IccPlanner.Controllers
@@ -102,6 +105,33 @@ namespace IccPlanner.Controllers
             await tokenProvider.AppendUserCookie(token, Response, request.Remember);
             return Ok();
 
+        }
+
+        /// <summary>
+        ///     Récupérer les claims de l'utilisateur authentifié et rafraîchir le token JWT.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("claims")] 
+        [Authorize]
+        [ProducesResponseType<ClaimsResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetClaims()
+        { 
+            var claims = new ClaimsResponse
+            {
+                Roles = User.Claims
+                    .Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value)
+                    .ToList(),
+
+                Permissions = User.Claims
+                    .Where(c => c.Type == ClaimType.Permission.ToString())
+                    .Select(c => c.Value)
+                    .ToList(),
+            };
+
+            return Ok(claims);
         }
     }
 }

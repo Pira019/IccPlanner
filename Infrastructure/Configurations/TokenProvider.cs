@@ -42,8 +42,8 @@ namespace Infrastructure.Configurations
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes((double)GetExpirationInMinutes(rememberMe)),
                 SigningCredentials = credentials,
-                Issuer = _appSetting.JwtSetting.Issuer,
-                Audience = _appSetting.JwtSetting.Audiance,
+                Issuer = _appSetting?.JwtSetting.Issuer,
+                Audience = _appSetting?.JwtSetting.Audiance,
             };
 
             var handler = new Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler();

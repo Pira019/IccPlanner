@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Dtos.Role;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -25,9 +26,29 @@ namespace Infrastructure.Repositories
             return _roleManager.CreateAsync(role);
         }
 
-        public async Task<List<Role>> GetAllRoles()
+        /// <summary>
+        ///     Récupérer tout les roles.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetRolesDto>> GetAllRoles()
         {
-            return await _iccPlannerContext.Roles.ToListAsync();
+            return await _roleManager.Roles 
+                .Select
+                (roles => new GetRolesDto
+                {
+                    Id = roles.Id,
+                    Description = roles.Description,
+                    Name = roles.Name ?? string.Empty,
+                    NbrUsers = _iccPlannerContext.UserRoles.Count( role => roles.Id == role.RoleId),
+                    Permissions = roles.Permissions
+                    .Select ( permisions => new PermissionDto 
+                    {
+                        Id = permisions.Id,
+                        Name = permisions.Name,
+                        Description = permisions.Description
+
+                    }).ToList()
+                }).ToListAsync();
         }
 
         public async Task<Role?> GetRoleByNameAsync(string roleName)

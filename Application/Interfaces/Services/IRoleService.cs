@@ -16,13 +16,7 @@ namespace Application.Interfaces.Services
         /// <param name="createRoleRequest">Le model de la requête <see cref="CreateRoleRequest"/></param>
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="IdentityResult"/> de l'opération </returns>
-        public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest);
-
-        /// <summary>
-        /// Récupérer tous les roles
-        /// </summary>
-        /// <returns></returns>
-        public Task<ICollection<GetRolesDto>> GetAll();
+        public Task<IdentityResult> CreateRole(CreateRoleRequest createRoleRequest); 
 
         /// <summary>
         /// Permet de récupéré Id d'un Role

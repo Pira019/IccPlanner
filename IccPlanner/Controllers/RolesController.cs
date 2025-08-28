@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Requests.Role;
 using Application.Responses;
 using Application.Responses.Errors;
@@ -13,10 +14,12 @@ namespace IccPlanner.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;
+        private readonly IRoleRepository _roleRepository;
 
-        public RolesController(IRoleService roleService)
+        public RolesController(IRoleService roleService, IRoleRepository roleRepository)
         {
             _roleService = roleService;
+            _roleRepository = roleRepository;
         }
 
         [HttpGet]
@@ -26,10 +29,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<GetRolesResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var roles = await _roleService.GetAll();
-            var result = new GetRolesResponse { Items = roles };
-
-            return Ok(result);
+            return Ok( await _roleRepository.GetAllRoles());
         }
 
         [HttpPost]
@@ -50,5 +50,6 @@ namespace IccPlanner.Controllers
             var result = await _roleService.GetRoleByName(createRoleRequest.Name);
             return Created(string.Empty, result);
         }
+
     }
 }
