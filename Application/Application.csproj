@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Responses\Errors\Ministry\" />
-    <Folder Include="Responses\NewFolder\" />
   </ItemGroup>
 
 </Project>

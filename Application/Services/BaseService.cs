@@ -27,7 +27,7 @@ namespace Application.Services
 
         public virtual async Task<IEnumerable<Object>> GetAll()
         {
-            return await _baseRepository.GetAll();
+            return await _baseRepository.GetAllAsync();
         }
     }
 }

@@ -121,6 +121,7 @@ namespace IccPlanner
             builder.Services.AddScoped<ITabServicePrgRepository, TabServicePrgRepository>();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
+            builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
             builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
 

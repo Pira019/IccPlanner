@@ -50,7 +50,7 @@
         /// <returns>
         ///     Une liste des elements 
         /// </returns>
-        public Task<IEnumerable<T>> GetAll();
+        public Task<IEnumerable<T>> GetAllAsync();
 
         /// <summary>
         ///     Supprimer une entité par son identifiant.
