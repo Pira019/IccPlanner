@@ -38,7 +38,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<CreateRoleResponse>(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateRole(CreateRoleRequest createRoleRequest)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest createRoleRequest)
         {
             var newRole = await _roleService.CreateRole(createRoleRequest);
 

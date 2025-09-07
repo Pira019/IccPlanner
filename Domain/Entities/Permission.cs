@@ -11,6 +11,10 @@ namespace Domain.Entities
         /// </summary>
         [MaxLength(255)]
         public required string Name { get; set; }
+
+        /// <summary>
+        ///     Description de la permission.
+        /// </summary>
         public required string Description { get; set; }
 
         /// <summary>

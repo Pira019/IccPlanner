@@ -9,16 +9,21 @@ namespace Application.Requests.Role
     public class CreateRoleRequest
     {
         /// <summary>
-        /// Nom du role
+        ///     Nom du role.
         /// </summary>
         [Required]
         [LettersOnly]
         public required string Name { get; set; }
         /// <summary>
-        /// Description du Role
+        ///     Description du Role.
         /// </summary>
         [Required]
         public required string Description { get; set; }
+
+        /// <summary>
+        ///     Liste des IDs des permissions à associer au rôle.
+        /// </summary>
+        public List<int> PermissionIds { get; set; } = new List<int>();
 
     }
 }
