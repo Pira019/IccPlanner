@@ -54,7 +54,7 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'ApiRessourceV01'
-    appname: 'IccStartPlannrApiV01'
+    appname: 'ICC_ELGO_TRST_RESSOURCE'
     package: '$(Build.ArtifactStagingDirectory)/publish'
 
 # Déploiement prod
