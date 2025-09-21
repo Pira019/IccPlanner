@@ -22,6 +22,29 @@ namespace IccPlanner.Controllers
             _departmentService = departmentService; 
         }
 
+        /// <summary>
+        ///     GetAsync all departments.
+        /// </summary>
+        /// <returns>
+        ///     Retourne une liste de <see cref="DepartmentResponse"/>.
+        /// </returns>
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get()
+        {
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var canViewInfoClaims = new List<string?>
+            {
+                ClaimsConstants.CAN_MANANG_DEPART,
+            };
+
+            var departments = await _departmentService.GetAsync(userAuthId.ToString(), canViewInfoClaims);
+            return Ok(departments);
+        }
+
         [HttpPost]
         [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]

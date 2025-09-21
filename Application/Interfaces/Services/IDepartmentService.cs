@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Requests.Department;
-using Application.Responses.Department; 
+using Application.Responses.Department;
 
 namespace Application.Interfaces.Services
 {
@@ -18,7 +18,7 @@ namespace Application.Interfaces.Services
         /// </summary>
         /// <param name="name">Le nom du département </param>
         /// <returns></returns>
-        public Task<bool> IsNameExists(string name); 
+        public Task<bool> IsNameExists(string name);
 
         /// <summary>
         /// Permet d'ajouter un responsable du département
@@ -61,6 +61,20 @@ namespace Application.Interfaces.Services
         /// <code>True</code> si la liste existe
         /// </remarks>
         public Task<bool> IsValidDepartmentIds(IEnumerable<int> departmentIds);
+
+        /// <summary>
+        ///     Obtenir les départements.
+        /// </summary>
+        /// <param name="userAuthId">
+        ///     Id de utilisateur connecté.
+        /// </param>
+        /// <param name="claimValues">
+        ///     Verifier si l'utilisateur a une des claims
+        /// </param>
+        /// <returns>
+        ///     Retourne un <see cref="GetDepartResponse"/>
+        /// </returns>
+        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues);
 
 
     }

@@ -22,14 +22,17 @@ namespace Application.Services
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IDepartmentProgramRepository _departmentProgramRepository; 
-        public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository, IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository)
+        private readonly IDepartmentProgramRepository _departmentProgramRepository;
+        private readonly IClaimRepository _claimRepository;
+        public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository,
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
             _postRepository = postRepository;
             _accountRepository = accountRepository;
-            _departmentProgramRepository = departmentProgramRepository; 
+            _departmentProgramRepository = departmentProgramRepository;
+            _claimRepository = claimRepository;
         }
         public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
@@ -60,9 +63,9 @@ namespace Application.Services
         }
 
         public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId)
-        { 
-           var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId); 
-           await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
+        {
+            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId);
+            await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
         }
 
         public async Task<bool> IsNameExists(string name)
@@ -78,11 +81,11 @@ namespace Application.Services
         /// <param name="createdByUserGuid"></param>
         /// <returns>Liste de <see cref="DepartmentProgram"/></returns>
         public async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Guid createdByUserGuid)
-        { 
-            var member = await _accountRepository.FindMemberByUserId(createdByUserGuid.ToString());
+        {
+            var member = await _accountRepository.FindMemberByUserIdAsync(createdByUserGuid.ToString());
 
             //
-            if(request.TypePrg == ProgramType.Recurring.ToString())
+            if (request.TypePrg == ProgramType.Recurring.ToString())
             {
                 // Un programme récurrent n'utilise pas de dates précises
                 request.Date?.Clear();
@@ -94,27 +97,27 @@ namespace Application.Services
             }
 
             var data = request.DepartmentIds.Distinct()
-                .Select(departmentId => 
+                .Select(departmentId =>
                     new DepartmentProgram
+                    {
+                        DepartmentId = departmentId,
+                        ProgramId = request.ProgramId,
+                        CreateById = member!.Id,
+                        Comment = request.Comment,
+                        Type = request.TypePrg,
+                        PrgDepartmentInfo = new PrgDepartmentInfo
                         {
-                            DepartmentId = departmentId,
-                            ProgramId = request.ProgramId,
-                            CreateById  = member!.Id,
-                            Comment = request.Comment,
-                            Type = request.TypePrg,
-                            PrgDepartmentInfo = new PrgDepartmentInfo 
-                            { 
-                                Dates = request.Date?.Select(d=> DateOnly.ParseExact(d,"yyyy-MM-dd")).ToList(),
-                                Days = request.Day,
-                                PrgDate = request.Date?.Select(d => new PrgDate
-                                {
-                                    Date = DateOnly.ParseExact(d, "yyyy-MM-dd")
-                                }).ToList() ?? []
-                            }
+                            Dates = request.Date?.Select(d => DateOnly.ParseExact(d, "yyyy-MM-dd")).ToList(),
+                            Days = request.Day,
+                            PrgDate = request.Date?.Select(d => new PrgDate
+                            {
+                                Date = DateOnly.ParseExact(d, "yyyy-MM-dd")
+                            }).ToList() ?? []
                         }
+                    }
                     )
                 .ToList();
-            return data;    
+            return data;
         }
 
         public async Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest)
@@ -131,8 +134,8 @@ namespace Application.Services
         public async Task<int> ImportMembersAsync(AddDepartmentMemberImportFileRequest addDepartmentMemberImportFileRequest, Guid? authenticatedUser)
         {
             var addedBy = await _accountRepository.GetAuthMemberAsync(authenticatedUser);
-            var departementMembers = new List<User>();  
-             
+            var departementMembers = new List<User>();
+
             using (var stream = new MemoryStream())
             {
                 addDepartmentMemberImportFileRequest.formFile.CopyTo(stream);
@@ -160,17 +163,17 @@ namespace Application.Services
                                 Contact = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.CONTACT.ToString()]].Text.Trim(),
                                 DepartmentId = addDepartmentMemberImportFileRequest.DepartmentId,
                                 Nom = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.PRENOM.ToString()]].Text,
-                                Sex = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.SEXE.ToString()]].Text.Substring(0,1).ToUpper(),
+                                Sex = worksheet.Cells[row, columnIndexes[ColumnExcelFileNames.SEXE.ToString()]].Text.Substring(0, 1).ToUpper(),
                                 AddedBy = addedBy!.Id
                             };
 
                             departementMembers.Add(_mapper.Map<User>(importData));
                         }
                     }
-                }                
+                }
             };
             //Enregistrer 
-            return await _accountRepository.SaveImportedMembersDepartment(departementMembers); 
+            return await _accountRepository.SaveImportedMembersDepartment(departementMembers);
         }
 
         public async Task<bool> IsValidDepartmentIds(IEnumerable<int> departmentIds)
@@ -184,5 +187,20 @@ namespace Application.Services
 
             return distinctDepartmentIds.All(id => existingIds.Contains(id));
         }
+
+        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues)
+        { 
+            // Vérifier si l'utilisateur a au moins un claim parmi ceux attendus
+            bool hasAccess = (await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId)).Any(c => claimValues.Contains(c));
+            string? memberId = string.Empty;
+
+            if (!hasAccess)
+            {
+                memberId = (await _accountRepository.FindMemberByUserIdAsync(userAuthId))?.Id.ToString();
+            } 
+            var departs = await _departmentRepository.GetDepartAsync(memberId);
+            departs.ShowInfo = hasAccess;
+            return departs;
+        }
     }
-} 
+}

@@ -64,14 +64,14 @@ namespace Infrastructure.Repositories
             return (_userManager.FindByIdAsync(id));
         }
 
-        public async Task<Domain.Entities.Member?> FindMemberByUserId(string userId)
+        public async Task<Domain.Entities.Member?> FindMemberByUserIdAsync(string userId)
         {
             return await _iccPlannerContext.Members.FirstOrDefaultAsync(x => x.User != null && x.User.Id == userId);
         }
 
         public async Task<Member?> GetAuthMemberAsync(Guid? userAuthId)
         {
-            return await FindMemberByUserId(userAuthId.ToString()!);
+            return await FindMemberByUserIdAsync(userAuthId.ToString()!);
         }
 
         public async Task<IList<string>> GetUserRoles(User user)
