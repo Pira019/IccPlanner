@@ -1,4 +1,6 @@
-﻿using Application.Responses.TabService;
+﻿using System.Drawing;
+using Application.Responses.Department;
+using Application.Responses.TabService;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -44,6 +46,15 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <param name="dateOnly"></param>
         /// <returns></returns>
-        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly);  
+        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly);
+
+        /// <summary>
+        ///     Obtenir la liste des départements.
+        /// </summary>
+        /// <param name="membreId"></param>
+        /// <returns>
+        ///     Retourne une liste des départements.
+        /// </returns>
+        public Task<GetDepartResponse> GetDepartAsync(string? membreId);
     }
 }

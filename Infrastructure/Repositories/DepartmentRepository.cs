@@ -1,5 +1,7 @@
-﻿using Application.Dtos.TabServicePrgDto;
+﻿using Application.Dtos.Department;
+using Application.Dtos.TabServicePrgDto;
 using Application.Interfaces.Repositories;
+using Application.Responses.Department;
 using Application.Responses.TabService;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -16,6 +18,29 @@ namespace Infrastructure.Repositories
         public async Task<DepartmentMember?> FindDepartmentMember(string memberId, int departmentId)
         {
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
+        }
+
+        public async Task<GetDepartResponse> GetDepartAsync(string? membreId)
+        {
+            Guid? memberGuid = string.IsNullOrEmpty(membreId) ? null : Guid.Parse(membreId);
+            var departDtos = await _dbSet
+                .AsNoTracking()
+                .Select(department => new GetDepartDto
+                {
+                    Id = department.Id,
+                    Name = department.Name,
+                    NbrMember = string.IsNullOrEmpty(membreId)
+                        ? department.Members.Count()   
+                        : (memberGuid.HasValue && department.Members.Any(m => m.Id == memberGuid.Value)
+                            ? department.Members.Count()  
+                            : 0)  
+                })
+                .ToListAsync();
+
+            return new GetDepartResponse
+            {
+                Departments = departDtos
+            };
         }
 
         ///inheritdoc />
