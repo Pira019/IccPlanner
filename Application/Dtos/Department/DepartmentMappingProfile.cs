@@ -1,5 +1,4 @@
-﻿using Application.Helper;
-using Application.Requests.Department;
+﻿using Application.Requests.Department;
 using Application.Responses.Department;
 using AutoMapper;
 using Domain.Entities;
@@ -49,7 +48,7 @@ namespace Application.Dtos.Department
                 .ForMember(dest => dest.Department, opt => opt.Ignore())
                 .ForMember(dest => dest.CreateById, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdateBy, opt => opt.Ignore())
-                .ForMember(dest => dest.Type, opt => opt.Ignore())
+                .ForMember(dest => dest.IndRecurent, opt => opt.Ignore())
                 .ForMember(dest => dest.FeedBacks, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())

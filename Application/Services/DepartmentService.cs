@@ -24,8 +24,10 @@ namespace Application.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
+        private readonly IPrgDepartmentInfoRepository _prgDepartmentInfoRepository;
         public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository,
-            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository,
+            IPrgDepartmentInfoRepository prgDepartmentInfoRepository)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
@@ -33,6 +35,7 @@ namespace Application.Services
             _accountRepository = accountRepository;
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
+            _prgDepartmentInfoRepository = prgDepartmentInfoRepository;
         }
         public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
@@ -64,8 +67,8 @@ namespace Application.Services
 
         public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId)
         {
-            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId);
-            await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
+            var departmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId);
+            await _departmentProgramRepository.InsertAlDepartmentProgramlAsync(departmentPrograms); 
         }
 
         public async Task<bool> IsNameExists(string name)
@@ -84,17 +87,8 @@ namespace Application.Services
         {
             var member = await _accountRepository.FindMemberByUserIdAsync(createdByUserGuid.ToString());
 
-            //
-            if (request.TypePrg == ProgramType.Recurring.ToString())
-            {
-                // Un programme récurrent n'utilise pas de dates précises
-                request.Date?.Clear();
-            }
-            else
-            {
-                // Un programme ponctuel n'utilise pas de jours récurrent
-                request.Day = null;
-            }
+            var effectiveDates = request.IndRecurent ? null : request.Dates;
+            var effectiveDays = request.IndRecurent ? request.Days : null;
 
             var data = request.DepartmentIds.Distinct()
                 .Select(departmentId =>
@@ -104,14 +98,17 @@ namespace Application.Services
                         ProgramId = request.ProgramId,
                         CreateById = member!.Id,
                         Comment = request.Comment,
-                        Type = request.TypePrg,
+                        IndRecurent = request.IndRecurent,
                         PrgDepartmentInfo = new PrgDepartmentInfo
                         {
-                            Dates = request.Date?.Select(d => DateOnly.ParseExact(d, "yyyy-MM-dd")).ToList(),
-                            Days = request.Day,
-                            PrgDate = request.Date?.Select(d => new PrgDate
+                            PrgDate = effectiveDates?.Select(d => new PrgDate
                             {
                                 Date = DateOnly.ParseExact(d, "yyyy-MM-dd")
+                            }).ToList() ?? [],
+
+                            PrgRecDays = effectiveDays?.Select(d => new PrgRecDay
+                            {
+                                Day = d
                             }).ToList() ?? []
                         }
                     }
@@ -189,7 +186,7 @@ namespace Application.Services
         }
 
         public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues)
-        { 
+        {
             // Vérifier si l'utilisateur a au moins un claim parmi ceux attendus
             bool hasAccess = (await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId)).Any(c => claimValues.Contains(c));
             string? memberId = string.Empty;
@@ -197,7 +194,7 @@ namespace Application.Services
             if (!hasAccess)
             {
                 memberId = (await _accountRepository.FindMemberByUserIdAsync(userAuthId))?.Id.ToString();
-            } 
+            }
             var departs = await _departmentRepository.GetDepartAsync(memberId);
             departs.ShowInfo = hasAccess;
             return departs;

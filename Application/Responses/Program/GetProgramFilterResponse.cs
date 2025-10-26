@@ -9,7 +9,7 @@ namespace Application.Responses.Program
     public class GetProgramFilterResponse
     {
         public string? Name { get; set; }
-        public string? TypeProgram { get; set; }
+        public bool? IndRecurent { get; set; }
         public IEnumerable<DepartmentDto>? Departments { get; set; }
         public IEnumerable<PrgDateDto>? Dates { get; set; }
 

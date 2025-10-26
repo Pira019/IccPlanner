@@ -75,7 +75,8 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, IDepartmentProgramRepository departmentProgramRepository)
+        public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, 
+            IDepartmentProgramRepository departmentProgramRepository)
         {
             //Check si les départements sont vides
             if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds)) 
@@ -89,11 +90,11 @@ namespace IccPlanner.Controllers
             }
 
             //Check si le programme existe
-            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);            
+            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.IndRecurent);            
             
             if (isDepartmentProgramExisting != null)
             {
-                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST,isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name,request.TypePrg), null, null));
+                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST,isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name,request.IndRecurent), null, null));
             }
 
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;

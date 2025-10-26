@@ -11,10 +11,24 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds, int programId, string programType)
+        public async Task<List<int>> InsertAlDepartmentProgramlAsync(IEnumerable<DepartmentProgram> entities)
+        {
+            var ids = new List<int>();
+
+            foreach (var chunk in entities.Chunk(1000))
+            {
+                await _dbSet.AddRangeAsync(chunk);
+                await PlannerContext.SaveChangesAsync();
+
+                ids.AddRange(chunk.Select(e => e.Id));
+            }
+            return ids;
+        }
+
+        public async Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds, int programId, bool indRecurent)
         {
             return await _dbSet.Where(dp => departmentIds.Contains(dp.DepartmentId) &&
-                   programId == dp.ProgramId && dp.Type == programType)
+                   programId == dp.ProgramId && dp.IndRecurent == indRecurent)
                    .Include(dp => dp.Department)
                    .Include(dp => dp.Program)
                    .FirstOrDefaultAsync();

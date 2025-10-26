@@ -486,7 +486,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Postes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+            modelBuilder.Entity("Domain.Entities.PrgRecDays", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1054,10 +1054,10 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("DepartmentMemberId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+            modelBuilder.Entity("Domain.Entities.PrgRecDays", b =>
                 {
                     b.HasOne("Domain.Entities.PrgDepartmentInfo", "PrgDepartmentInfo")
-                        .WithMany("PrgDate")
+                        .WithMany("PrgRecDays")
                         .HasForeignKey("PrgDepartmentInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1177,7 +1177,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
                 {
-                    b.Navigation("PrgDate");
+                    b.Navigation("PrgRecDays");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>

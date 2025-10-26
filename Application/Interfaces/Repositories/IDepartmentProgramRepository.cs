@@ -13,12 +13,13 @@ namespace Application.Interfaces.Repositories
         /// <param name="programId">
         ///     Id de programme
         /// </param>
-        /// <param name="programType">
-        ///     Type de programme
+        /// <param name="indRecurent">
+        ///     Indicateur qui indique si le programme est récurrent ou non.
         /// </param>
         /// <returns>
         ///     Retourne <see cref="DepartmentProgram"/>
         /// </returns>
-        public Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds,int programId, string programType);
+        public Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds,int programId, bool indRecurent);
+        public Task<List<int>> InsertAlDepartmentProgramlAsync(IEnumerable<DepartmentProgram> entities); 
     }
 }

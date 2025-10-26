@@ -17,15 +17,19 @@ namespace Domain.Entities
         public ICollection<PrgDate> PrgDate { get; set;  } = new List<PrgDate>();
 
         /// <summary>
-        ///     Liste des dates du programme du département. Peut être vide ou nulle si non spécifié.
+        ///     Jours de programme régulier.
         /// </summary>
-        public List<DateOnly>? Dates { get; set; }
+        public ICollection<PrgRecDay> PrgRecDays { get; set; } = new List<PrgRecDay>();
 
         /// <summary>
-        ///     Liste des jours associés au programme du département
+        ///     Indicateur si activé ou non.
         /// </summary>
         /// 
-        [MaxLength(55)]
-        public string? Days { get; set; }
+        public bool IndAct { get; set; } = true;
+        /// <summary>
+        ///     Jour de fin pour de programme régulier.
+        /// </summary>
+        public DateOnly? DateStart { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+        public DateOnly? DateEnD { get; set; }
     }
 }

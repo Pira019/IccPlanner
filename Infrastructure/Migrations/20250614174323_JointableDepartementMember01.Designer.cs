@@ -433,7 +433,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Postes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+            modelBuilder.Entity("Domain.Entities.PrgRecDays", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -444,7 +444,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("Day")
+                    b.Property<string>("Days")
                         .HasColumnType("text");
 
                     b.Property<int>("PrgDepartmentInfoId")
@@ -1004,10 +1004,10 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("DepartmentMemberId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+            modelBuilder.Entity("Domain.Entities.PrgRecDays", b =>
                 {
                     b.HasOne("Domain.Entities.PrgDepartmentInfo", "PrgDepartmentInfo")
-                        .WithMany("PrgDate")
+                        .WithMany("PrgRecDays")
                         .HasForeignKey("PrgDepartmentInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1028,7 +1028,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
                 {
-                    b.HasOne("Domain.Entities.PrgDate", "PrgDate")
+                    b.HasOne("Domain.Entities.PrgRecDays", "PrgRecDays")
                         .WithMany("TabServicePrgs")
                         .HasForeignKey("PrgDateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1040,7 +1040,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PrgDate");
+                    b.Navigation("PrgRecDays");
 
                     b.Navigation("TabServices");
                 });
@@ -1142,14 +1142,14 @@ namespace Infrastructure.Migrations
                     b.Navigation("Departements");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PrgDate", b =>
+            modelBuilder.Entity("Domain.Entities.PrgRecDays", b =>
                 {
                     b.Navigation("TabServicePrgs");
                 });
 
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
                 {
-                    b.Navigation("PrgDate");
+                    b.Navigation("PrgRecDays");
                 });
 
             modelBuilder.Entity("Domain.Entities.Program", b =>

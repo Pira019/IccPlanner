@@ -123,6 +123,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+            builder.Services.AddScoped<IPrgDepartmentInfoRepository, PrgDepartmentInfoRepository>();
 
             builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
 

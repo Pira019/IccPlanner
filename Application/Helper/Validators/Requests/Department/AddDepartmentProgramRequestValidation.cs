@@ -20,30 +20,38 @@ namespace Application.Helper.Validators.Requests.Department
             RuleFor(x => x.ProgramId)
               .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM_NAME);
 
-            RuleFor(x => x.TypePrg)
-             .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM_TYPE)
-             .IsEnumName(typeof(ProgramType), caseSensitive: false).WithMessage(ValidationMessages.INVALID_PRG_TYPE);
+            /*RuleFor(x => x.IndRecurent)
+             .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM_TYPE);*/
 
             // Validation 1 : Si le programme est récurrent, Days ne doit pas être vide
-            RuleFor(x => x.Day)
+            RuleFor(x => x.Days)
                 .NotEmpty()
-                .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.DAYS_REQUIRED);
+                .When(x => x.IndRecurent).WithMessage(ValidationMessages.DAYS_REQUIRED);
 
             // Validation 2 : Pour chaque jour, vérifier que ce n'est pas null si le programme est récurrent et Pour chaque jour, vérifier qu'il est valide
-            RuleFor(x => x.Day)
-               .NotEmpty()
-               .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.CANNOT_CONTAIN_NULL).WithName(ValidationMessages.DAYS)
-               .Must(day => Enum.TryParse(typeof(ValidDaysOfWeek), day, true, out _))
-               .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.VALID_DAYS); 
+            RuleForEach(x => x.Days)
+             .NotEmpty()
+             .When(x => x.IndRecurent)
+             .WithMessage(ValidationMessages.CANNOT_CONTAIN_NULL)
+             .Must(day => int.TryParse(day, out int dayInt) && dayInt >= 1 && dayInt <= 7)
+             .When(x => x.IndRecurent)
+             .WithMessage(ValidationMessages.VALID_DAYS);
 
-            //Les dates
-            RuleFor(x => x.Date)
-                .NotEmpty()
-                .When(date => date.TypePrg == ProgramType.Punctual.ToString()).WithMessage(ValidationMessages.DATES_REQUIRED);
-
-            RuleForEach(x => x.Date)
-                .Must(date => DateOnly.TryParse(date, out _))
-                .When(date => date.TypePrg == ProgramType.Punctual.ToString()).WithMessage(ValidationMessages.INVALID_DATE); 
-        } 
+            //Les dates            
+            RuleForEach(x => x.Dates)
+            .Must(date => DateOnly.TryParse(date, out _))
+            .When(x => !x.IndRecurent)
+            .WithMessage(ValidationMessages.INVALID_DATE)
+            .Must(date =>
+            {
+                if (DateOnly.TryParse(date, out var parsedDate))
+                {
+                    return parsedDate >= DateOnly.FromDateTime(DateTime.Today);
+                }
+                return true; // Si invalide, déjà géré par la règle précédente
+            })
+            .When(x => !x.IndRecurent)
+            .WithMessage(ValidationMessages.DATE_INF);
+        }
     }
 }

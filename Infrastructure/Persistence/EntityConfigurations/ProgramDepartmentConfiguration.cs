@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<DepartmentProgram> builder)
         {
-            builder.HasIndex(x => new { x.ProgramId, x.DepartmentId, x.Type }).IsUnique();  
+            builder.HasIndex(x => new { x.ProgramId, x.DepartmentId, x.IndRecurent }).IsUnique();  
         }
     }
 }

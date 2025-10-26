@@ -33,7 +33,7 @@ namespace Infrastructure.Repositories
                             Name = dp.Department.Name,
                             ShortName = dp.Department.ShortName
                         }).ToList(),
-                     TypeProgram = d.ProgramDepartments.Select(dp => dp.Type)
+                     IndRecurent = d.ProgramDepartments.Select(dp => dp.IndRecurent)
                         .FirstOrDefault(),
 
                      Dates = d.ProgramDepartments

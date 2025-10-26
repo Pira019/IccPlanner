@@ -247,7 +247,7 @@
     <value>Un ou plusieurs jours sont requis lorsque le programme est récurrent.</value>
   </data>
   <data name="VALID_DAYS" xml:space="preserve">
-    <value>Chaque jour doit être un jour valide de la semaine (ex. : Monday, Tuesday, etc.) lorsque le programme est récurrent. Veuillez entrer les jours en anglais.</value>
+    <value>Pour les programmes récurrents, chaque jour doit être un jour de la semaine valide. Utilisez des chiffres pour représenter les jours : 1 = lundi, 2 = mardi, ..., 7 = dimanche.</value>
   </data>
   <data name="DATES_REQUIRED" xml:space="preserve">
     <value>La ou les dates sont requises lorsque le programme est ponctuel.</value>
@@ -265,7 +265,7 @@
     <value>Le nombre de services</value>
   </data>
   <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
-    <value>Le département « {0} » a déjà un programme « {1} » de type « {2} ».</value>
+    <value>Le département « {0} » a déjà un programme « {1} ».</value>
   </data>
   <data name="START_TIME" xml:space="preserve">
     <value>Heure de début</value>
@@ -332,5 +332,8 @@
   </data>
   <data name="AVAILAIBILITY_NOT_FOUND" xml:space="preserve">
     <value>Disponibilité non trouvée. Veuillez réessayer plus tard ou contacter l’équipe de soutien.</value>
+  </data>
+  <data name="DATE_INF" xml:space="preserve">
+    <value>Les dates doivent être supérieures ou égales à aujourd’hui. </value>
   </data>
 </root>
