@@ -333,4 +333,13 @@
   <data name="AVAILAIBILITY_NOT_FOUND" xml:space="preserve">
     <value>Availability not found. Please try again later or contact the support team.</value>
   </data>
+  <data name="MJ.MinistryNameExist" xml:space="preserve">
+    <value>The ministry name « {0} » already exists.</value>
+  </data>
+  <data name="MO.MinistryNameExist" xml:space="preserve">
+    <value>This ministry name is already assigned; modification is not possible.</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
 </root>

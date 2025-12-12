@@ -295,6 +295,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Id.
+        /// </summary>
+        public static string Id {
+            get {
+                return ResourceManager.GetString("Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Each date must be in a valid format (yyyy-MM-dd)..
         /// </summary>
         public static string INVALID_DATE {
@@ -480,6 +489,24 @@ namespace Shared.Ressources {
         public static string MISSING_REQUIRED_COLUMN {
             get {
                 return ResourceManager.GetString("MISSING_REQUIRED_COLUMN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The ministry name « {0} » already exists..
+        /// </summary>
+        public static string MJ_MinistryNameExist {
+            get {
+                return ResourceManager.GetString("MJ.MinistryNameExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This ministry name is already assigned; modification is not possible..
+        /// </summary>
+        public static string MO_MinistryNameExist {
+            get {
+                return ResourceManager.GetString("MO.MinistryNameExist", resourceCulture);
             }
         }
         
