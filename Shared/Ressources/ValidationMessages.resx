@@ -342,4 +342,7 @@
   <data name="Id" xml:space="preserve">
     <value>Id</value>
   </data>
+  <data name="DE_Ministry" xml:space="preserve">
+    <value>This ministry is associated with one or more departments. Deleting it will also automatically delete all departments linked to it.</value>
+  </data>
 </root>

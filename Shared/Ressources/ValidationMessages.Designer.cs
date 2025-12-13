@@ -142,6 +142,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à This ministry is associated with one or more departments. Deleting it will also automatically delete all departments linked to it..
+        /// </summary>
+        public static string DE_Ministry {
+            get {
+                return ResourceManager.GetString("DE_Ministry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The department.
         /// </summary>
         public static string DEPARTMENT {

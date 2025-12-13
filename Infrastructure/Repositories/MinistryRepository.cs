@@ -17,6 +17,11 @@ namespace Infrastructure.Repositories
             return await _dbSet.Select(ministry => new GetMinistriesResponse { Id = ministry.Id, Name = ministry.Name }).OrderBy(x=> x.Name).ToListAsync();
         }
 
+        public async Task<bool> HasDepartmentAsync(int idMinistry)
+        {
+            return await PlannerContext.Departments.AnyAsync(x => x.MinistryId == idMinistry);
+        }
+
         public async Task<bool> IsExists(int id)
         {
            return await PlannerContext.Ministries.AnyAsync(x => x.Id == id);

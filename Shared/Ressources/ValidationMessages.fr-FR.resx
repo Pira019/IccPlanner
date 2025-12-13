@@ -342,4 +342,7 @@
   <data name="Id" xml:space="preserve">
     <value>Id</value>
   </data>
+  <data name="DE_Ministry" xml:space="preserve">
+    <value>Ce ministère est associé à un ou plusieurs départements. Le supprimer entraînera automatiquement la suppression de tous les départements qui y sont rattachés.</value>
+  </data>
 </root>
