@@ -85,5 +85,20 @@ namespace Application.Responses.Errors
                 StatusDescription = ValidationMessages.BAD_REQUEST
             };
         }
+
+        public static ApiErrorResponseWarning ErrorMessageWarning(string errorMessage, string? propertyName, string? propertyValue)
+        {
+            var formattageMessage = errorMessage
+                .Replace("{PropertyName}", propertyName)
+                .Replace("{PropertyValue}", propertyValue);
+
+            return new ApiErrorResponseWarning
+            {
+                Success = false,
+                StatusCode = StatusCodes.Status400BadRequest, 
+                Message = formattageMessage,
+                StatusDescription = ValidationMessages.BAD_REQUEST
+            };
+        }
     }
 }

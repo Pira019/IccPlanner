@@ -5,7 +5,14 @@
     /// </summary>
     public class AddMinistryRequest
     { 
-        public required string Name { get; set; } 
-        public required string Description { get; set; }
+        /// <summary>
+        ///     Nom du ministère.
+        /// </summary>
+        public required string Name { get; set; }
+
+        /// <summary>
+        ///     Description du ministère.
+        /// </summary>
+        public required string Description { get; set; } 
     }
 }

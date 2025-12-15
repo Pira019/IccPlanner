@@ -15,6 +15,20 @@
         public Task<T> Insert(T entity);
 
         /// <summary>
+        ///     Mettre à jour une entité
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task UpdateAsync(T entity, T existingEntity);
+
+        /// <summary>
+        ///     Récupérer une entité par son Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<T?> GetById(int id);
+
+        /// <summary>
         /// Flag si un model exist par son Id
         /// </summary>
         /// <param name="id">Id du model</param>

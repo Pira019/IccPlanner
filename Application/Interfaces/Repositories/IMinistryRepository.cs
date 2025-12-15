@@ -22,6 +22,13 @@ namespace Application.Interfaces.Repositories
         public Task<bool> IsExists(int id);
 
         /// <summary>
+        ///     Vérifier si un ministère a des départements associés.
+        /// </summary>
+        /// <param name="idMinistry"></param>
+        /// <returns></returns>
+        public Task<bool> HasDepartmentAsync( int idMinistry);
+
+        /// <summary>
         /// Obtenir la liste de ministères
         /// </summary>
         /// <returns>

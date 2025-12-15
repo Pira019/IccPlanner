@@ -142,6 +142,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à This ministry is associated with one or more departments. Deleting it will also automatically delete all departments linked to it..
+        /// </summary>
+        public static string DE_Ministry {
+            get {
+                return ResourceManager.GetString("DE_Ministry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The department.
         /// </summary>
         public static string DEPARTMENT {
@@ -291,6 +300,15 @@ namespace Shared.Ressources {
         public static string GREATER_THEN {
             get {
                 return ResourceManager.GetString("GREATER_THEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Id.
+        /// </summary>
+        public static string Id {
+            get {
+                return ResourceManager.GetString("Id", resourceCulture);
             }
         }
         
@@ -480,6 +498,24 @@ namespace Shared.Ressources {
         public static string MISSING_REQUIRED_COLUMN {
             get {
                 return ResourceManager.GetString("MISSING_REQUIRED_COLUMN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The ministry name « {0} » already exists..
+        /// </summary>
+        public static string MJ_MinistryNameExist {
+            get {
+                return ResourceManager.GetString("MJ.MinistryNameExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This ministry name is already assigned; modification is not possible..
+        /// </summary>
+        public static string MO_MinistryNameExist {
+            get {
+                return ResourceManager.GetString("MO.MinistryNameExist", resourceCulture);
             }
         }
         
