@@ -67,6 +67,19 @@ namespace Infrastructure.Repositories
         public async Task DeleteAsync(int id)
         {
             await _dbSet.Where(x => EF.Property<int>(x, "Id") == id).ExecuteDeleteAsync();
-        } 
+        }
+
+        public async Task<TEntity?> GetById(int id)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
+        }
+
+        public async Task UpdateAsync(TEntity entity, TEntity existingEntity)
+        {            
+            // Copier les valeurs de la nouvelle entité vers l'existante
+            PlannerContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+
+            await PlannerContext.SaveChangesAsync();
+        }
     }
 }

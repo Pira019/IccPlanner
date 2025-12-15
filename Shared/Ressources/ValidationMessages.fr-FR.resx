@@ -333,4 +333,16 @@
   <data name="AVAILAIBILITY_NOT_FOUND" xml:space="preserve">
     <value>Disponibilité non trouvée. Veuillez réessayer plus tard ou contacter l’équipe de soutien.</value>
   </data>
+  <data name="MJ.MinistryNameExist" xml:space="preserve">
+    <value>Le nom de ministère « {0} » existe déjà.</value>
+  </data>
+  <data name="MO.MinistryNameExist" xml:space="preserve">
+    <value>Ce nom de ministère est déjà attribué, la modification est impossible.</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="DE_Ministry" xml:space="preserve">
+    <value>Ce ministère est associé à un ou plusieurs départements. Le supprimer entraînera automatiquement la suppression de tous les départements qui y sont rattachés.</value>
+  </data>
 </root>
