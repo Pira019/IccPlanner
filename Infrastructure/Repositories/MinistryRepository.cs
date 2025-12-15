@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<GetMinistriesResponse>> GetAll()
         {
-            return await _dbSet.Select(ministry => new GetMinistriesResponse { Id = ministry.Id, Name = ministry.Name }).OrderBy(x=> x.Name).ToListAsync();
+            return await _dbSet.Select(ministry => new GetMinistriesResponse { Id = ministry.Id, Name = ministry.Name, Description = ministry.Description }).OrderBy(x=> x.Name).ToListAsync();
         }
 
         public async Task<bool> HasDepartmentAsync(int idMinistry)

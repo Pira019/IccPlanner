@@ -32,7 +32,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<AddMinistryResponse>(StatusCodes.Status201Created)]
         public async Task<IActionResult> Add([FromBody] AddMinistryRequest request)
-        {
+        {  
             var result = await _ministryService.AddMinistry(request);
             return Created(string.Empty, result);
         }
@@ -54,19 +54,9 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put([FromBody] AddMinistryRequest request, [FromServices] IMinistryRepository ministryRepository)
-        {
-            var validator = new MjMinistryRequestValidation();
-
-            // Valider la requête
-            var validationResult = await validator.ValidateAsync(request);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ApiError.ErrorMessage(validationResult.Errors.First().ErrorMessage, null, null));
-            }
-
-            var ministryAn = await ministryRepository.GetById(request.Id);
+        public async Task<IActionResult> Put([FromBody] EditMinistryRequest request, [FromServices] IMinistryRepository ministryRepository)
+        { 
+            var ministryAn = await ministryRepository.GetById((int)request.Id!);
 
             if (ministryAn == null)
             {
@@ -82,7 +72,7 @@ namespace IccPlanner.Controllers
 
             var newMinistry = new Ministry
             {
-                Id = request.Id,
+                Id = ministryAn!.Id,
                 Name = request.Name,
                 Description = request.Description
             };

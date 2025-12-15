@@ -5,7 +5,7 @@ using Shared.Ressources;
 
 namespace Application.Helper.Validators.Requests
 {
-    public class MjMinistryRequestValidation : AbstractValidator<AddMinistryRequest>
+    public class MjMinistryRequestValidation : AbstractValidator<EditMinistryRequest>
     { 
         public MjMinistryRequestValidation() 
         { 
