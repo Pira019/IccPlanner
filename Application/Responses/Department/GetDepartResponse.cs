@@ -10,11 +10,9 @@ namespace Application.Responses.Department
         /// <summary>
         ///     Liste des départements.
         /// </summary>
-        public IEnumerable<GetDepartDto>? Departments { get; set; }
-
-        /// <summary>
-        ///     Indique si des informations supplémentaires doivent être affichées.
-        /// </summary>
-        public bool ShowInfo { get; set; }
+        public IEnumerable<GetDepartDto>? Departments { get; set; } 
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalCount { get; set; }
     }
 }

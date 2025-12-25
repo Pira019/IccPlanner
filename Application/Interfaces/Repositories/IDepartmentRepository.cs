@@ -55,6 +55,6 @@ namespace Application.Interfaces.Repositories
         /// <returns>
         ///     Retourne une liste des départements.
         /// </returns>
-        public Task<GetDepartResponse> GetDepartAsync(string? membreId);
+        public Task<GetDepartResponse> GetDepartAsync(string? membreId, int pageNumber = 1, int pageSize = 50);
     }
 }

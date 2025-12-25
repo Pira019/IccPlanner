@@ -188,19 +188,19 @@ namespace Application.Services
             return distinctDepartmentIds.All(id => existingIds.Contains(id));
         }
 
-        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues)
-        { 
+        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize = 50)
+        {
             // Vérifier si l'utilisateur a au moins un claim parmi ceux attendus
-            bool hasAccess = (await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId)).Any(c => claimValues.Contains(c));
-            string? memberId = string.Empty;
-
-            if (!hasAccess)
+            var userClaims = await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId);
+            var hasAccess = Utiles.HasAnyClaim(userClaims, claimValues);
+            if (hasAccess)
             {
-                memberId = (await _accountRepository.FindMemberByUserIdAsync(userAuthId))?.Id.ToString();
-            } 
-            var departs = await _departmentRepository.GetDepartAsync(memberId);
-            departs.ShowInfo = hasAccess;
-            return departs;
+                return await _departmentRepository.GetDepartAsync(null, pageNumber,pageSize);
+            }
+
+            var memberId = await _accountRepository.FindMemberByUserIdAsync(userAuthId);
+
+            return await _departmentRepository.GetDepartAsync(memberId?.Id.ToString());
         }
     }
 }

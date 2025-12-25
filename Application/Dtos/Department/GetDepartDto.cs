@@ -18,7 +18,7 @@
         /// <summary>
         ///     Responsable du département.
         /// </summary>
-        public string? Manager { get; set; }
+        public string? ShortName { get; set; }
 
         /// <summary>
         ///    Nombre de membres dans le département.
@@ -26,8 +26,8 @@
         public int NbrMember { get; set; }
 
         /// <summary>
-        ///     Indique si le département est actif.
+        ///     Nombre de programmes associés au département.
         /// </summary>
-        public bool IsActive { get; set; }
+        public int NbrProgram { get; set; } 
     }
 }

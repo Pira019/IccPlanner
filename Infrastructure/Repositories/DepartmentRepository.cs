@@ -20,28 +20,45 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
-        public async Task<GetDepartResponse> GetDepartAsync(string? membreId)
+        public async Task<GetDepartResponse> GetDepartAsync(string? membreId, int pageNumber, int pageSize)
         {
             Guid? memberGuid = string.IsNullOrEmpty(membreId) ? null : Guid.Parse(membreId);
-            var departDtos = await _dbSet
-                .AsNoTracking()
+
+            var query = _dbSet.AsNoTracking();
+
+            // Filtrer par membreId si fourni
+            if (memberGuid.HasValue)
+            {
+                query = query.Where(d => d.Members.Any(m => m.Id == memberGuid.Value));
+            }
+
+            // Compter le total pour info pagination
+            int totalCount = await query.CountAsync();
+
+            // Appliquer la pagination
+            var departDtos = await query
+                .OrderBy(d => d.Name) // tri par nom pour cohérence
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(department => new GetDepartDto
                 {
                     Id = department.Id,
                     Name = department.Name,
-                    NbrMember = string.IsNullOrEmpty(membreId)
-                        ? department.Members.Count()   
-                        : (memberGuid.HasValue && department.Members.Any(m => m.Id == memberGuid.Value)
-                            ? department.Members.Count()  
-                            : 0)  
+                    NbrMember = department.Members.Count,
+                    NbrProgram = department.Programs.Count,
+                    ShortName = department.ShortName,
                 })
                 .ToListAsync();
 
             return new GetDepartResponse
             {
-                Departments = departDtos
+                Departments = departDtos,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount
             };
         }
+
 
         ///inheritdoc />
         public async Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly datePrg)
@@ -65,11 +82,11 @@ namespace Infrastructure.Repositories
                             ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
                             StartTime = service.TabServices.StartTime,
                             EndTime = service.TabServices.EndTime.ToString(),
-                            IsAvailable = service.Availabilities.Any( x=> x.DepartmentMember.Member.Id == userId)
+                            IsAvailable = service.Availabilities.Any(x => x.DepartmentMember.Member.Id == userId)
 
                         })))
                             .OrderBy(X => X.StartTime).ToList()
-                }).Where(dpt => dpt.ServicePrograms.Any()) 
+                }).Where(dpt => dpt.ServicePrograms.Any())
                 .ToListAsync();
         }
 

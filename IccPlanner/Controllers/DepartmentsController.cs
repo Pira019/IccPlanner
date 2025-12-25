@@ -1,10 +1,12 @@
-﻿using Application.Helper;
+﻿using System.Drawing.Printing;
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
 using Application.Responses.Department;
-using Application.Responses.Errors; 
+using Application.Responses.Errors;
+using Infrastructure.Security;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,10 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
-        private readonly IDepartmentService _departmentService; 
+        private readonly IDepartmentService _departmentService;
         public DepartmentsController(IDepartmentService departmentService)
         {
-            _departmentService = departmentService; 
+            _departmentService = departmentService;
         }
 
         /// <summary>
@@ -33,15 +35,11 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int pageNumber , int pageSize)
         {
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
-            var canViewInfoClaims = new List<string?>
-            {
-                ClaimsConstants.CAN_MANANG_DEPART,
-            };
 
-            var departments = await _departmentService.GetAsync(userAuthId.ToString(), canViewInfoClaims);
+            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsGroups.DepartmentManagement, pageNumber, pageSize);
             return Ok(departments);
         }
 
@@ -78,9 +76,9 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, IDepartmentProgramRepository departmentProgramRepository)
         {
             //Check si les départements sont vides
-            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds)) 
+            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds))
             {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS,null, null));
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS, null, null));
             }
             //Check si le programme existe
             if (!await programRepository.IsExist(request.ProgramId))
@@ -89,16 +87,16 @@ namespace IccPlanner.Controllers
             }
 
             //Check si le programme existe
-            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);            
-            
+            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);
+
             if (isDepartmentProgramExisting != null)
             {
-                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST,isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name,request.TypePrg), null, null));
+                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST, isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name, request.TypePrg), null, null));
             }
 
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
             await _departmentService.AddDepartmentsProgram(request, userAuthId);
-            return Created(string.Empty,string.Empty);
+            return Created(string.Empty, string.Empty);
         }
 
         [HttpDelete("department-program")]

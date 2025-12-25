@@ -42,5 +42,22 @@ namespace Application.Helper
         {
             return text + "@example.com";
         }
+
+        /// <summary>
+        ///     Vérifie si l'utilisateur possède au moins une des revendications requises.
+        /// </summary>
+        /// <param name="userClaims">
+        ///     Claims de l'utilisateur.
+        /// </param>
+        /// <param name="requiredClaims">
+        ///     Claims requises.
+        /// </param>
+        /// <returns>
+        ///     Retourne true si l'utilisateur possède au moins une des revendications requises, sinon false.
+        /// </returns>
+        public static bool HasAnyClaim(IEnumerable<string?> userClaims, IEnumerable<string> requiredClaims)
+        {
+            return userClaims.Any(c => requiredClaims.Contains(c));
+        }
     }
 }

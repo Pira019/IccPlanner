@@ -71,10 +71,13 @@ namespace Application.Interfaces.Services
         /// <param name="claimValues">
         ///     Verifier si l'utilisateur a une des claims
         /// </param>
+        /// <param name="pageNumber">
+        ///     
+        /// </param>
         /// <returns>
         ///     Retourne un <see cref="GetDepartResponse"/>
         /// </returns>
-        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues);
+        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize=50);
 
 
     }
