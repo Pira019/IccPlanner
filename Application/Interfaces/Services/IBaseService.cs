@@ -3,7 +3,7 @@
     /// <summary>
     ///      Permet de gérer des fonction CRUD
     /// </summary>
-    public interface IBaseService
+    public interface IBaseService<T> where T : class
     {
         /// <summary>
         ///     Permet de persister un objet
@@ -14,7 +14,7 @@
         /// <returns>
         ///     Définit une classe Response
         /// </returns>
-        public Task<Object> Add (Object requestBody); 
+        public Task<T> Add (T requestBody); 
         
         /// <summary>
         ///     Obtenir tous les objets enregistres 
@@ -22,6 +22,14 @@
         /// <returns>
         ///    Un objet Response(DTO)
         /// </returns>
-        public Task<IEnumerable<Object>> GetAll ();  
+        public Task<IEnumerable<T>> GetAll ();
+
+        /// <summary>
+        ///  Supprimer un objet par son Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task DeleteByIdAsync(int id);
+        public Task DeleteSoftByIdAsync(int id);
     }
 } 

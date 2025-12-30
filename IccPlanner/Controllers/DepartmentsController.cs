@@ -67,6 +67,25 @@ namespace IccPlanner.Controllers
             return Ok();
         }
 
+       /// <summary>
+       /// Deletes the department with the specified identifier using a soft-delete operation.
+       /// </summary>
+       /// <remarks>This operation performs a soft delete, marking the department as deleted without
+       /// permanently removing it from the database. Requires appropriate authorization.</remarks>
+       /// <param name="id">The unique identifier of the department to delete. Must correspond to an existing department.</param>
+       /// <returns>An <see cref="IActionResult"/> indicating the result of the delete operation. Returns status code 200 (OK) if
+       /// the deletion succeeds, or an appropriate error response if the request is unauthorized or forbidden.</returns>
+        [HttpDelete("{id}")]
+        [Authorize(Policy = PolicyConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _departmentService.DeleteSoftByIdAsync(id); 
+            return Ok();
+        }
+
         [HttpPost("programs")]
         [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]

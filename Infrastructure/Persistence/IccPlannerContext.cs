@@ -3,7 +3,10 @@
 
 // Ignore Spelling: Prg Prgs
 
+using System.Linq.Expressions;
+using System.Reflection.Emit;
 using Domain.Entities;
+using Domain.Entities.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -89,6 +92,20 @@ namespace Infrastructure.Persistence
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+
+            // Query Filter pour toutes les entités ISoftDelete
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
+                {
+                    var parameter = Expression.Parameter(entityType.ClrType, "e");
+                    var prop = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
+                    var body = Expression.Equal(prop, Expression.Constant(false));
+                    var lambda = Expression.Lambda(body, parameter);
+
+                    builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                }
+            }
         } 
     }
 }

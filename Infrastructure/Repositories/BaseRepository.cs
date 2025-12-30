@@ -81,5 +81,15 @@ namespace Infrastructure.Repositories
 
             await PlannerContext.SaveChangesAsync();
         }
+
+        public async Task DeleteSoftAsync(int id)
+        {
+            await _dbSet
+                    .Where(x => EF.Property<int>(x, "Id") == id)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(e => EF.Property<bool>(e, "IsDeleted"), true)
+                        .SetProperty(e => EF.Property<DateTimeOffset?>(e, "DeletedAt"), DateTimeOffset.UtcNow)
+                    );
+        }
     }
 }

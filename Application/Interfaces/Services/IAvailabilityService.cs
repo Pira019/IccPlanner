@@ -1,8 +1,9 @@
 ﻿using Application.Requests.Availability;
+using Domain.Entities;
 
 namespace Application.Interfaces.Services
 {
-    public interface IAvailabilityService : IBaseService
+    public interface IAvailabilityService : IBaseService<Availability>
     {
         /// <summary>
         ///     Permet de récupérer l'ID du département d'un membre dans un département spécifique.
@@ -26,6 +27,6 @@ namespace Application.Interfaces.Services
         ///     Id du membre dans le département pour lequel on veut ajouter la disponibilité.
         /// </param>
         /// <returns></returns>
-        public Task<Object> Add( AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember); 
+        public Task<TabServices> Add( AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember); 
     }
 }

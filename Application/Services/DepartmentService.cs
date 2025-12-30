@@ -16,24 +16,24 @@ namespace Application.Services
     /// <summary>
     /// Ce service permet de gérer les action d'un Département 
     /// </summary>
-    public class DepartmentService : IDepartmentService
+    public class DepartmentService : BaseService<Department>, IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
-        private readonly IMapper _mapper;
+        private readonly IDepartmentRepository _departmentRepository; 
         private readonly IPostRepository _postRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
-        public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository,
-            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)
+        public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper,IDepartmentRepository departmentRepository, IPostRepository postRepository,
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)  
+            : base(baseRepository, mapper)
         {
-            _departmentRepository = departmentRepository;
-            _mapper = mapper;
+            _departmentRepository = departmentRepository; 
             _postRepository = postRepository;
             _accountRepository = accountRepository;
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
-        }
+        } 
+
         public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
             var departemtDto = _mapper.Map<Department>(addDepartmentRequest);
@@ -201,6 +201,6 @@ namespace Application.Services
             var memberId = await _accountRepository.FindMemberByUserIdAsync(userAuthId);
 
             return await _departmentRepository.GetDepartAsync(memberId?.Id.ToString());
-        }
+        } 
     }
 }

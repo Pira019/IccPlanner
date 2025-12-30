@@ -72,5 +72,14 @@
         /// <param name="id"></param>
         /// <returns></returns>
         public Task DeleteAsync(int id);
+
+        /// <summary>
+        ///     Supprimer une entité de manière soft par son identifiant.
+        /// </summary>
+        /// <param name="id">
+        ///     Indentifiant de l'entité à supprimer en soft.
+        /// </param>
+        /// <returns></returns>
+        public Task DeleteSoftAsync(int id);
     }
 }

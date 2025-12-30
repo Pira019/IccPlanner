@@ -1,10 +1,11 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Requests.Department;
 using Application.Responses.Department;
+using Domain.Entities;
 
 namespace Application.Interfaces.Services
 {
-    public interface IDepartmentService
+    public interface IDepartmentService : IBaseService<Department>
     {
         /// <summary>
         /// Modèle de donner pour ajouter un département 

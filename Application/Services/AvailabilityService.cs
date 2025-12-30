@@ -20,13 +20,18 @@ namespace Application.Services
             _departmentMemberRepository = departmentMemberRepository;
         }
 
-        /// <inheritdoc />
-        public Task<object> Add(AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember)
+        public Task<TabServices> Add(AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember)
         {
-            var availabilityEntity = _mapper.Map<Availability>(addAvailabilityRequest);
-            availabilityEntity.DepartmentMemberId = idDepartmentMember;
-            return base.Add(availabilityEntity);
+            throw new NotImplementedException();
         }
+
+        /// <inheritdoc />
+        /*  public Task<TabServices> Add(AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember)
+          {
+              var availabilityEntity = _mapper.Map<Availability>(addAvailabilityRequest);
+              availabilityEntity.DepartmentMemberId = idDepartmentMember;
+              return base.Add(availabilityEntity);
+          }*/
 
         /// <inheritdoc />
         public async Task<int?> GetIdDepartmentMember(Guid authMemberGuid, int? idDepartment)

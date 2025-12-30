@@ -2,6 +2,7 @@
 
 namespace Domain.Entities
 {
+    // Clamis
     public class Permission
     {
         public int Id { get; set; }

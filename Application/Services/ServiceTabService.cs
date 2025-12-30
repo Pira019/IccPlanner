@@ -19,11 +19,11 @@ namespace Application.Services
             _serviceRepository = repository;
         }
 
-        public override async Task<Object> Add(Object entity)
+       /* public override async Task<TabServices> Add(TabServices entity)
         {
-            var result = await base.Add(entity);
+            /*var result = await base.Add(entity);
             return _mapper.Map<BaseAddResponse>(result);
-        }
+        }*/
 
         public async Task<bool> IsServiceExist(string startTime, string endTime, string displayServiceName)
         {
@@ -32,9 +32,9 @@ namespace Application.Services
             return await _serviceRepository.IsServiceExist(start, end, displayServiceName);
         }
 
-        public override async Task<IEnumerable<object>> GetAll()
+      /*  public override async Task<IEnumerable<object>> GetAll()
         {
             return _mapper.Map<List<GetTabServiceListResponse>>(await base.GetAll()); 
-        } 
+        } */
     }
 }
