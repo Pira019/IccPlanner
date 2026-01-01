@@ -69,7 +69,7 @@ namespace Infrastructure.Repositories
             await _dbSet.Where(x => EF.Property<int>(x, "Id") == id).ExecuteDeleteAsync();
         }
 
-        public async Task<TEntity?> GetById(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
             return await _dbSet.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }

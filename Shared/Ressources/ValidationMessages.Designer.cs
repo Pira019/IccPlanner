@@ -169,7 +169,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The department « {PropertyValue} » already exists..
+        ///   Recherche une chaîne localisée semblable à The department « {0} » already exists..
         /// </summary>
         public static string DEPARTMENT_EXIST {
             get {
@@ -417,6 +417,15 @@ namespace Shared.Ressources {
         public static string INVALID_PRG_TYPE {
             get {
                 return ResourceManager.GetString("INVALID_PRG_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0} is invalid..
+        /// </summary>
+        public static string INVALID_VALUE {
+            get {
+                return ResourceManager.GetString("INVALID_VALUE", resourceCulture);
             }
         }
         

@@ -26,7 +26,7 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<T?> GetById(int id);
+        public Task<T?> GetByIdAsync(int id);
 
         /// <summary>
         /// Flag si un model exist par son Id

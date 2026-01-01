@@ -133,7 +133,7 @@
     <value>Départements</value>
   </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
-    <value>Le département « {PropertyValue} » existe déjà.</value>
+    <value>Le département « {0} » existe déjà.</value>
   </data>
   <data name="DEPARTMENT_INVALID_IDS" xml:space="preserve">
     <value>Un ou plusieurs identifiants de départements sont invalides.</value>
@@ -344,5 +344,8 @@
   </data>
   <data name="DE_Ministry" xml:space="preserve">
     <value>Ce ministère est associé à un ou plusieurs départements. Le supprimer entraînera automatiquement la suppression de tous les départements qui y sont rattachés.</value>
+  </data>
+  <data name="INVALID_VALUE" xml:space="preserve">
+    <value>{0} n’est pas valide.</value>
   </data>
 </root>

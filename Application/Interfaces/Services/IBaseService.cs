@@ -14,7 +14,7 @@
         /// <returns>
         ///     Définit une classe Response
         /// </returns>
-        public Task<T> Add (T requestBody); 
+        public Task<Result<T>> Add (T requestBody); 
         
         /// <summary>
         ///     Obtenir tous les objets enregistres 

@@ -56,7 +56,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Put([FromBody] EditMinistryRequest request, [FromServices] IMinistryRepository ministryRepository)
         { 
-            var ministryAn = await ministryRepository.GetById((int)request.Id!);
+            var ministryAn = await ministryRepository.GetByIdAsync((int)request.Id!);
 
             if (ministryAn == null)
             {

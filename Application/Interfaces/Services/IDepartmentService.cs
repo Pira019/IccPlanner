@@ -12,7 +12,7 @@ namespace Application.Interfaces.Services
         /// </summary>
         /// <param name="addDepartmentRequest"><see cref="AddDepartmentResponse"/></param>
         /// <returns> <see cref="AddDepartmentResponse"/></returns>
-        public Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest);
+        public Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest);
 
         /// <summary>
         /// Permet de savoir si le nom du département existe 

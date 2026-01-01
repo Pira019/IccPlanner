@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Application.Services
 {
@@ -17,13 +18,7 @@ namespace Application.Services
             _baseRepository = baseRepository;
             _mapper = mapper;
         }
-
-        public virtual async Task<TEntity> Add(TEntity requestBody)
-        {
-            //Map le request body en une classe définit 
-            var newEntity = _mapper.Map<TEntity>(requestBody);
-            return await _baseRepository.Insert(newEntity);
-        }
+         
 
         public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
@@ -38,6 +33,13 @@ namespace Application.Services
         public async Task DeleteSoftByIdAsync(int id)
         {
             await _baseRepository.DeleteSoftAsync(id);
+        }
+
+        public async Task<Result<TEntity>> Add(TEntity requestBody)
+        {
+            //Map le request body en une classe définit 
+            var newEntity = _mapper.Map<TEntity>(requestBody);
+            return Result<TEntity>.Success( await _baseRepository.Insert(newEntity));
         }
     }
 }

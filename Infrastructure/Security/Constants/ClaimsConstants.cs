@@ -15,7 +15,7 @@
         // Permissions liées aux Départements 
         public const string CAN_CREATE_DEPARTMENT = "CanCreateDepartement";
         public const string CAN_ATTRIBUT_DEPARTMENT_CHEF = "CanAttributDepartmentChef";
-        public const string CAN_MANANG_DEPART = "CanManagDepartment";
+        public const string CAN_MANANG_DEPART = "CanManagDepart";
 
 
         // Permissions départements 

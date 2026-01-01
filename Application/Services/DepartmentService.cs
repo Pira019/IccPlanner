@@ -10,6 +10,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using OfficeOpenXml;
 using Shared.Enums;
+using Shared.Ressources;
 
 namespace Application.Services
 {
@@ -23,8 +24,9 @@ namespace Application.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
+        private readonly IMinistryRepository _ministryRepository;
         public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper,IDepartmentRepository departmentRepository, IPostRepository postRepository,
-            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)  
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository, IMinistryRepository ministryRepository)  
             : base(baseRepository, mapper)
         {
             _departmentRepository = departmentRepository; 
@@ -32,14 +34,29 @@ namespace Application.Services
             _accountRepository = accountRepository;
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
-        } 
+            _ministryRepository = ministryRepository;
+        }  
 
-        public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
+        public async Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
+            // Vérifie si le ministère existe
+            var ministry = await _ministryRepository.GetByIdAsync(addDepartmentRequest.MinistryId);
+            if( ministry == null )
+            {
+               return Result<AddDepartmentResponse>.Fail(string.Format(ValidationMessages.INVALID_VALUE,ValidationMessages.MINISTRY));
+            }
+
+            var existingNameDepartment = await _departmentRepository.IsNameExistsAsync(addDepartmentRequest.Name);
+
+            if (existingNameDepartment)
+            {
+                return Result<AddDepartmentResponse>.Fail(string.Format(ValidationMessages.DEPARTMENT_EXIST, addDepartmentRequest.Name));
+            }
+
             var departemtDto = _mapper.Map<Department>(addDepartmentRequest);
             var newDepartment = await _departmentRepository.Insert(departemtDto);
 
-            return _mapper.Map<AddDepartmentResponse>(newDepartment);
+            return Result<AddDepartmentResponse>.Success(_mapper.Map<AddDepartmentResponse>(newDepartment)); 
         }
 
         public async Task AddDepartmentResponsable(AddDepartmentRespoRequest addDepartmentRespoRequest)

@@ -52,7 +52,11 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Add(AddDepartmentRequest request)
         {
             var newDepartment = await _departmentService.AddDepartment(request);
-            return Created(string.Empty, newDepartment);
+            if(!newDepartment.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));
+            }
+            return Created(string.Empty, newDepartment.Value);
         }
 
         [HttpPost("responsable")]

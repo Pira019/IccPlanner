@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Department;
+﻿using System;
+using Application.Dtos.Department;
 using Application.Dtos.TabServicePrgDto;
 using Application.Interfaces.Repositories;
 using Application.Responses.Department;
@@ -110,7 +111,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> IsNameExistsAsync(string name)
         {
-            return await PlannerContext.Departments.AnyAsync(x => x.Name == name);
+            return await PlannerContext.Departments.AnyAsync(x => name.ToLower() == name.ToLower());
         }
         public async Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember)
         {

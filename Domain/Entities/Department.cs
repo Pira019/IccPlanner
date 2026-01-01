@@ -5,8 +5,8 @@ namespace Domain.Entities
     public class Department : BaseEntity
     {
         public int Id { get; set; }
-        public int MinistryId { get; set; }
-        public Ministry Ministry { get; set; } = null!;
+        public int? MinistryId { get; set; }
+        public Ministry? Ministry { get; set; }
         [MaxLength(255)]
         public required string Name { get; set; }
         public required string Description { get; set; }
