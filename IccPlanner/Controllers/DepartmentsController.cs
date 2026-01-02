@@ -44,7 +44,7 @@ namespace IccPlanner.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT)]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
@@ -57,6 +57,30 @@ namespace IccPlanner.Controllers
                 return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));
             }
             return Created(string.Empty, newDepartment.Value);
+        }
+
+        /// <summary>
+        ///     Permet de modifier un département existant.
+        /// </summary>
+        /// <param name="id">
+        ///  Identifiant du département à modifier.
+        /// </param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<AddDepartmentResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put(int id,AddDepartmentRequest request)
+        {
+            var newDepartment = await _departmentService.UpdateDept(id,request);
+            if (!newDepartment.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));
+            }
+            return Ok();
         }
 
         [HttpPost("responsable")]
@@ -80,7 +104,7 @@ namespace IccPlanner.Controllers
        /// <returns>An <see cref="IActionResult"/> indicating the result of the delete operation. Returns status code 200 (OK) if
        /// the deletion succeeds, or an appropriate error response if the request is unauthorized or forbidden.</returns>
         [HttpDelete("{id}")]
-        [Authorize(Policy = PolicyConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF)]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]

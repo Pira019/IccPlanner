@@ -74,7 +74,7 @@ namespace Infrastructure.Repositories
             return await _dbSet.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
 
-        public async Task UpdateAsync(TEntity entity, TEntity existingEntity)
+        public async Task Update_Async(TEntity entity, TEntity existingEntity)
         {            
             // Copier les valeurs de la nouvelle entité vers l'existante
             PlannerContext.Entry(existingEntity).CurrentValues.SetValues(entity);
@@ -90,6 +90,11 @@ namespace Infrastructure.Repositories
                         .SetProperty(e => EF.Property<bool>(e, "IsDeleted"), true)
                         .SetProperty(e => EF.Property<DateTimeOffset?>(e, "DeletedAt"), DateTimeOffset.UtcNow)
                     );
+        }
+
+        public async Task UpdateAsync(TEntity entity)
+        {
+            await PlannerContext.SaveChangesAsync();
         }
     }
 }

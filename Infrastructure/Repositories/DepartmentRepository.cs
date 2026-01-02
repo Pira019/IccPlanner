@@ -111,7 +111,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> IsNameExistsAsync(string name)
         {
-            return await PlannerContext.Departments.AnyAsync(x => name.ToLower() == name.ToLower());
+            return await PlannerContext.Departments.AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
         public async Task<DepartmentMember> SaveDepartmentMember(DepartmentMember departmentMember)
         {

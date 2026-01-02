@@ -77,7 +77,7 @@ namespace IccPlanner.Controllers
                 Description = request.Description
             };
 
-            await ministryRepository.UpdateAsync(newMinistry, ministryAn!);
+            await ministryRepository.Update_Async(newMinistry, ministryAn!);
 
             return Ok();
         }

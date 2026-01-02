@@ -15,6 +15,18 @@ namespace Application.Interfaces.Services
         public Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest);
 
         /// <summary>
+        ///     Mettre a jour un département existant.
+        /// </summary>
+        /// <param name="id">
+        ///     Identifiant du département à modifier.
+        /// </param>
+        /// <param name="addDepartmentRequest">
+        ///     Modèle de donnée à recevoir pour la mise à jour.
+        /// </param>
+        /// <returns></returns>
+        public Task<Result<bool>> UpdateDept(int id, AddDepartmentRequest addDepartmentRequest);
+
+        /// <summary>
         /// Permet de savoir si le nom du département existe 
         /// </summary>
         /// <param name="name">Le nom du département </param>

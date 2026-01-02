@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> IsNameExists(string name)
         {
-            return await PlannerContext.Ministries.AnyAsync(x => x.Name == name);
+            return await PlannerContext.Ministries.AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
     }
 }

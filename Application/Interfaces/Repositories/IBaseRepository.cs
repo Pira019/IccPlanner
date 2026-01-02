@@ -19,7 +19,8 @@
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Task UpdateAsync(T entity, T existingEntity);
+        public Task Update_Async(T entity, T existingEntity);
+        public Task UpdateAsync(T entity);
 
         /// <summary>
         ///     Récupérer une entité par son Id

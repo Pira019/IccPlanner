@@ -22,10 +22,7 @@ namespace Application.Helper.Validators.Requests.Ministry
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT_NAME)
-                .MaximumLength(255).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.DEPARTMENT_NAME);
-
-            RuleFor(x => x.MinistryId)
-                .NotEmpty().WithMessage(ValidationMessages.INVALID_ENTRY).WithName(ValidationMessages.MINISTRY);
+                .MaximumLength(255).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.DEPARTMENT_NAME); 
 
             RuleFor(x => x.ShortName)
                .MaximumLength(55).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.SHORT_NAME);
