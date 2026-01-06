@@ -10,7 +10,8 @@ namespace Domain.Entities
         [MaxLength(255)]
         public required string Name { get; set; }
         public required string Description { get; set; }
-        [MaxLength(55)]
+
+        [MaxLength(15)]
         public string? ShortName { get; set; }
         public DateOnly? StartDate { get; set; } // Date d'ouverture
         public List<Member> Members { get; } = [];

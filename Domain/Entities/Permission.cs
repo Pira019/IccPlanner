@@ -19,6 +19,13 @@ namespace Domain.Entities
         public required string Description { get; set; }
 
         /// <summary>
+        /// Fonction  
+        /// </summary>
+        /// 
+        [MaxLength(10)]
+        public string? Fnc { get; set; }
+
+        /// <summary>
         ///     Liste des rôles associés à cette permission.
         /// </summary>
         public List<Role> Roles { get; } = [];
