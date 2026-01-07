@@ -21,6 +21,7 @@ namespace Application.Dtos.Department
                     .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 
             CreateMap<Domain.Entities.Department, AddDepartmentResponse>();
+            CreateMap<Domain.Entities.Department, DeptResponse>();
 
             CreateMap<AddDepartmentRespoRequest, Domain.Entities.DepartmentMember>()
                 .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.DepartmentId))

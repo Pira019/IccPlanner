@@ -92,6 +92,15 @@ namespace Application.Interfaces.Services
         /// </returns>
         public Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize=50);
 
+        /// <summary>
+        ///     Determine un département par son Id.
+        /// </summary>
+        /// <param name="idDept"></param>
+        /// <returns>
+        ///     Retourne un <see cref="GetDepartResponse"/>
+        /// </returns>
+        public Task<DeptResponse> GetByIdAsync(int idDept);
+
 
     }
 }

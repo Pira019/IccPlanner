@@ -249,5 +249,11 @@ namespace Application.Services
             await _departmentRepository.UpdateAsync(existingDepartment);
             return Result<bool>.Success(default);
         }
+
+        public async Task<DeptResponse> GetByIdAsync(int idDept)
+        {
+            var dept = await _departmentRepository.GetByIdAsync(idDept);
+            return _mapper.Map<DeptResponse>(dept);
+        }
     }
 }

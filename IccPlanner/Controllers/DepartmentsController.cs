@@ -171,6 +171,17 @@ namespace IccPlanner.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<DeptResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get(int id)
+        { 
+            var dept = await _departmentService.GetByIdAsync(id);
+            return Ok(dept);
+        }
+
 
     }
 }
