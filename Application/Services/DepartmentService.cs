@@ -10,36 +10,54 @@ using Domain.Abstractions;
 using Domain.Entities;
 using OfficeOpenXml;
 using Shared.Enums;
+using Shared.Ressources;
 
 namespace Application.Services
 {
     /// <summary>
     /// Ce service permet de gérer les action d'un Département 
     /// </summary>
-    public class DepartmentService : IDepartmentService
+    public class DepartmentService : BaseService<Department>, IDepartmentService
     {
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
-        public DepartmentService(IDepartmentRepository departmentRepository, IMapper mapper, IPostRepository postRepository,
-            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository)
+        private readonly IMinistryRepository _ministryRepository;
+        public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper, IDepartmentRepository departmentRepository, IPostRepository postRepository,
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository, IMinistryRepository ministryRepository)
+            : base(baseRepository, mapper)
         {
             _departmentRepository = departmentRepository;
-            _mapper = mapper;
             _postRepository = postRepository;
             _accountRepository = accountRepository;
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
+            _ministryRepository = ministryRepository;
         }
-        public async Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest)
+
+        public async Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest)
         {
+            // Vérifie si le ministère existe
+            var ministry = await _ministryRepository.GetByIdAsync(addDepartmentRequest.MinistryId);
+            if (addDepartmentRequest.MinistryId != default && ministry == null)
+            {
+                return Result<AddDepartmentResponse>.Fail(string.Format(ValidationMessages.INVALID_VALUE, ValidationMessages.MINISTRY));
+            }
+
+            var existingNameDepartment = await _departmentRepository.IsNameExistsAsync(addDepartmentRequest.Name);
+
+            if (existingNameDepartment)
+            {
+                return Result<AddDepartmentResponse>.Fail(string.Format(ValidationMessages.DEPARTMENT_EXIST, addDepartmentRequest.Name));
+            }
+
             var departemtDto = _mapper.Map<Department>(addDepartmentRequest);
+            departemtDto.MinistryId = addDepartmentRequest.MinistryId == 0 ? null : addDepartmentRequest.MinistryId;
             var newDepartment = await _departmentRepository.Insert(departemtDto);
 
-            return _mapper.Map<AddDepartmentResponse>(newDepartment);
+            return Result<AddDepartmentResponse>.Success(_mapper.Map<AddDepartmentResponse>(newDepartment));
         }
 
         public async Task AddDepartmentResponsable(AddDepartmentRespoRequest addDepartmentRespoRequest)
@@ -171,7 +189,8 @@ namespace Application.Services
                         }
                     }
                 }
-            };
+            }
+            ;
             //Enregistrer 
             return await _accountRepository.SaveImportedMembersDepartment(departementMembers);
         }
@@ -188,19 +207,53 @@ namespace Application.Services
             return distinctDepartmentIds.All(id => existingIds.Contains(id));
         }
 
-        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues)
-        { 
+        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize = 50)
+        {
             // Vérifier si l'utilisateur a au moins un claim parmi ceux attendus
-            bool hasAccess = (await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId)).Any(c => claimValues.Contains(c));
-            string? memberId = string.Empty;
-
-            if (!hasAccess)
+            var userClaims = await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId);
+            var hasAccess = Utiles.HasAnyClaim(userClaims, claimValues);
+            if (hasAccess)
             {
-                memberId = (await _accountRepository.FindMemberByUserIdAsync(userAuthId))?.Id.ToString();
-            } 
-            var departs = await _departmentRepository.GetDepartAsync(memberId);
-            departs.ShowInfo = hasAccess;
-            return departs;
+                return await _departmentRepository.GetDepartAsync(null, pageNumber, pageSize);
+            }
+
+            var memberId = await _accountRepository.FindMemberByUserIdAsync(userAuthId);
+
+            return await _departmentRepository.GetDepartAsync(memberId?.Id.ToString());
+        }
+
+        public async Task<Result<bool>> UpdateDept(int id, AddDepartmentRequest addDepartmentRequest)
+        {
+            // Vérifie si le ministère existe
+            var ministry = await _ministryRepository.GetByIdAsync(addDepartmentRequest.MinistryId);
+            if (addDepartmentRequest.MinistryId != default && ministry == null)
+            {
+                return Result<bool>.Fail(string.Format(ValidationMessages.INVALID_VALUE, ValidationMessages.MINISTRY));
+            }
+
+            var existingDepartment = await _departmentRepository.GetByIdAsync(id);
+            if (existingDepartment == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.DEPARTMENT_NOT_EXIST);
+            }
+            var namedExists = await _departmentRepository.IsNameExistsAsync(addDepartmentRequest.Name);
+            // vérifie si le nom existe deja
+            if (existingDepartment.Name.ToLower() != addDepartmentRequest.Name.ToLower() && namedExists)
+            {
+                return Result<bool>.Fail(string.Format(ValidationMessages.DEPARTMENT_EXIST, addDepartmentRequest.Name));
+            }
+
+            _mapper.Map(addDepartmentRequest,existingDepartment);
+            existingDepartment.MinistryId = addDepartmentRequest.MinistryId == 0 ? null : addDepartmentRequest.MinistryId;
+            existingDepartment.UpdatedAt = DateTime.UtcNow;
+            await _departmentRepository.UpdateAsync(existingDepartment);
+            return Result<bool>.Success(default);
+        }
+
+        public async Task<DeptResponse> GetByIdAsync(int idDept)
+        {
+            var dept = await _departmentRepository.GetByIdAsync(idDept);
+            return _mapper.Map<DeptResponse>(dept);
         }
     }
 }

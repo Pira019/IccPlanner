@@ -69,16 +69,31 @@ namespace Infrastructure.Repositories
             await _dbSet.Where(x => EF.Property<int>(x, "Id") == id).ExecuteDeleteAsync();
         }
 
-        public async Task<TEntity?> GetById(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
             return await _dbSet.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
         }
 
-        public async Task UpdateAsync(TEntity entity, TEntity existingEntity)
+        public async Task Update_Async(TEntity entity, TEntity existingEntity)
         {            
             // Copier les valeurs de la nouvelle entité vers l'existante
             PlannerContext.Entry(existingEntity).CurrentValues.SetValues(entity);
 
+            await PlannerContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteSoftAsync(int id)
+        {
+            await _dbSet
+                    .Where(x => EF.Property<int>(x, "Id") == id)
+                    .ExecuteUpdateAsync(s => s
+                        .SetProperty(e => EF.Property<bool>(e, "IsDeleted"), true)
+                        .SetProperty(e => EF.Property<DateTimeOffset?>(e, "DeletedAt"), DateTimeOffset.UtcNow)
+                    );
+        }
+
+        public async Task UpdateAsync(TEntity entity)
+        {
             await PlannerContext.SaveChangesAsync();
         }
     }

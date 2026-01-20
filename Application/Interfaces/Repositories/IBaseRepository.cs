@@ -19,14 +19,15 @@
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Task UpdateAsync(T entity, T existingEntity);
+        public Task Update_Async(T entity, T existingEntity);
+        public Task UpdateAsync(T entity);
 
         /// <summary>
         ///     Récupérer une entité par son Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<T?> GetById(int id);
+        public Task<T?> GetByIdAsync(int id);
 
         /// <summary>
         /// Flag si un model exist par son Id
@@ -72,5 +73,14 @@
         /// <param name="id"></param>
         /// <returns></returns>
         public Task DeleteAsync(int id);
+
+        /// <summary>
+        ///     Supprimer une entité de manière soft par son identifiant.
+        /// </summary>
+        /// <param name="id">
+        ///     Indentifiant de l'entité à supprimer en soft.
+        /// </param>
+        /// <returns></returns>
+        public Task DeleteSoftAsync(int id);
     }
 }

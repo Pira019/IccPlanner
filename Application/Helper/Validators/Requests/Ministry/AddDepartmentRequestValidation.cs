@@ -20,14 +20,9 @@ namespace Application.Helper.Validators.Requests.Ministry
 
             RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(x => x.Name) 
+            RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DEPARTMENT_NAME)
-                .MaximumLength(255).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.DEPARTMENT_NAME)
-                .Must(IsDepartmentNameExists).WithMessage(ValidationMessages.DEPARTMENT_EXIST);
-
-            RuleFor(x => x.MinistryId)
-                .NotEmpty().WithMessage(ValidationMessages.INVALID_ENTRY).WithName(ValidationMessages.MINISTRY)
-                .Must(IsMinistryExistsById).WithMessage(ValidationMessages.INVALID_ENTRY).WithName(ValidationMessages.MINISTRY);
+                .MaximumLength(255).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.DEPARTMENT_NAME); 
 
             RuleFor(x => x.ShortName)
                .MaximumLength(55).WithMessage(ValidationMessages.MAX_LENGTH).WithMessage(ValidationMessages.SHORT_NAME);
@@ -37,30 +32,6 @@ namespace Application.Helper.Validators.Requests.Ministry
             
             RuleFor(X => X.StartDate)
               .Must(date => date == null || date.Value <= DateOnly.FromDateTime(DateTime.Today)).WithMessage(ValidationMessages.VAILID_DATE).WithName(ValidationMessages.DATE);
-        }
-
-        /// <summary>
-        /// Verifier si le nom département existe deja 
-        /// </summary>
-        /// <param name="departmentName">
-        /// Nom du département
-        /// </param>
-        /// <returns></returns>
-        private bool IsDepartmentNameExists(string departmentName)
-        {
-            return !_departmentService.IsNameExists(departmentName).Result;
-        }
-
-        /// <summary>
-        /// Verifier si l'Id département n'existe pas
-        /// </summary>
-        /// <param name="ministryId">
-        /// L'Id du département
-        /// </param>
-        /// <returns></returns>
-        private bool IsMinistryExistsById(int ministryId)
-        {
-            return _ministryService.IsMinistryExistsById(ministryId).Result;
-        }
+        } 
     }
 }

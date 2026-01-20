@@ -2,6 +2,7 @@
 
 namespace Domain.Entities
 {
+    // Clamis
     public class Permission
     {
         public int Id { get; set; }
@@ -16,6 +17,13 @@ namespace Domain.Entities
         ///     Description de la permission.
         /// </summary>
         public required string Description { get; set; }
+
+        /// <summary>
+        /// Fonction  
+        /// </summary>
+        /// 
+        [MaxLength(10)]
+        public string? Fnc { get; set; }
 
         /// <summary>
         ///     Liste des rôles associés à cette permission.

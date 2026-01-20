@@ -45,6 +45,15 @@ namespace Infrastructure.Security
             /*Fin Accès Ministère*/
 
             /*Accès Départements*/
+            
+            options.AddPolicy(PolicyConstants.CAN_MANG_DEPART, policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
+                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
+                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_MANANG_DEPART);
+                }));
+
 
             //CAN_CREATE_DEPARTMENT
             options.AddPolicy(PolicyConstants.CAN_CREATE_DEPARTMENT, policy =>

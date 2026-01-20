@@ -1,7 +1,9 @@
 ﻿
+using Domain.Entities;
+
 namespace Application.Interfaces.Services
 {
-    public interface IServiceTabService : IBaseService
+    public interface IServiceTabService : IBaseService<TabServices>
     {
         /// <summary>
         ///     Vérifie si un service existe deja par rapport au paramètre passé

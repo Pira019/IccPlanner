@@ -154,6 +154,7 @@ namespace IccPlanner
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
 
+
             //Pour l'authentification la gestion de token
             builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 

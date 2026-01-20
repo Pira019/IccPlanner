@@ -1,17 +1,30 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Requests.Department;
 using Application.Responses.Department;
+using Domain.Entities;
 
 namespace Application.Interfaces.Services
 {
-    public interface IDepartmentService
+    public interface IDepartmentService : IBaseService<Department>
     {
         /// <summary>
         /// Modèle de donner pour ajouter un département 
         /// </summary>
         /// <param name="addDepartmentRequest"><see cref="AddDepartmentResponse"/></param>
         /// <returns> <see cref="AddDepartmentResponse"/></returns>
-        public Task<AddDepartmentResponse> AddDepartment(AddDepartmentRequest addDepartmentRequest);
+        public Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest);
+
+        /// <summary>
+        ///     Mettre a jour un département existant.
+        /// </summary>
+        /// <param name="id">
+        ///     Identifiant du département à modifier.
+        /// </param>
+        /// <param name="addDepartmentRequest">
+        ///     Modèle de donnée à recevoir pour la mise à jour.
+        /// </param>
+        /// <returns></returns>
+        public Task<Result<bool>> UpdateDept(int id, AddDepartmentRequest addDepartmentRequest);
 
         /// <summary>
         /// Permet de savoir si le nom du département existe 
@@ -71,10 +84,22 @@ namespace Application.Interfaces.Services
         /// <param name="claimValues">
         ///     Verifier si l'utilisateur a une des claims
         /// </param>
+        /// <param name="pageNumber">
+        ///     
+        /// </param>
         /// <returns>
         ///     Retourne un <see cref="GetDepartResponse"/>
         /// </returns>
-        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string?> claimValues);
+        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize=50);
+
+        /// <summary>
+        ///     Determine un département par son Id.
+        /// </summary>
+        /// <param name="idDept"></param>
+        /// <returns>
+        ///     Retourne un <see cref="GetDepartResponse"/>
+        /// </returns>
+        public Task<DeptResponse> GetByIdAsync(int idDept);
 
 
     }

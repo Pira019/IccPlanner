@@ -7,7 +7,7 @@ namespace Application.Requests.Department
     /// </summary>
     public class AddDepartmentRequest
     { 
-        public required int MinistryId { get; set; } 
+        public int MinistryId { get; set; } = default;
         public required string Name { get; set; } 
 
         public string? ShortName { get; set; }

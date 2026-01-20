@@ -133,7 +133,7 @@
     <value>Department</value>
   </data>
   <data name="DEPARTMENT_EXIST" xml:space="preserve">
-    <value>The department « {PropertyValue} » already exists.</value>
+    <value>The department « {0} » already exists.</value>
   </data>
   <data name="DEPARTMENT_INVALID_IDS" xml:space="preserve">
     <value>One or more department identifiers are invalid.</value>
@@ -344,5 +344,8 @@
   </data>
   <data name="DE_Ministry" xml:space="preserve">
     <value>This ministry is associated with one or more departments. Deleting it will also automatically delete all departments linked to it.</value>
+  </data>
+  <data name="INVALID_VALUE" xml:space="preserve">
+    <value>{0} is invalid.</value>
   </data>
 </root>

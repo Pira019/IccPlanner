@@ -1,10 +1,12 @@
-﻿using Application.Helper;
+﻿using System.Drawing.Printing;
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
 using Application.Responses.Department;
-using Application.Responses.Errors; 
+using Application.Responses.Errors;
+using Infrastructure.Security;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,10 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
-        private readonly IDepartmentService _departmentService; 
+        private readonly IDepartmentService _departmentService;
         public DepartmentsController(IDepartmentService departmentService)
         {
-            _departmentService = departmentService; 
+            _departmentService = departmentService;
         }
 
         /// <summary>
@@ -33,20 +35,16 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int pageNumber , int pageSize)
         {
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
-            var canViewInfoClaims = new List<string?>
-            {
-                ClaimsConstants.CAN_MANANG_DEPART,
-            };
 
-            var departments = await _departmentService.GetAsync(userAuthId.ToString(), canViewInfoClaims);
+            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsGroups.DepartmentManagement, pageNumber, pageSize);
             return Ok(departments);
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT)]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
@@ -54,7 +52,35 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Add(AddDepartmentRequest request)
         {
             var newDepartment = await _departmentService.AddDepartment(request);
-            return Created(string.Empty, newDepartment);
+            if(!newDepartment.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));
+            }
+            return Created(string.Empty, newDepartment.Value);
+        }
+
+        /// <summary>
+        ///     Permet de modifier un département existant.
+        /// </summary>
+        /// <param name="id">
+        ///  Identifiant du département à modifier.
+        /// </param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<AddDepartmentResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put(int id,AddDepartmentRequest request)
+        {
+            var newDepartment = await _departmentService.UpdateDept(id,request);
+            if (!newDepartment.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));
+            }
+            return Ok();
         }
 
         [HttpPost("responsable")]
@@ -69,6 +95,25 @@ namespace IccPlanner.Controllers
             return Ok();
         }
 
+       /// <summary>
+       /// Deletes the department with the specified identifier using a soft-delete operation.
+       /// </summary>
+       /// <remarks>This operation performs a soft delete, marking the department as deleted without
+       /// permanently removing it from the database. Requires appropriate authorization.</remarks>
+       /// <param name="id">The unique identifier of the department to delete. Must correspond to an existing department.</param>
+       /// <returns>An <see cref="IActionResult"/> indicating the result of the delete operation. Returns status code 200 (OK) if
+       /// the deletion succeeds, or an appropriate error response if the request is unauthorized or forbidden.</returns>
+        [HttpDelete("{id}")]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _departmentService.DeleteSoftByIdAsync(id); 
+            return Ok();
+        }
+
         [HttpPost("programs")]
         [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
@@ -78,9 +123,9 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, IDepartmentProgramRepository departmentProgramRepository)
         {
             //Check si les départements sont vides
-            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds)) 
+            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds))
             {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS,null, null));
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS, null, null));
             }
             //Check si le programme existe
             if (!await programRepository.IsExist(request.ProgramId))
@@ -89,16 +134,16 @@ namespace IccPlanner.Controllers
             }
 
             //Check si le programme existe
-            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);            
-            
+            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);
+
             if (isDepartmentProgramExisting != null)
             {
-                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST,isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name,request.TypePrg), null, null));
+                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST, isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name, request.TypePrg), null, null));
             }
 
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
             await _departmentService.AddDepartmentsProgram(request, userAuthId);
-            return Created(string.Empty,string.Empty);
+            return Created(string.Empty, string.Empty);
         }
 
         [HttpDelete("department-program")]
@@ -124,6 +169,17 @@ namespace IccPlanner.Controllers
             var userAuthId = Utiles.GetUserIdFromClaims(User);
             var result = await _departmentService.ImportMembersAsync(request, userAuthId);
             return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<DeptResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get(int id)
+        { 
+            var dept = await _departmentService.GetByIdAsync(id);
+            return Ok(dept);
         }
 
 

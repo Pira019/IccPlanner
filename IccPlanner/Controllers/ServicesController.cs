@@ -38,7 +38,7 @@ namespace IccPlanner.Controllers
         ///     Modèle de donnée a recevoir 
         /// </param>
         /// <returns></returns>
-        [HttpPost]
+       /* [HttpPost]
         [Authorize(Policy = PolicyConstants.MANAGER_SERVICE)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
@@ -54,9 +54,9 @@ namespace IccPlanner.Controllers
                         serviceRequest.DisplayName, serviceRequest.StartTime, serviceRequest.EndTime), null, null));
             }
 
-            var resultat = await _serviceTabService.Add(serviceRequest);
+          //  var resultat = await _serviceTabService.Add(serviceRequest);
             return Created(string.Empty, resultat);
-        }
+        }*/
 
         /// <summary>
         ///     Obtenir tous les services
