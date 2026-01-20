@@ -8,11 +8,21 @@ namespace Application.Interfaces.Services
     public interface IProgramService
     {
         /// <summary>
-        /// Permet d'ajouter un service
+        ///     Ajouter un nouveau programme.
         /// </summary>
-        /// <param name="request"> Model de donnée <see cref="AddProgramRequest"/> </param>
-        /// <returns> <see cref="AddProgramResponse"/> </returns>
-        public Task<AddProgramResponse> Add(AddProgramRequest request);
+        /// <param name="request">
+        ///     Model de requête <see cref="AddProgramRequest"/>
+        /// </param>
+        /// <param name="userId">
+        ///     Indique l'identifiant de l'utilisateur qui effectue l'opération
+        /// </param>
+        /// <param name="permissionName">
+        ///    Permet de spécifier le nom de la permission requise pour effectuer cette opération.
+        /// </param>
+        /// <returns>
+        ///     Retourne un objet <see cref="Result{AddProgramResponse}"/>
+        /// </returns>
+        public Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userId, string permissionName);
 
         /// <summary>
         /// Permet de savoir si le nom du programme existe 

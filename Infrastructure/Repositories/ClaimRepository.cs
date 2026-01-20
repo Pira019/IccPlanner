@@ -9,14 +9,12 @@ namespace Infrastructure.Repositories
     /// <summary>
     ///     
     /// </summary>
-    public class ClaimRepository : IClaimRepository
+    public class ClaimRepository : BaseRepository<IdentityUserClaim<string>>, IClaimRepository
     {
-        private readonly IccPlannerContext _iccPlannerContext;
-
-        public ClaimRepository(IccPlannerContext iccPlannerContext)
+        public ClaimRepository(IccPlannerContext plannerContext) : base(plannerContext)
         {
-            _iccPlannerContext = iccPlannerContext;
         }
+
 
         /// <summary>
         ///     
@@ -25,10 +23,19 @@ namespace Infrastructure.Repositories
         /// <returns></returns>
         public async Task<IEnumerable<string?>> GetClaimsValuesByUserIdAsync(string userId)
         {
-           return await _iccPlannerContext.Set<IdentityUserClaim<string>>()
+           return await _dbSet
                 .Where(uc => uc.UserId == userId)
                 .Select(uc => uc.ClaimValue)
                 .ToListAsync();
+        }
+
+        public async Task<bool> HasClaimAsync(string userId, string permissionName)
+        {
+            return await _dbSet.AnyAsync(uc =>
+                                        uc.UserId == userId &&
+                                        uc.ClaimValue != null &&
+                                         EF.Functions.ILike(uc.ClaimValue, permissionName)
+                                    );
         }
     }
 }

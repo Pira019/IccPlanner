@@ -268,6 +268,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0} « {1} » already exist..
+        /// </summary>
+        public static string EXIST_Pro_Val {
+            get {
+                return ResourceManager.GetString("EXIST_Pro_Val", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The file.
         /// </summary>
         public static string FILE {

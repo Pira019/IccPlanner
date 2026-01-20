@@ -13,5 +13,10 @@ namespace Domain.Entities
         public required string Description { get; set; }
         [MaxLength(15)]
         public string? ShortName { get; set; }
+
+        /// <summary>
+        ///     Indique si le poste confère le droit de gérer des membres dans le département.
+        /// </summary>
+        public bool IndGest { get; set; } = default;
     }
 }

@@ -153,6 +153,9 @@
   <data name="EXIST" xml:space="preserve">
     <value>{PropertyName} « {PropertyValue} » existe déjà.</value>
   </data>
+  <data name="EXIST_Pro_Val" xml:space="preserve">
+    <value>{0} « {1} » existe déjà.</value>
+  </data>
   <data name="FILE" xml:space="preserve">
     <value>Le fichier</value>
   </data>

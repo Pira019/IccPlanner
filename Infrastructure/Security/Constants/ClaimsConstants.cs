@@ -22,6 +22,9 @@
         public const string CAN_CREATE_PROGRAM = "CanCreateProgram";
         public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
 
+        // Permissions programmes 
+        public const string CAN_MANAGER_PRG = "CanManagerPrg"; 
+
         // Permissions liées aux Service 
         public const string MANAGER_SERVICE = "ManagerService";
 

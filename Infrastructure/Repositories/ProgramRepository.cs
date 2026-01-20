@@ -67,7 +67,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> IsNameExistsAsync(string name)
         {
-            return await _dbSet.AnyAsync(x => EF.Functions.ILike(x.Name, name));
+            return await _dbSet.AnyAsync(x => x.Name.ToLower() == name.ToLower()); 
         }
     }
 }
