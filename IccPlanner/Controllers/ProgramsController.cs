@@ -62,5 +62,21 @@ namespace IccPlanner.Controllers
         {
             return Ok(/* await _programRepository.GetProgramFilterAsync(filter) */);
         }
+
+        [HttpPut("{id}")]
+        [Authorize()]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put(int id, [FromBody] AddProgramRequest request)
+        {
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var res = await _programService.Update(id, request, userAuthId.ToString(), ClaimsConstants.CAN_MANAGER_PRG);
+
+            if (!res.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            }
+            return Ok();
+        }
     }
 }

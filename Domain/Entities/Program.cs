@@ -6,7 +6,7 @@ namespace Domain.Entities
     /// <summary>
     /// Définit les jours des activité ex: cultes, soirée d'adoration etc
     /// </summary>
-    public class Program
+    public class Program : BaseEntity
     {
         private string _name = string.Empty;
 
@@ -20,6 +20,16 @@ namespace Domain.Entities
         public string? Description { get; set; }
         [MaxLength(15)]
         public string? ShortName { get; set; }
+
+        /// <summary>
+        ///     Id de l'utilisateur ajouté.
+        /// </summary>
+        public string? AddBy { get; set; }
+
+        /// <summary>
+        ///     Id de l'utilisateur modifié.
+        /// </summary>
+        public string? UpdatedBy { get; set; }
         public List<Department> Departments { get; } = [];
         public List<DepartmentProgram> ProgramDepartments { get; } = [];
     }

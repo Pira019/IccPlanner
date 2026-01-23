@@ -142,6 +142,12 @@
     <value>Le nom du département</value>
   </data>
   <data name="DEPARTMENT_NOT_EXIST" xml:space="preserve">
+    <value>Ce programme n’existe pas.</value>
+  </data>
+  <data name="PRG_NOT_EXIST" xml:space="preserve">
+    <value>Ce programme n’existe pas.</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_NOT_EXIST" xml:space="preserve">
     <value>Ce département n'existe pas.</value>
   </data>
   <data name="DESCRIPTION" xml:space="preserve">
@@ -350,5 +356,8 @@
   </data>
   <data name="INVALID_VALUE" xml:space="preserve">
     <value>{0} n’est pas valide.</value>
+  </data>
+  <data name="MO_PrgNonAutor" xml:space="preserve">
+    <value>Vous n’avez pas les autorisations nécessaires pour modifier ce programme.</value>
   </data>
 </root>

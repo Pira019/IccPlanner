@@ -43,6 +43,21 @@ namespace Application.Interfaces.Services
         /// </returns>
         public Task<PaginatedDto<ProgramDto>> GetPaginatedProgram(int pageIndex, int pageSize);
 
+        /// <summary>
+        ///     Modifier le programme
+        /// </summary>
+        /// <param name="idPrg"> 
+        ///     Identifiant du programme à modifier.
+        /// </param>
+        /// <param name="request">
+        ///     Model de requête <see cref="AddProgramRequest"/>
+        /// </param>
+        /// <param name="permissionName">
+        ///     Specifie le nom de la permission requise pour effectuer cette opération.
+        /// </param>
+        /// <returns></returns>
+        public Task<Result<bool>> Update(int idPrg, AddProgramRequest request, string userId, string permissionName);
+
 
     }
 }

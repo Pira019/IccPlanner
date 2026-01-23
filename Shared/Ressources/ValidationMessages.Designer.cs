@@ -214,6 +214,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à This department not exist..
+        /// </summary>
+        public static string DEPARTMENT_PROGRAM_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_PROGRAM_NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Description.
         /// </summary>
         public static string DESCRIPTION {
@@ -538,6 +547,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You do not have the necessary permissions to edit this program. .
+        /// </summary>
+        public static string MO_PrgNonAutor {
+            get {
+                return ResourceManager.GetString("MO_PrgNonAutor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Please select one or more {PropertyName}.
         /// </summary>
         public static string MUST_CHOOSE {
@@ -597,6 +615,15 @@ namespace Shared.Ressources {
         public static string PGM_SERVICE_EXIST {
             get {
                 return ResourceManager.GetString("PGM_SERVICE_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This program does not exist..
+        /// </summary>
+        public static string PRG_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("PRG_NOT_EXIST", resourceCulture);
             }
         }
         

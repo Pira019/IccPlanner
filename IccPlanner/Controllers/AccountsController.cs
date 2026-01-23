@@ -38,7 +38,7 @@ namespace IccPlanner.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromForm] CreateAccountRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateAccountRequest request)
         {
             var result = await _accountService.CreateAccount(request);
 
@@ -59,7 +59,7 @@ namespace IccPlanner.Controllers
         [HttpGet("confirm-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequest request)
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request)
         {
             // Trouver l'utilisateur
             var user = await _accountService.FindUserAccountById(request.UserId);

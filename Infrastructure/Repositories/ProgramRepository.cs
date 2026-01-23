@@ -15,6 +15,12 @@ namespace Infrastructure.Repositories
         public ProgramRepository(IccPlannerContext plannerContext) : base(plannerContext)
         {
         }
+
+        public async Task<bool> CanUserAccessProgramAsync(int idPrg, string userId)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == idPrg && x.AddBy == userId);
+        }
+
         public async Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest filter)
         {
             return await _dbSet.Where(d => (filter.DepartmentIds == null

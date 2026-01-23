@@ -144,6 +144,12 @@
   <data name="DEPARTMENT_NOT_EXIST" xml:space="preserve">
     <value>This department not exist.</value>
   </data>
+  <data name="PRG_NOT_EXIST" xml:space="preserve">
+    <value>This program does not exist.</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_NOT_EXIST" xml:space="preserve">
+    <value>This department not exist.</value>
+  </data>
   <data name="DESCRIPTION" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -350,5 +356,8 @@
   </data>
   <data name="INVALID_VALUE" xml:space="preserve">
     <value>{0} is invalid.</value>
+  </data>
+  <data name="MO_PrgNonAutor" xml:space="preserve">
+    <value>You do not have the necessary permissions to edit this program. </value>
   </data>
 </root>
