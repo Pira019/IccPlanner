@@ -20,7 +20,8 @@
 
         // Permissions départements 
         public const string CAN_CREATE_PROGRAM = "CanCreateProgram";
-        public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
+        public const string MANAGE_PRG_DETAIL = "manage_program_details";
+        public const string DEPART_MANAGER = "depart:manager";
 
         // Permissions programmes 
         public const string CAN_MANAGER_PRG = "CanManagerPrg"; 

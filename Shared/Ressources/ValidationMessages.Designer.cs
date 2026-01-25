@@ -115,11 +115,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The date must be valid..
+        /// </summary>
+        public static string DATE_VALID {
+            get {
+                return ResourceManager.GetString("DATE_VALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The date(s) are required when the program is punctual..
         /// </summary>
         public static string DATES_REQUIRED {
             get {
                 return ResourceManager.GetString("DATES_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The start date must be earlier than the end date..
+        /// </summary>
+        public static string DATES_SUP {
+            get {
+                return ResourceManager.GetString("DATES_SUP", resourceCulture);
             }
         }
         
@@ -205,7 +223,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The department « {0} » already has a program «{1} » of type « {2} »..
+        ///   Recherche une chaîne localisée semblable à The department « {0} » already has a program «{1}..
         /// </summary>
         public static string DEPARTMENT_PROGRAM_EXIST {
             get {
@@ -772,7 +790,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Each day must be a valid day of the week (e.g., Monday, Tuesday, etc.) when the program is recurring. Please enter the days in English..
+        ///   Recherche une chaîne localisée semblable à Each day must be a valid day of the week (0 = Sunday, 1 = Monday, …).
         /// </summary>
         public static string VALID_DAYS {
             get {

@@ -1,11 +1,12 @@
 ﻿// Ignore Spelling: Auth 
+using System.Globalization;
 using Application.Dtos.Department;
 using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
-using Application.Responses.Department;
-using AutoMapper;
+using Application.Responses.Department; 
+using AutoMapper; 
 using Domain.Abstractions;
 using Domain.Entities;
 using OfficeOpenXml;
@@ -25,8 +26,12 @@ namespace Application.Services
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
         private readonly IMinistryRepository _ministryRepository;
+        private readonly IProgramRepository _programRepository;
+
         public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper, IDepartmentRepository departmentRepository, IPostRepository postRepository,
-            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository, IClaimRepository claimRepository, IMinistryRepository ministryRepository)
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository,
+            IClaimRepository claimRepository, IMinistryRepository ministryRepository,
+            IProgramRepository programRepository )
             : base(baseRepository, mapper)
         {
             _departmentRepository = departmentRepository;
@@ -35,6 +40,7 @@ namespace Application.Services
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
             _ministryRepository = ministryRepository;
+            _programRepository = programRepository;
         }
 
         public async Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest)
@@ -80,10 +86,37 @@ namespace Application.Services
             await _departmentRepository.SaveDepartmentMemberPost(departmentMemberPost);
         }
 
-        public async Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId)
+        public async Task<Result<bool>> AddDepartmentProgram(AddDepartmentProgramRequest departmentProgramRequest, string userId)
         {
-            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userAuthId);
+            var valDept = await IsValidDepartmentIds(departmentProgramRequest.DepartmentIds);
+            //Check si les départements sont vides
+            if (!valDept)
+            {
+                return Result<bool>.Fail(ValidationMessages.DEPARTMENT_INVALID_IDS); 
+            }
+
+            var prgExis = await _programRepository.IsExist(departmentProgramRequest.ProgramId);
+
+            //Check si le programme existe
+            if (!prgExis) {
+                return Result<bool>.Fail(ValidationMessages.PRG_NOT_EXIST); 
+            }
+
+            //Check si le programme existe
+            var departmentProgram = await _departmentProgramRepository.FindDepartmentProgramAsync(departmentProgramRequest.DepartmentIds, departmentProgramRequest.ProgramId, departmentProgramRequest.IndRecurrent);
+
+            if (departmentProgram != null) {
+                var deptName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(departmentProgram.Department.Name.ToLower());
+
+                return Result<bool>.Fail(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST, deptName , 
+                      CultureInfo.CurrentCulture.TextInfo.ToTitleCase(departmentProgram.Program.Name.ToLower())));
+            }
+
+
+            var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userId);
             await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
+
+            return Result<bool>.Success(true);
         }
 
         public async Task<bool> IsNameExists(string name)
@@ -92,52 +125,74 @@ namespace Application.Services
         }
 
         /// <summary>
-        /// Initialise le modèle de programme de département à partir de <see cref="AddDepartmentProgramRequest"/> 
-        /// pour preparer l'enregistrement en masse
+        ///     Initialise le modèle DepartmentProgram en fonction de la requête.
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="createdByUserGuid"></param>
-        /// <returns>Liste de <see cref="DepartmentProgram"/></returns>
-        public async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, Guid createdByUserGuid)
-        {
-            var member = await _accountRepository.FindMemberByUserIdAsync(createdByUserGuid.ToString());
+        /// <param name="request">
+        ///     Modèle de requête pour ajouter un DepartmentProgram.
+        /// </param>
+        /// <param name="userId">
+        ///     Indique l'ID de l'utilisateur qui crée le DepartmentProgram.
+        /// </param>
+        /// <returns>
+        ///     Retourne une liste de DepartmentProgram initialisés.
+        /// </returns>
+        private async Task<IEnumerable<DepartmentProgram>> InitializeDepartmentProgramModel(AddDepartmentProgramRequest request, string userId)
+        { 
+            var result = new List<DepartmentProgram>();
+            // Parse start date
+            var startDate = string.IsNullOrWhiteSpace(request.DateStart)
+                            ? DateOnly.FromDateTime(DateTime.Today)
+                            : DateOnly.Parse(request.DateStart);
 
-            //
-            if (request.TypePrg == ProgramType.Recurring.ToString())
-            {
-                // Un programme récurrent n'utilise pas de dates précises
-                request.Date?.Clear();
-            }
-            else
-            {
-                // Un programme ponctuel n'utilise pas de jours récurrent
-                request.Day = null;
-            }
+            // Parse end date (nullable)
+            var endDate = DateOnly.TryParse(request.DateEnd, out var parsedEnd) ? parsedEnd : (DateOnly?)null;
 
-            var data = request.DepartmentIds.Distinct()
-                .Select(departmentId =>
-                    new DepartmentProgram
+            foreach (var departmentId in request.DepartmentIds.Distinct())
+            {
+                var departmentProgram = new DepartmentProgram
+                {
+                    DepartmentId = departmentId,
+                    ProgramId = request.ProgramId,
+                    CreateBy =userId,
+                    Comment = request.Comment,
+                    IndRecurent = request.IndRecurrent,
+                    DateS = startDate,
+                    DateF = endDate,
+                    PrgDepartmentInfos = new List<PrgDepartmentInfo>()
+                };
+
+                if (request.IndRecurrent && request.Days != null && request.Days.Any())
+                {
+                    // Un PrgDepartmentInfo par jour récurrent
+                    foreach (var day in request.Days.Distinct())
                     {
-                        DepartmentId = departmentId,
-                        ProgramId = request.ProgramId,
-                        CreateById = member!.Id,
-                        Comment = request.Comment,
-                        Type = request.TypePrg,
-                        PrgDepartmentInfo = new PrgDepartmentInfo
+                        departmentProgram.PrgDepartmentInfos.Add(new PrgDepartmentInfo
                         {
-                            Dates = request.Date?.Select(d => DateOnly.ParseExact(d, "yyyy-MM-dd")).ToList(),
-                            Days = request.Day,
-                            PrgDate = request.Date?.Select(d => new PrgDate
+                            Day = day.ToString(), // ou utiliser byte si possible
+                            PrgDate = GenerateRecurrentDates(new List<int> { day }, request.DateEnd, startDate)
+                        });
+                    }
+                }
+                else if (!request.IndRecurrent && request.Dates != null && request.Dates.Any())
+                {
+                    // Programme ponctuel
+                    departmentProgram.PrgDepartmentInfos.Add(new PrgDepartmentInfo
+                    {
+                        PrgDate = request.Dates
+                            .Select(d => new PrgDate
                             {
                                 Date = DateOnly.ParseExact(d, "yyyy-MM-dd")
-                            }).ToList() ?? []
-                        }
-                    }
-                    )
-                .ToList();
-            return data;
-        }
+                            })
+                            .ToList()
+                    });
+                }
 
+                result.Add(departmentProgram);
+            }
+
+            return result;
+
+        } 
         public async Task DeleteDepartmentProgramByIdsAsync(DeleteDepartmentProgramRequest deleteDepartmentProgramRequest)
         {
             //convertir la chêne de caractère en tableau de int(ids)
@@ -250,10 +305,46 @@ namespace Application.Services
             return Result<bool>.Success(default);
         }
 
-        public async Task<DeptResponse> GetByIdAsync(int idDept)
+        /// <summary>
+        ///   Genère une liste de dates récurrentes basées sur les jours spécifiés jusqu'à une date de fin donnée.
+        /// </summary>
+        /// <param name="days"> 
+        /// Liste des jours de la semaine (0 = Dimanche, 1 = Lundi, ..., 6 = Samedi)
+        /// </param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        private List<PrgDate> GenerateRecurrentDates(
+                                    List<int> days,          // jours récurrents : 0 = dimanche ... 6 = samedi
+                                    string? endDate,          // date de fin en string (yyyy-MM-dd)
+                                    DateOnly? startDate = null) // date de début optionnelle, défaut = aujourd'hui
+        { 
+            if (!DateOnly.TryParse(endDate, out var end))
+                return new List<PrgDate>();
+
+            if (days == null || days.Count == 0)    
+                return new List<PrgDate>();
+
+            // Date de début = startDate si fourni, sinon aujourd'hui
+            var current = startDate ?? DateOnly.FromDateTime(DateTime.Today);
+
+            var dates = new List<PrgDate>();
+
+            while (current <= end)
+            {
+                if (days.Contains((int)current.DayOfWeek))
+                {
+                    dates.Add(new PrgDate { Date = current });
+                }
+
+                current = current.AddDays(1);
+            }
+
+            return dates;
+        }
+
+        public Task<DeptResponse> GetByIdAsync(int idDept)
         {
-            var dept = await _departmentRepository.GetByIdAsync(idDept);
-            return _mapper.Map<DeptResponse>(dept);
+            throw new NotImplementedException();
         }
     }
 }

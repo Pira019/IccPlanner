@@ -21,15 +21,17 @@ namespace Infrastructure.Repositories
             return await _dbSet.AnyAsync(x => x.Id == idPrg && x.AddBy == userId);
         }
 
-        public async Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest filter)
+        public Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest getProgramFilter)
+        {
+            throw new NotImplementedException();
+        }
+
+        /*public async Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest filter)
         {
             return await _dbSet.Where(d => (filter.DepartmentIds == null
                 || d.ProgramDepartments.Any(dp => filter.DepartmentIds.Contains(dp.Department.Id.ToString()))
                 )
-                && (!filter.Mois.HasValue && !filter.Year.HasValue ||
-                d.ProgramDepartments.Any(prgDate => prgDate.PrgDepartmentInfo != null &&
-                prgDate.PrgDepartmentInfo.PrgDate.Any(pd => pd.Date.HasValue && pd.Date.Value.Month == filter.Mois && pd.Date.Value.Year == filter.Year))
-                ))
+                && (!filter.Mois.HasValue && !filter.Year.HasValue ))
                  .Select(d => new GetProgramFilterResponse
                  {
                      Name = d.Name,
@@ -39,11 +41,11 @@ namespace Infrastructure.Repositories
                             Name = dp.Department.Name,
                             ShortName = dp.Department.ShortName
                         }).ToList(),
-                     TypeProgram = d.ProgramDepartments.Select(dp => dp.Type)
+                     TypeProgram = d.ProgramDepartments.Select(dp => dp.IndRecurent.ToString())
                         .FirstOrDefault(),
 
                      Dates = d.ProgramDepartments
-                     .Where(dp => dp.PrgDepartmentInfo != null)
+                     .Where(dp => dp.IndRecurent)
                         .SelectMany(dp => dp.PrgDepartmentInfo!.PrgDate
                             .Where(pd =>
                                 (!filter.Mois.HasValue && !filter.Year.HasValue ) ||
@@ -69,7 +71,7 @@ namespace Infrastructure.Repositories
                             })).ToList()
                  })
                 .ToListAsync();
-        }
+        }*/
 
         public async Task<bool> IsNameExistsAsync(string name)
         {

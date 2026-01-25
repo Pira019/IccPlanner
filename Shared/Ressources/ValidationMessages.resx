@@ -256,7 +256,7 @@
     <value>One or more days are required when the program is recurring.</value>
   </data>
   <data name="VALID_DAYS" xml:space="preserve">
-    <value>Each day must be a valid day of the week (e.g., Monday, Tuesday, etc.) when the program is recurring. Please enter the days in English.</value>
+    <value>Each day must be a valid day of the week (0 = Sunday, 1 = Monday, …)</value>
   </data>
   <data name="DATES_REQUIRED" xml:space="preserve">
     <value>The date(s) are required when the program is punctual.</value>
@@ -274,7 +274,7 @@
     <value>The number of service(s)</value>
   </data>
   <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
-    <value>The department « {0} » already has a program «{1} » of type « {2} ».</value>
+    <value>The department « {0} » already has a program «{1}.</value>
   </data>
   <data name="START_TIME" xml:space="preserve">
     <value>Start time</value>
@@ -359,5 +359,11 @@
   </data>
   <data name="MO_PrgNonAutor" xml:space="preserve">
     <value>You do not have the necessary permissions to edit this program. </value>
+  </data>
+  <data name="DATE_VALID" xml:space="preserve">
+    <value>The date must be valid.</value>
+  </data>
+  <data name="DATES_SUP" xml:space="preserve">
+    <value>The start date must be earlier than the end date.</value>
   </data>
 </root>

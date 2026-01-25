@@ -1,4 +1,5 @@
-﻿using Application.Requests.Department;
+﻿using System.Globalization;
+using Application.Requests.Department;
 using FluentValidation;
 using Shared.Enums;
 using Shared.Ressources;
@@ -20,30 +21,51 @@ namespace Application.Helper.Validators.Requests.Department
             RuleFor(x => x.ProgramId)
               .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM_NAME);
 
-            RuleFor(x => x.TypePrg)
-             .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM_TYPE)
-             .IsEnumName(typeof(ProgramType), caseSensitive: false).WithMessage(ValidationMessages.INVALID_PRG_TYPE);
+            RuleFor(x => x.DateStart)
+            .Must(date => string.IsNullOrEmpty(date) || DateOnly.TryParse(date, out _))
+            .WithMessage(ValidationMessages.INVALID_DATE);
 
-            // Validation 1 : Si le programme est récurrent, Days ne doit pas être vide
-            RuleFor(x => x.Day)
-                .NotEmpty()
-                .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.DAYS_REQUIRED);
+            RuleFor(x => x.DateEnd)
+           .Must(date => string.IsNullOrEmpty(date) || DateOnly.TryParse(date, out _))
+           .WithMessage(ValidationMessages.INVALID_DATE);
 
-            // Validation 2 : Pour chaque jour, vérifier que ce n'est pas null si le programme est récurrent et Pour chaque jour, vérifier qu'il est valide
-            RuleFor(x => x.Day)
-               .NotEmpty()
-               .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.CANNOT_CONTAIN_NULL).WithName(ValidationMessages.DAYS)
-               .Must(day => Enum.TryParse(typeof(ValidDaysOfWeek), day, true, out _))
-               .When(x => x.TypePrg == ProgramType.Recurring.ToString()).WithMessage(ValidationMessages.VALID_DAYS); 
+            RuleFor(x => x.DateStart)
+            .Must((x, start) =>
+            {
+                if (string.IsNullOrEmpty(start) || string.IsNullOrEmpty(x.DateEnd))
+                    return true; // ignore si l'une des dates est vide
+
+                return DateOnly.TryParseExact(start, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dStart)
+                    && DateOnly.TryParseExact(x.DateEnd, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dEnd)
+                    && dStart < dEnd; // start < end
+            })
+            .WithMessage(ValidationMessages.DATES_SUP);
+
+
+            // Validation 1 : Si le programme est récurrent, Days ne doit pas être vide 
+            RuleFor(x => x.Days)
+            .NotEmpty()
+            .When(x => x.IndRecurrent)
+            .WithMessage(ValidationMessages.DAYS_REQUIRED); 
+
+            RuleForEach(x => x.Days)
+                .InclusiveBetween(0, 6)
+                .WithMessage(ValidationMessages.VALID_DAYS)
+                .When(x => x.IndRecurrent);
 
             //Les dates
-            RuleFor(x => x.Date)
+            // Vérifie que la collection Dates n'est pas vide si le programme est récurrent
+            RuleFor(x => x.Dates)
                 .NotEmpty()
-                .When(date => date.TypePrg == ProgramType.Punctual.ToString()).WithMessage(ValidationMessages.DATES_REQUIRED);
+                .When(x => x.IndRecurrent)
+                .WithMessage(ValidationMessages.DATES_REQUIRED);
 
-            RuleForEach(x => x.Date)
+            // Vérifie que chaque date est valide si le programme est récurrent
+            RuleForEach(x => x.Dates)
                 .Must(date => DateOnly.TryParse(date, out _))
-                .When(date => date.TypePrg == ProgramType.Punctual.ToString()).WithMessage(ValidationMessages.INVALID_DATE); 
-        } 
+                .When(x => x.IndRecurrent)
+                .WithMessage(ValidationMessages.INVALID_DATE);
+
+        }
     }
 }

@@ -256,7 +256,7 @@
     <value>Un ou plusieurs jours sont requis lorsque le programme est récurrent.</value>
   </data>
   <data name="VALID_DAYS" xml:space="preserve">
-    <value>Chaque jour doit être un jour valide de la semaine (ex. : Monday, Tuesday, etc.) lorsque le programme est récurrent. Veuillez entrer les jours en anglais.</value>
+    <value>Chaque jour doit être un jour de la semaine valide (0 = lundi, 1 = mardi, …)</value>
   </data>
   <data name="DATES_REQUIRED" xml:space="preserve">
     <value>La ou les dates sont requises lorsque le programme est ponctuel.</value>
@@ -274,7 +274,7 @@
     <value>Le nombre de services</value>
   </data>
   <data name="DEPARTMENT_PROGRAM_EXIST" xml:space="preserve">
-    <value>Le département « {0} » a déjà un programme « {1} » de type « {2} ».</value>
+    <value>Le département « {0} » a déjà un programme « {1} ».</value>
   </data>
   <data name="START_TIME" xml:space="preserve">
     <value>Heure de début</value>
@@ -359,5 +359,11 @@
   </data>
   <data name="MO_PrgNonAutor" xml:space="preserve">
     <value>Vous n’avez pas les autorisations nécessaires pour modifier ce programme.</value>
+  </data>
+  <data name="DATE_VALID" xml:space="preserve">
+    <value>La date doit être valide.</value>
+  </data>
+  <data name="DATES_SUP" xml:space="preserve">
+    <value>La date de début doit être inférieure à la date de fin.</value>
   </data>
 </root>

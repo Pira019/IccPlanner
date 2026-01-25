@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    [Migration("20250525044711_UpdatePrgDateTable")]
-    partial class UpdatePrgDateTable
+    [Migration("20260123163006_AddCol")]
+    partial class AddCol
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,51 +26,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DepartmentMember", b =>
-                {
-                    b.Property<int>("DepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("MembersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("DepartmentsId", "MembersId");
-
-                    b.HasIndex("MembersId");
-
-                    b.ToTable("DepartmentMember");
-                });
-
-            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
-                {
-                    b.Property<int>("DepartmentMembersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramDepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartmentMembersId", "ProgramDepartmentsId");
-
-                    b.HasIndex("ProgramDepartmentsId");
-
-                    b.ToTable("DepartmentMemberDepartmentProgram");
-                });
-
-            modelBuilder.Entity("DepartmentProgram", b =>
-                {
-                    b.Property<int>("DepartmentsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DepartmentsId", "ProgramsId");
-
-                    b.HasIndex("ProgramsId");
-
-                    b.ToTable("DepartmentProgram");
-                });
-
             modelBuilder.Entity("Domain.Entities.Availability", b =>
                 {
                     b.Property<int>("Id")
@@ -79,25 +34,22 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("DepartmentMemberId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsAvailable")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
 
-                    b.Property<int>("ProgramDepartmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProgramId")
+                    b.Property<int>("TabServicePrgId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -105,9 +57,10 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentMemberId");
+                    b.HasIndex("TabServicePrgId");
 
-                    b.HasIndex("ProgramDepartmentId");
+                    b.HasIndex("DepartmentMemberId", "TabServicePrgId")
+                        .IsUnique();
 
                     b.ToTable("Availabilities");
                 });
@@ -123,11 +76,17 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("MinistryId")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("MinistryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -136,8 +95,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("ShortName")
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
@@ -169,8 +128,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("DateEntry")
                         .HasColumnType("date");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("uuid");
@@ -243,8 +208,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ProgramId")
                         .HasColumnType("integer");
@@ -289,8 +260,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("DepartmentMemberId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ProgramDepartmentId")
                         .HasColumnType("integer");
@@ -332,8 +309,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateOnly?>("EntryDate")
                         .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(55)
@@ -400,12 +383,19 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Fnc")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Permissions");
                 });
@@ -466,6 +456,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IndGest")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -530,8 +523,14 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(55)
                         .HasColumnType("character varying(55)");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("DepartmentProgramId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -552,18 +551,36 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AddBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
 
                     b.Property<string>("ShortName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -591,9 +608,15 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -864,6 +887,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.Property<int>("PermissionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RolesId")
+                        .HasColumnType("text");
+
+                    b.HasKey("PermissionsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("PermissionRole");
+                });
+
             modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
@@ -871,6 +909,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool?>("IndSys")
+                        .HasColumnType("boolean");
 
                     b.HasDiscriminator().HasValue("Role");
                 });
@@ -896,51 +937,6 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("DepartmentMember", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Member", null)
-                        .WithMany()
-                        .HasForeignKey("MembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentMemberDepartmentProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.DepartmentMember", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentMembersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.DepartmentProgram", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramDepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DepartmentProgram", b =>
-                {
-                    b.HasOne("Domain.Entities.Department", null)
-                        .WithMany()
-                        .HasForeignKey("DepartmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Program", null)
-                        .WithMany()
-                        .HasForeignKey("ProgramsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.Availability", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentMember", "DepartmentMember")
@@ -949,24 +945,22 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.DepartmentProgram", "ProgramDepartment")
+                    b.HasOne("Domain.Entities.TabServicePrg", "TabServicePrg")
                         .WithMany("Availabilities")
-                        .HasForeignKey("ProgramDepartmentId")
+                        .HasForeignKey("TabServicePrgId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DepartmentMember");
 
-                    b.Navigation("ProgramDepartment");
+                    b.Navigation("TabServicePrg");
                 });
 
             modelBuilder.Entity("Domain.Entities.Department", b =>
                 {
                     b.HasOne("Domain.Entities.Ministry", "Ministry")
                         .WithMany("Departements")
-                        .HasForeignKey("MinistryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MinistryId");
 
                     b.Navigation("Ministry");
                 });
@@ -1133,7 +1127,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.TabServices", "TabServices")
-                        .WithMany("TabServicePrgs")
+                        .WithMany("ServicePrgDepartments")
                         .HasForeignKey("TabServicesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1194,6 +1188,21 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.HasOne("Domain.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Member", "Member")
@@ -1225,8 +1234,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
                 {
-                    b.Navigation("Availabilities");
-
                     b.Navigation("FeedBacks");
 
                     b.Navigation("PrgDepartmentInfo");
@@ -1259,9 +1266,14 @@ namespace Infrastructure.Migrations
                     b.Navigation("ProgramDepartments");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TabServicePrg", b =>
+                {
+                    b.Navigation("Availabilities");
+                });
+
             modelBuilder.Entity("Domain.Entities.TabServices", b =>
                 {
-                    b.Navigation("TabServicePrgs");
+                    b.Navigation("ServicePrgDepartments");
                 });
 #pragma warning restore 612, 618
         }
