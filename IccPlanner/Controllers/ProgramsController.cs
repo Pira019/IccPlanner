@@ -26,7 +26,7 @@ namespace IccPlanner.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.CAN_MANAG_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
@@ -44,7 +44,7 @@ namespace IccPlanner.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_PROGRAM)]
+        [Authorize(Policy = PolicyConstants.CAN_MANAG_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)] 
         [ProducesResponseType<PaginatedDto<ProgramDto>>(StatusCodes.Status200OK)]

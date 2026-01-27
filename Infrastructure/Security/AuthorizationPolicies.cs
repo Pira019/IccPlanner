@@ -84,14 +84,42 @@ namespace Infrastructure.Security
 
             /*Accès Départements*/
 
-            //CAN_CREATE_ROLE
-            options.AddPolicy(PolicyConstants.CAN_CREATE_PROGRAM, policy =>
-                policy.RequireAssertion(context =>
-                    context.User.IsInRole(RolesConstants.ADMIN) ||
-                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_PROGRAM)
-                    ));
+            //CAN_CREATE_ROLE 
+            options.AddPolicy(PolicyConstants.CAN_MANAG_PROGRAM, policy =>
+             policy.RequireAssertion(context =>
+             {
+                 var permissionClaim = context.User.Claims
+                .FirstOrDefault(c => c.Type == ClaimsConstants.PERMISSION)?.Value;
+
+                 if (string.IsNullOrEmpty(permissionClaim))
+                     return false; // pas de permissions du tout
+
+                 // Parser le JSON
+                 var permissions = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(permissionClaim);
+                 if (permissions == null)
+                     return false;
+
+                 // Vérifier permission simple : MANAGE_PRG_DETAIL
+                 var canManagePrograms = permissions.ContainsKey(ClaimsConstants.CAN_MANAGER_PRG);
+
+                 // Vérifier department:manage
+                 var hasDepartments = false;
+                 if (permissions.TryGetValue(ClaimsConstants.DEPART_MANAGER, out var deptElement))
+                 {
+                     // Convertir en liste d'int
+                     var deptIds = deptElement.EnumerateArray().Select(x => x.GetInt32()).ToList();
+                     hasDepartments = deptIds.Any(); // true si au moins un département
+                 }
+
+                 // Autorisé si au moins une des deux conditions est vraie
+                 return canManagePrograms || hasDepartments;
+
+             })
+         );
+
 
             // ACCES DEPARTEMENT PROGRAM
+
             options.AddPolicy(PolicyConstants.CAN_MANG_DEPART_DETAIL, policy =>
                 policy.RequireAssertion(context =>
                 {

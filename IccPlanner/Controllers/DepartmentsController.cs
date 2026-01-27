@@ -119,7 +119,7 @@ namespace IccPlanner.Controllers
         ///     Model contenant les informations nécessaires pour ajouter un programme aux départements.
         /// </param> 
         [HttpPost("programs")]
-       [Authorize(PolicyConstants.CAN_MANG_DEPART)] 
+        [Authorize(PolicyConstants.CAN_MANG_DEPART)] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]

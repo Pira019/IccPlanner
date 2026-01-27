@@ -24,7 +24,7 @@
         public const string DEPART_MANAGER = "depart:manager";
 
         // Permissions programmes 
-        public const string CAN_MANAGER_PRG = "CanManagerPrg"; 
+        public const string CAN_MANAGER_PRG = "prg:manager"; 
 
         // Permissions liées aux Service 
         public const string MANAGER_SERVICE = "ManagerService";
