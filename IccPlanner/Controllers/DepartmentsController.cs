@@ -1,4 +1,5 @@
-﻿using Application.Helper; 
+﻿using System.Data;
+using Application.Helper; 
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
@@ -33,11 +34,11 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(int pageNumber , int pageSize)
+        public async Task<IActionResult> Get([FromQuery] int? pageNumber = null, [FromQuery] int? pageSize = null)
         {
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
 
-            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsGroups.DepartmentManagement, pageNumber, pageSize);
+            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsConstants.CAN_MANANG_DEPART, pageNumber, pageSize);
             return Ok(departments);
         }
 

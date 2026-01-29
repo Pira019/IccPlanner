@@ -1,4 +1,6 @@
-﻿ namespace Application.Interfaces.Repositories
+﻿using Application.Responses.Account;
+
+namespace Application.Interfaces.Repositories
 {
     /// <summary>
     ///     Interface pour gérer les réclamations (claims) des utilisateurs.
@@ -30,5 +32,11 @@
         ///     Retourne une collection de booléens indiquant si l'utilisateur possède la réclamation spécifiée.
         /// </returns>
         public Task<bool> HasClaimAsync(string userId,string permissionName);
+
+        /// <summary>
+        ///     Obtient les réclamations (claims) de l'utilisateur actuel.
+        /// </summary>
+        /// <returns></returns>
+        public ClaimsResponse GetUserClaims();
     }
 }

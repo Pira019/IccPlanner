@@ -106,6 +106,9 @@ namespace IccPlanner
                 options.AddSecurityRequirement(securityRequirement);
             });
 
+            // HttpContextAccessor
+            builder.Services.AddHttpContextAccessor();
+
             //Repositories  
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();

@@ -34,7 +34,7 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Add([FromBody] AddProgramRequest request)
         {
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
-            var res = await _programService.Add(request, userAuthId.ToString(),ClaimsConstants.CAN_MANAGER_PRG);
+            var res = await _programService.Add(request, userAuthId.ToString());
 
             if (!res.IsSuccess) 
             {

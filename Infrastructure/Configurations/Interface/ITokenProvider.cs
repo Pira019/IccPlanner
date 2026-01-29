@@ -6,21 +6,24 @@ namespace Infrastructure.Configurations.Interface
     public interface ITokenProvider
     {
         /// <summary>
-        /// Générer le JWT token
+        ///     Permet de créer un token JWT
         /// </summary>
-        /// <param name="user">
-        /// Utiliser authentifier <see cref="User"/>
+        /// <param name="userId">
+        ///     Identifiant de l'utilisateur
         /// </param>
         /// <param name="userRolesName">
-        /// LListe de roles
+        ///     Liste des rôles de l'utilisateur
+        /// </param>
+        /// <param name="claims">
+        ///     Liste des claims(permissions) de l'utilisateur
         /// </param>
         /// <param name="rememberMe">
-        ///  Indique si l'utilisateur veut rester connecté ou pas
+        ///     Indique si l'utilisateur veut rester connecté ou pas
         /// </param>
         /// <returns>
-        ///  Retourner le token 
+        ///     Retourner le token JWT sous forme de chaîne de caractères
         /// </returns>
-        public string Create(User user, ICollection<string> userRolesName, bool rememberMe);
+        public string Create(string userId, ICollection<string> userRolesName, ICollection<string> claims, bool rememberMe);
 
         /// <summary>
         /// Stocker le token dans le cookie

@@ -21,26 +21,32 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
-        public async Task<GetDepartResponse> GetDepartAsync(string? membreId, int pageNumber, int pageSize)
+        public async Task<GetDepartResponse> GetDepartAsync(string? membreId, int? pageNumber= null, int? pageSize = null)
         {
-            Guid? memberGuid = string.IsNullOrEmpty(membreId) ? null : Guid.Parse(membreId);
-
             var query = _dbSet.AsNoTracking();
 
             // Filtrer par membreId si fourni
-            if (memberGuid.HasValue)
+            if (!string.IsNullOrEmpty(membreId))
             {
-                query = query.Where(d => d.Members.Any(m => m.Id == memberGuid.Value));
+                Guid memberGuid = Guid.Parse(membreId);
+                query = query.Where(d => d.Members.Any(m => m.Id == memberGuid));
             }
 
-            // Compter le total pour info pagination
+            // Compter le total
             int totalCount = await query.CountAsync();
 
-            // Appliquer la pagination
+            // Appliquer le tri
+            query = query.OrderBy(d => d.Name);
+
+            // Pagination seulement si les deux sont fournis
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                query = query.Skip((pageNumber.Value - 1) * pageSize.Value)
+                             .Take(pageSize.Value);
+            }
+
+            // Projection
             var departDtos = await query
-                .OrderBy(d => d.Name) // tri par nom pour cohérence
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
                 .Select(department => new GetDepartDto
                 {
                     Id = department.Id,
@@ -51,11 +57,12 @@ namespace Infrastructure.Repositories
                 })
                 .ToListAsync();
 
+            // Retour
             return new GetDepartResponse
             {
                 Departments = departDtos,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageNumber = pageNumber ?? 1,
+                PageSize = pageSize ?? totalCount,
                 TotalCount = totalCount
             };
         }

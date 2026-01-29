@@ -22,7 +22,7 @@ namespace Application.Interfaces.Services
         /// <returns>
         ///     Retourne un objet <see cref="Result{AddProgramResponse}"/>
         /// </returns>
-        public Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userId, string permissionName);
+        public Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userId);
 
         /// <summary>
         /// Permet de savoir si le nom du programme existe 

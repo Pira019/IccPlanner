@@ -4,10 +4,13 @@ using Application.Dtos.Account;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
+using Application.Responses.Account;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Shared.Ressources;
 
 namespace Application.Services
 {
@@ -18,13 +21,16 @@ namespace Application.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ISendEmailService _sendEmailService;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; 
+        private readonly IClaimRepository _claimRepository;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, ISendEmailService sendEmailService)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, ISendEmailService sendEmailService,
+             IClaimRepository claimRepository)
         {
             _accountRepository = accountRepository;
             _mapper = mapper;
-            _sendEmailService = sendEmailService;
+            _sendEmailService = sendEmailService; 
+            _claimRepository = claimRepository;
         }
 
         /// <summary>
@@ -45,7 +51,7 @@ namespace Application.Services
 
                 if (isAdmin)
                 {
-                  await  _accountRepository.AddUserRole(newUser!,RolesConstants.ADMIN);
+                    await _accountRepository.AddUserRole(newUser!, RolesConstants.ADMIN);
                 }
                 // Envoie Email
                 await _sendEmailService.SendEmailConfirmation(newUser!);
@@ -64,9 +70,33 @@ namespace Application.Services
             return await _accountRepository.FindByIdAsync(userId);
         }
 
-        public async Task<SignInResult> Login(LoginRequest loginRequest)
+        public async Task<Result<LoginAccountResponse>> Login(LoginRequest loginRequest)
         {
-            return await _accountRepository.SignIn(loginRequest.Email, loginRequest.Password, loginRequest.Remember);
+            var result = await _accountRepository.SignIn(loginRequest.Email, loginRequest.Password);
+
+
+            if (!result.Succeeded)
+            {
+                return Result<LoginAccountResponse>.Fail(ValidationMessages.INVALID_LOGIN_ATTEMPT);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return Result<LoginAccountResponse>.Fail(ValidationMessages.USER_IS_LOCKED_OUT);
+            }
+            
+            var user = await _accountRepository.FindByEmailAsync(loginRequest.Email);
+            var roles = await _accountRepository.GetUserRoles(user!); // Récupérer les rôles de l'utilisateur
+            var userClaims = await _claimRepository.GetClaimsValuesByUserIdAsync(user!.Id); // Récupérer les claims(permissions) de l'utilisateur
+
+            var response = new LoginAccountResponse
+            {
+                userId = user!.Id,
+                roles = roles.ToList(),
+                claims = userClaims.ToList()
+            };
+
+            return Result<LoginAccountResponse>.Success(response); 
         }
 
         public async Task<User?> FindUserAccountByEmail(string email)
@@ -82,6 +112,11 @@ namespace Application.Services
         public async Task<ICollection<string>> GetUserRoles(User user)
         {
             return await _accountRepository.GetUserRoles(user);
+        }
+
+        public ClaimsResponse GetUserClaims()
+        {
+            return _claimRepository.GetUserClaims();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Requests.Account;
+using Application.Responses.Account;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -29,12 +30,15 @@ namespace Application.Interfaces.Services
         public Task<User?> FindUserAccountById(string userId);
 
         /// <summary>
-        /// Authentifier un utilisateur
+        ///  Authentifier un utilisateur
         /// </summary>
-        /// <param name="loginRequest">Model de donnée pour authetification</param>
-        /// <returns><see cref="Task"/> représente l'opération asynchrone, 
-        /// contenant <see cref="SignInResult"/> de l'opération </returns>
-        public Task<SignInResult> Login(LoginRequest loginRequest);
+        /// <param name="loginRequest">
+        ///     Modele de connexion <see cref="LoginRequest"/>
+        /// </param>
+        /// <returns>
+        ///     Resultat de l'opération <see cref="Result{LoginAccountResponse}"/>
+        /// </returns>
+        public Task<Result<LoginAccountResponse>> Login(LoginRequest loginRequest);
 
         /// <summary>
         /// Récuperer un compte par email
@@ -53,6 +57,14 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant les noms de roles </returns>
         public Task<ICollection<string>> GetUserRoles(User user);
+
+        /// <summary>
+        ///     Obtient les revendications (claims) de l'utilisateur actuel.
+        /// </summary>
+        /// <returns>
+        ///     Revendications de l'utilisateur sous forme de <see cref="ClaimsResponse"/>.
+        /// </returns>
+        public ClaimsResponse GetUserClaims();
 
 
     } 

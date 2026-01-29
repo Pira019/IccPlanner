@@ -26,18 +26,8 @@ namespace Application.Services
             _departmentMemberRepository = departmentMemberRepository;
         }
 
-        public async Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userAuth, string permissionName)
+        public async Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userAuth)
         {
-            bool hasClaim = await _ClaimRepository.HasClaimAsync(userAuth, permissionName);
-            bool canManage = !hasClaim && await _departmentMemberRepository.CanManageMembersAsync(userAuth);
-
-            var isAutor = hasClaim || canManage;
-            // Verifier si l'utilisateur a la permission nécessaire.
-            if (!isAutor)
-            {
-                return Result<AddProgramResponse>.Fail(ValidationMessages.UNAUTHORIZED);
-            }
-
             if (await _IProgramRepository.IsNameExistsAsync(request.Name))
             {
                 return Result<AddProgramResponse>.Fail(string.Format(ValidationMessages.EXIST_Pro_Val, ValidationMessages.PROGRAM_NAME, request.Name));

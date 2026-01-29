@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Auth 
 using System.Globalization;
+using System.Text.Json;
 using Application.Dtos.Department;
 using Application.Helper;
 using Application.Interfaces.Repositories;
@@ -262,19 +263,18 @@ namespace Application.Services
             return distinctDepartmentIds.All(id => existingIds.Contains(id));
         }
 
-        public async Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize = 50)
+        public async Task<GetDepartResponse> GetAsync(string userAuthId, string claimValue, int? pageNumber = null, int? pageSize = null)
         {
-            // Vérifier si l'utilisateur a au moins un claim parmi ceux attendus
-            var userClaims = await _claimRepository.GetClaimsValuesByUserIdAsync(userAuthId);
-            var hasAccess = Utiles.HasAnyClaim(userClaims, claimValues);
-            if (hasAccess)
+            var userClaims = Utiles.DeserializePermissions(_claimRepository.GetUserClaims()?.Permissions);   
+
+            if (userClaims != null && userClaims.Contains(claimValue))
             {
                 return await _departmentRepository.GetDepartAsync(null, pageNumber, pageSize);
             }
 
             var memberId = await _accountRepository.FindMemberByUserIdAsync(userAuthId);
 
-            return await _departmentRepository.GetDepartAsync(memberId?.Id.ToString());
+            return await _departmentRepository.GetDepartAsync(memberId?.Id.ToString(), pageNumber, pageSize);
         }
 
         public async Task<Result<bool>> UpdateDept(int id, AddDepartmentRequest addDepartmentRequest)
@@ -344,7 +344,8 @@ namespace Application.Services
 
         public Task<DeptResponse> GetByIdAsync(int idDept)
         {
-            throw new NotImplementedException();
+            var dept =  _departmentRepository.GetByIdAsync(idDept);
+            return dept.ContinueWith(t => _mapper.Map<DeptResponse>(t.Result) );
         }
     }
 }

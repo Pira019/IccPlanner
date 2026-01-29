@@ -1,6 +1,10 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System.Security.Claims;
+using Application.Interfaces.Repositories;
+using Application.Responses.Account;
 using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +15,10 @@ namespace Infrastructure.Repositories
     /// </summary>
     public class ClaimRepository : BaseRepository<IdentityUserClaim<string>>, IClaimRepository
     {
-        public ClaimRepository(IccPlannerContext plannerContext) : base(plannerContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ClaimRepository(IccPlannerContext plannerContext,IHttpContextAccessor httpContextAccessor) : base(plannerContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -27,6 +33,24 @@ namespace Infrastructure.Repositories
                 .Where(uc => uc.UserId == userId)
                 .Select(uc => uc.ClaimValue)
                 .ToListAsync();
+        }
+
+        public ClaimsResponse GetUserClaims()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            return new ClaimsResponse
+            {
+                Roles = user.Claims
+                    .Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value)
+                    .ToList(),
+
+                Permissions = user.Claims
+                    .Where(c => c.Type == ClaimType.Permission.ToString())
+                    .Select(c => c.Value)
+                    .ToList(),
+            };
         }
 
         public async Task<bool> HasClaimAsync(string userId, string permissionName)

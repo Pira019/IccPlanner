@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 
 namespace Application.Helper
 {
@@ -59,5 +60,74 @@ namespace Application.Helper
         {
             return userClaims.Any(c => requiredClaims.Contains(c));
         }
+
+        /// <summary>
+        /// Désérialise une liste de permissions depuis des strings JSON encodées
+        /// Exemple d'entrée : ["[\"CanManagDepart\"]", "[\"CanManageProgram\"]"]
+        /// Retour : ["CanManagDepart", "CanManageProgram"]
+        /// </summary>
+        public static List<string> DeserializePermissions(IEnumerable<string>? rawPermissions)
+        {
+            var permissions = new List<string>();
+
+            if (rawPermissions == null)
+                return permissions;
+
+            foreach (var raw in rawPermissions)
+            {
+                if (string.IsNullOrWhiteSpace(raw))
+                    continue;
+
+                try
+                {
+                    var deserialized = JsonSerializer.Deserialize<List<string>>(raw);
+                    if (deserialized != null)
+                    {
+                        permissions.AddRange(deserialized);
+                    }
+                }
+                catch
+                {
+                    // Ignorer les entrées mal formées
+                }
+            }
+
+            // Supprimer les doublons
+            return permissions.Distinct().ToList();
+        }
+
+        /// <summary>
+        ///     Permet de vérifier si l'utilisateur possède une permission spécifique.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="permissionKey"></param>
+        /// <param name="typePermission"></param>
+        /// <returns></returns>
+        public static bool HasPermission(this ClaimsPrincipal user, string permissionKey, string typePermission)
+        {
+            // Récupérer le claim
+            var permissionClaim = user.Claims
+                .FirstOrDefault(c => c.Type == typePermission)?.Value;
+
+            if (string.IsNullOrEmpty(permissionClaim))
+                return false; // pas de permissions du tout
+
+            try
+            {
+                // Désérialiser le JSON
+                var permissions = JsonSerializer.Deserialize<List<string>>(permissionClaim);
+                if (permissions == null)
+                    return false;
+
+                // Vérifier si la permission demandée existe
+                return permissions.Contains(permissionKey);
+            }
+            catch
+            { 
+                return false;
+            }
+        }
+
+
     }
 }

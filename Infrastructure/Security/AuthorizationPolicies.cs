@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Application.Constants;
+using Application.Helper;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 
@@ -46,13 +47,10 @@ namespace Infrastructure.Security
             /*Fin Accès Ministère*/
 
             /*Accès Départements*/
-
             options.AddPolicy(PolicyConstants.CAN_MANG_DEPART, policy =>
                 policy.RequireAssertion(context =>
-                {
-                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
-                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
-                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_MANANG_DEPART);
+                { 
+                    return Utiles.HasPermission(context.User, ClaimsConstants.CAN_MANANG_DEPART, ClaimsConstants.PERMISSION);
                 }));
 
 
@@ -82,40 +80,26 @@ namespace Infrastructure.Security
             /*Fin Accès Départements*/
 
 
-            /*Accès Départements*/
-
-            //CAN_CREATE_ROLE 
+            /*Accès programme*/ 
             options.AddPolicy(PolicyConstants.CAN_MANAG_PROGRAM, policy =>
-             policy.RequireAssertion(context =>
-             {
-                 var permissionClaim = context.User.Claims
-                .FirstOrDefault(c => c.Type == ClaimsConstants.PERMISSION)?.Value;
+                policy.RequireAssertion(context =>
+                {
+                    var permissionClaim = context.User.Claims
+                        .FirstOrDefault(c => c.Type == ClaimsConstants.PERMISSION)?.Value;
 
-                 if (string.IsNullOrEmpty(permissionClaim))
-                     return false; // pas de permissions du tout
+                    if (string.IsNullOrEmpty(permissionClaim))
+                        return false;
 
-                 // Parser le JSON
-                 var permissions = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(permissionClaim);
-                 if (permissions == null)
-                     return false;
+                    // Désérialiser en liste
+                    var permissions = JsonSerializer.Deserialize<List<string>>(permissionClaim);
+                    if (permissions == null)
+                        return false;
 
-                 // Vérifier permission simple : MANAGE_PRG_DETAIL
-                 var canManagePrograms = permissions.ContainsKey(ClaimsConstants.CAN_MANAGER_PRG);
+                    // Vérifier s'il y a au moins un depart:manager
+                    return permissions.Contains(ClaimsConstants.CAN_MANAGER_PRG) || permissions.Any(p => p.StartsWith(ClaimsConstants.DEPART_MANAGER));
+                })
+            );
 
-                 // Vérifier department:manage
-                 var hasDepartments = false;
-                 if (permissions.TryGetValue(ClaimsConstants.DEPART_MANAGER, out var deptElement))
-                 {
-                     // Convertir en liste d'int
-                     var deptIds = deptElement.EnumerateArray().Select(x => x.GetInt32()).ToList();
-                     hasDepartments = deptIds.Any(); // true si au moins un département
-                 }
-
-                 // Autorisé si au moins une des deux conditions est vraie
-                 return canManagePrograms || hasDepartments;
-
-             })
-         );
 
 
             // ACCES DEPARTEMENT PROGRAM

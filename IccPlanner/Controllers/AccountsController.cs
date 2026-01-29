@@ -89,22 +89,13 @@ namespace IccPlanner.Controllers
             // Authentification
             var resultat = await _accountService.Login(request);
 
-            if (resultat.IsLockedOut)
+            if (!resultat.IsSuccess)
             {
-                return BadRequest(_accountResponseError.UserIsLockedOut());
-            }
-
-            if (!resultat.Succeeded)
-            {
-                return BadRequest(_accountResponseError.LoginInvalidAttempt());
-            }
-
-            var userAuth = await _accountService.FindUserAccountByEmail(request.Email);
-            var userAuthRoles = await _accountService.GetUserRoles(userAuth!);
-            var token = tokenProvider.Create(userAuth!, userAuthRoles, request.Remember);
+                return BadRequest(ApiError.ErrorMessage(resultat.Error, null, null));
+            } 
+            var token = tokenProvider.Create(resultat.Value.userId, resultat.Value.roles,resultat.Value.claims, request.Remember);
             await tokenProvider.AppendUserCookie(token, Response, request.Remember);
             return Ok();
-
         }
 
         /// <summary>
@@ -118,19 +109,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         public IActionResult GetClaims()
         { 
-            var claims = new ClaimsResponse
-            {
-                Roles = User.Claims
-                    .Where(c => c.Type == ClaimTypes.Role)
-                    .Select(c => c.Value)
-                    .ToList(),
-
-                Permissions = User.Claims
-                    .Where(c => c.Type == ClaimType.Permission.ToString())
-                    .Select(c => c.Value)
-                    .ToList(),
-            };
-
+            var claims = _accountService.GetUserClaims();
             return Ok(claims);
         }
     }
