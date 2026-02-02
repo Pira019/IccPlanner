@@ -57,13 +57,13 @@ namespace Application.Helper.Validators.Requests.Department
             // Vérifie que la collection Dates n'est pas vide si le programme est récurrent
             RuleFor(x => x.Dates)
                 .NotEmpty()
-                .When(x => x.IndRecurrent)
+                .When(x => !x.IndRecurrent)
                 .WithMessage(ValidationMessages.DATES_REQUIRED);
 
             // Vérifie que chaque date est valide si le programme est récurrent
             RuleForEach(x => x.Dates)
                 .Must(date => DateOnly.TryParse(date, out _))
-                .When(x => x.IndRecurrent)
+                .When(x => !x.IndRecurrent)
                 .WithMessage(ValidationMessages.INVALID_DATE);
 
         }

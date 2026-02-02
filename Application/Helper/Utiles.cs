@@ -120,7 +120,13 @@ namespace Application.Helper
                     return false;
 
                 // Vérifier si la permission demandée existe
-                return permissions.Contains(permissionKey);
+                if (permissions.Contains(permissionKey))
+                    return true;
+
+                if (permissions.Any(p => p.StartsWith(permissionKey)))
+                    return true;
+
+                return false;
             }
             catch
             { 
