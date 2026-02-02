@@ -115,11 +115,29 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The date must be valid..
+        /// </summary>
+        public static string DATE_VALID {
+            get {
+                return ResourceManager.GetString("DATE_VALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The date(s) are required when the program is punctual..
         /// </summary>
         public static string DATES_REQUIRED {
             get {
                 return ResourceManager.GetString("DATES_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The start date must be earlier than the end date..
+        /// </summary>
+        public static string DATES_SUP {
+            get {
+                return ResourceManager.GetString("DATES_SUP", resourceCulture);
             }
         }
         
@@ -205,11 +223,20 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à The department « {0} » already has a program «{1} » of type « {2} »..
+        ///   Recherche une chaîne localisée semblable à The department « {0} » already has a program «{1}..
         /// </summary>
         public static string DEPARTMENT_PROGRAM_EXIST {
             get {
                 return ResourceManager.GetString("DEPARTMENT_PROGRAM_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This department not exist..
+        /// </summary>
+        public static string DEPARTMENT_PROGRAM_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_PROGRAM_NOT_EXIST", resourceCulture);
             }
         }
         
@@ -264,6 +291,15 @@ namespace Shared.Ressources {
         public static string EXIST {
             get {
                 return ResourceManager.GetString("EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0} « {1} » already exist..
+        /// </summary>
+        public static string EXIST_Pro_Val {
+            get {
+                return ResourceManager.GetString("EXIST_Pro_Val", resourceCulture);
             }
         }
         
@@ -529,6 +565,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You do not have the necessary permissions to edit this program. .
+        /// </summary>
+        public static string MO_PrgNonAutor {
+            get {
+                return ResourceManager.GetString("MO_PrgNonAutor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Please select one or more {PropertyName}.
         /// </summary>
         public static string MUST_CHOOSE {
@@ -588,6 +633,15 @@ namespace Shared.Ressources {
         public static string PGM_SERVICE_EXIST {
             get {
                 return ResourceManager.GetString("PGM_SERVICE_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This program does not exist..
+        /// </summary>
+        public static string PRG_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("PRG_NOT_EXIST", resourceCulture);
             }
         }
         
@@ -736,7 +790,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Each day must be a valid day of the week (e.g., Monday, Tuesday, etc.) when the program is recurring. Please enter the days in English..
+        ///   Recherche une chaîne localisée semblable à Each day must be a valid day of the week (0 = Sunday, 1 = Monday, …).
         /// </summary>
         public static string VALID_DAYS {
             get {

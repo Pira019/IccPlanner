@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Dtos.Program;
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Program;
@@ -15,37 +16,35 @@ namespace IccPlanner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProgramsController : ControllerBase
+    public class ProgramsController : PlannerBaseController
     {
-        private readonly IProgramService _programService;
-        private readonly IProgramRepository _programRepository;
+        private readonly IProgramService _programService; 
 
-        public ProgramsController(IProgramService programService, IProgramRepository programRepository)
+        public ProgramsController(IAccountRepository accountRepository,IProgramService programService) : base(accountRepository)
         {
-            this._programService = programService;
-            this._programRepository = programRepository;
+            _programService = programService;
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_PROGRAM)]
+        [Authorize(Policy = PolicyConstants.CAN_MANAG_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<AddProgramResponse>(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateProgram([FromBody] AddProgramRequest request)
+        public async Task<IActionResult> Add([FromBody] AddProgramRequest request)
         {
-            bool isProgramexist = await _programService.IsNameExists(request.Name);
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var res = await _programService.Add(request, userAuthId.ToString());
 
-            if (isProgramexist) 
-            { 
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.EXIST,ValidationMessages.PROGRAM_NAME,request.Name));
-            }            
-            var result = await _programService.Add(request);
-            return Created(string.Empty, result);
+            if (!res.IsSuccess) 
+            {
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            }             
+            return Created(string.Empty, res.Value);
         }
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_PROGRAM)]
+        [Authorize(Policy = PolicyConstants.CAN_MANAG_PROGRAM)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)] 
         [ProducesResponseType<PaginatedDto<ProgramDto>>(StatusCodes.Status200OK)]
@@ -61,7 +60,23 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<GetProgramFilterResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProgramFilterAsync([FromBody] GetProgramFilterRequest filter)
         {
-            return Ok( await _programRepository.GetProgramFilterAsync(filter) );
+            return Ok(/* await _programRepository.GetProgramFilterAsync(filter) */);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize()]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put(int id, [FromBody] AddProgramRequest request)
+        {
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var res = await _programService.Update(id, request, userAuthId.ToString(), ClaimsConstants.CAN_MANAGER_PRG);
+
+            if (!res.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            }
+            return Ok();
         }
     }
 }

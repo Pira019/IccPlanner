@@ -21,26 +21,32 @@ namespace Infrastructure.Repositories
             return await PlannerContext.DepartmentMembers.FirstOrDefaultAsync(x => x.MemberId == Guid.Parse(memberId) && x.DepartmentId == departmentId);
         }
 
-        public async Task<GetDepartResponse> GetDepartAsync(string? membreId, int pageNumber, int pageSize)
+        public async Task<GetDepartResponse> GetDepartAsync(string? membreId, int? pageNumber= null, int? pageSize = null)
         {
-            Guid? memberGuid = string.IsNullOrEmpty(membreId) ? null : Guid.Parse(membreId);
-
             var query = _dbSet.AsNoTracking();
 
             // Filtrer par membreId si fourni
-            if (memberGuid.HasValue)
+            if (!string.IsNullOrEmpty(membreId))
             {
-                query = query.Where(d => d.Members.Any(m => m.Id == memberGuid.Value));
+                Guid memberGuid = Guid.Parse(membreId);
+                query = query.Where(d => d.Members.Any(m => m.Id == memberGuid));
             }
 
-            // Compter le total pour info pagination
+            // Compter le total
             int totalCount = await query.CountAsync();
 
-            // Appliquer la pagination
+            // Appliquer le tri
+            query = query.OrderBy(d => d.Name);
+
+            // Pagination seulement si les deux sont fournis
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                query = query.Skip((pageNumber.Value - 1) * pageSize.Value)
+                             .Take(pageSize.Value);
+            }
+
+            // Projection
             var departDtos = await query
-                .OrderBy(d => d.Name) // tri par nom pour cohérence
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
                 .Select(department => new GetDepartDto
                 {
                     Id = department.Id,
@@ -51,45 +57,51 @@ namespace Infrastructure.Repositories
                 })
                 .ToListAsync();
 
+            // Retour
             return new GetDepartResponse
             {
                 Departments = departDtos,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageNumber = pageNumber ?? 1,
+                PageSize = pageSize ?? totalCount,
                 TotalCount = totalCount
             };
         }
 
+        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly)
+        {
+            throw new NotImplementedException();
+        }
+
 
         ///inheritdoc />
-        public async Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly datePrg)
-        {
-            return await _dbSet.Where(department => department.Members.Any(member => member.Id == userId))
-                .Select(department => new GetServicesListResponse
-                {
-                    DepartmentName = department.Name,
-                    ServicePrograms = department.DepartmentPrograms
-                   .Where(dp => dp.PrgDepartmentInfo != null)
-                   .SelectMany(dp => dp.PrgDepartmentInfo!.PrgDate
-                        .Where(pd => pd.Date == datePrg)
-                       .SelectMany(pd =>
-                        pd.TabServicePrgs.Select(service =>
-                        new ServiceProgramDto
-                        {
-                            ProgramName = dp.Program.Name,
-                            ProgramShortName = dp.Program.ShortName,
-                            ServiceProgramId = service.Id,
-                            DisplayName = service.DisplayName,
-                            ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
-                            StartTime = service.TabServices.StartTime,
-                            EndTime = service.TabServices.EndTime.ToString(),
-                            IsAvailable = service.Availabilities.Any(x => x.DepartmentMember.Member.Id == userId)
+        /* public async Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly datePrg)
+         {
+             return await _dbSet.Where(department => department.Members.Any(member => member.Id == userId))
+                 .Select(department => new GetServicesListResponse
+                 {
+                     DepartmentName = department.Name,
+                     ServicePrograms = department.DepartmentPrograms
+                    .Where(dp => dp.PrgDepartmentInfo != null)
+                    .SelectMany(dp => dp.PrgDepartmentInfo!.PrgDate
+                         .Where(pd => pd.Date == datePrg)
+                        .SelectMany(pd =>
+                         pd.TabServicePrgs.Select(service =>
+                         new ServiceProgramDto
+                         {
+                             ProgramName = dp.Program.Name,
+                             ProgramShortName = dp.Program.ShortName,
+                             ServiceProgramId = service.Id,
+                             DisplayName = service.DisplayName,
+                             ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
+                             StartTime = service.TabServices.StartTime,
+                             EndTime = service.TabServices.EndTime.ToString(),
+                             IsAvailable = service.Availabilities.Any(x => x.DepartmentMember.Member.Id == userId)
 
-                        })))
-                            .OrderBy(X => X.StartTime).ToList()
-                }).Where(dpt => dpt.ServicePrograms.Any())
-                .ToListAsync();
-        }
+                         })))
+                             .OrderBy(X => X.StartTime).ToList()
+                 }).Where(dpt => dpt.ServicePrograms.Any())
+                 .ToListAsync();
+         }*/
 
         public async Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds)
         {

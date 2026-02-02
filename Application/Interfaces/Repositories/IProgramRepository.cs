@@ -22,5 +22,19 @@ namespace Application.Interfaces.Repositories
         /// </param>
         /// <returns></returns>
         public Task<IEnumerable<GetProgramFilterResponse>> GetProgramFilterAsync(GetProgramFilterRequest getProgramFilter);
+
+        /// <summary>
+        ///     Permet de vérifier si un utilisateur a accès à un programme spécifique.
+        /// </summary>
+        /// <param name="idPrg">
+        ///     Id du programme.
+        /// </param>
+        /// <param name="userId">
+        ///     Indentifiant de l'utilisateur.
+        /// </param>
+        /// <returns>
+        ///     Retourne une valeur <see cref="bool"/> indiquant si l'utilisateur a accès au programme spécifié.
+        /// </returns>
+        public Task<bool> CanUserAccessProgramAsync(int idPrg, string userId);
     }
 }

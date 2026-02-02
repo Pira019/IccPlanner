@@ -1,6 +1,5 @@
-﻿using System.Drawing.Printing;
-using Application.Helper;
-using Application.Interfaces.Repositories;
+﻿using System.Data;
+using Application.Helper; 
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
@@ -35,11 +34,11 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(int pageNumber , int pageSize)
+        public async Task<IActionResult> Get([FromQuery] int? pageNumber = null, [FromQuery] int? pageSize = null)
         {
             var userAuthId = Utiles.GetUserIdFromClaims(User)!;
 
-            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsGroups.DepartmentManagement, pageNumber, pageSize);
+            var departments = await _departmentService.GetAsync(userAuthId.ToString(), ClaimsConstants.CAN_MANANG_DEPART, pageNumber, pageSize);
             return Ok(departments);
         }
 
@@ -114,40 +113,32 @@ namespace IccPlanner.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///     Ajoute un programme aux département.
+        /// </summary>
+        /// <param name="request">
+        ///     Model contenant les informations nécessaires pour ajouter un programme aux départements.
+        /// </param> 
         [HttpPost("programs")]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
+        [Authorize(PolicyConstants.CAN_MANG_DEPART_DETAIL)] 
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateDepartmentProgram([FromBody] AddDepartmentProgramRequest request, IProgramRepository programRepository, IDepartmentProgramRepository departmentProgramRepository)
-        {
-            //Check si les départements sont vides
-            if (!await _departmentService.IsValidDepartmentIds(request.DepartmentIds))
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> AddDepartmentProgram([FromBody] AddDepartmentProgramRequest request)
+        {            
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;  
+            var result = await _departmentService.AddDepartmentProgram(request, userAuthId.ToString());
+            
+            if (!result.IsSuccess)
             {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_INVALID_IDS, null, null));
-            }
-            //Check si le programme existe
-            if (!await programRepository.IsExist(request.ProgramId))
-            {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.INVALID_ENTRY, ValidationMessages.PROGRAM_NAME, null));
-            }
-
-            //Check si le programme existe
-            var isDepartmentProgramExisting = await departmentProgramRepository.GetFirstExistingDepartmentProgramAsync(request.DepartmentIds, request.ProgramId, request.TypePrg);
-
-            if (isDepartmentProgramExisting != null)
-            {
-                return BadRequest(ApiError.ErrorMessage(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST, isDepartmentProgramExisting.Department.Name, isDepartmentProgramExisting.Program.Name, request.TypePrg), null, null));
-            }
-
-            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
-            await _departmentService.AddDepartmentsProgram(request, userAuthId);
-            return Created(string.Empty, string.Empty);
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }  
+            return Created();
         }
 
         [HttpDelete("department-program")]
-        [Authorize(Policy = PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM)]
+        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART_DETAIL)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]

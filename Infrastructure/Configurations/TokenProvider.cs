@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using Domain.Entities;
 using Infrastructure.Configurations.Interface;
+using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +25,7 @@ namespace Infrastructure.Configurations
             _appSetting = options.Value;
         }
 
-        public string Create(User user, ICollection<string> userRolesName, bool rememberMe)
+        public string Create(string user, ICollection<string> userRolesName, ICollection<string> claimslst, bool rememberMe)
         {
             string secrteKey = _appSetting?.JwtSetting?.Secret!;
             var secutityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secrteKey));
@@ -32,15 +34,22 @@ namespace Infrastructure.Configurations
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub , user.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier , user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub , user),
+                new Claim(ClaimTypes.NameIdentifier , user),
             };
-            userRolesName.ToList().ForEach(roleName => claims.Add(new Claim(ClaimTypes.Role, roleName)));
+
+            var allPermissions = new List<string>();
+            // Ajouter les permissions simples
+          
+            claimslst.ToList().ForEach(p => allPermissions.Add(p)); //claims
+
+            claims.Add(new Claim(ClaimTypes.Role, JsonSerializer.Serialize(userRolesName.ToList())));            
+            claims.Add(new Claim(ClaimsConstants.PERMISSION, JsonSerializer.Serialize(allPermissions)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes((double)GetExpirationInMinutes(rememberMe)),
+                Expires = DateTime.UtcNow.AddMinutes((double)_appSetting?.JwtSetting.ExpirationInMinutes!),
                 SigningCredentials = credentials,
                 Issuer = _appSetting?.JwtSetting.Issuer,
                 Audience = _appSetting?.JwtSetting.Audiance,

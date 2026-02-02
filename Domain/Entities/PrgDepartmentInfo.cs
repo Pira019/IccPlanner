@@ -25,7 +25,7 @@ namespace Domain.Entities
         ///     Liste des jours associés au programme du département
         /// </summary>
         /// 
-        [MaxLength(55)]
-        public string? Days { get; set; }
+        [MaxLength(1)]
+        public string? Day { get; set; }
     }
 }

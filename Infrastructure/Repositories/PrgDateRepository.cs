@@ -33,7 +33,7 @@ namespace Infrastructure.Repositories
             return await _dbSet.Include(x => x.PrgDepartmentInfo)
                                         .ThenInclude(p => p.DepartmentProgram)
                                         .Where(x => x.Id == prgDateId
-                                                  && x.PrgDepartmentInfo.DepartmentProgram.Type == ProgramType.Recurring.ToString()
+                                                  && x.PrgDepartmentInfo.DepartmentProgram.IndRecurent
                                                   && x.Date >= DateOnly.FromDateTime(DateTime.Now))
                                         .Select(x => x.Id)
                                         .ToArrayAsync();

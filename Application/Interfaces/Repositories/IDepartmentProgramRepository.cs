@@ -5,20 +5,20 @@ namespace Application.Interfaces.Repositories
     public interface IDepartmentProgramRepository : IBaseRepository<DepartmentProgram>
     {
         /// <summary>
-        ///     Récupère le département qui a deja un programme 
+        ///     Récupère le département qui a deja un programme .
         /// </summary>
         /// <param name="departmentIds">
-        ///     Ids des départements    
+        ///     Departements à vérifier.
         /// </param>
         /// <param name="programId">
-        ///     Id de programme
+        ///     Programme à vérifier.
         /// </param>
-        /// <param name="programType">
-        ///     Type de programme
+        /// <param name="indRec">
+        ///     Indicateur de récurrence.
         /// </param>
         /// <returns>
-        ///     Retourne <see cref="DepartmentProgram"/>
+        ///     Retourne le premier département qui a déjà le programme spécifié, ou null s'il n'existe pas.
         /// </returns>
-        public Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds,int programId, string programType);
+        public Task<DepartmentProgram?> FindDepartmentProgramAsync(List<int> departmentIds,int programId, bool indRec);
     }
 }

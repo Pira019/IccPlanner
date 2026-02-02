@@ -1,4 +1,6 @@
-﻿using Application.Constants;
+﻿using System.Text.Json;
+using Application.Constants;
+using Application.Helper;
 using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 
@@ -45,13 +47,10 @@ namespace Infrastructure.Security
             /*Fin Accès Ministère*/
 
             /*Accès Départements*/
-            
             options.AddPolicy(PolicyConstants.CAN_MANG_DEPART, policy =>
                 policy.RequireAssertion(context =>
-                {
-                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
-                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
-                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_MANANG_DEPART);
+                { 
+                    return Utiles.HasPermission(context.User, ClaimsConstants.CAN_MANANG_DEPART, ClaimsConstants.PERMISSION);
                 }));
 
 
@@ -81,20 +80,24 @@ namespace Infrastructure.Security
             /*Fin Accès Départements*/
 
 
-            /*Accès Départements*/
+            /*Accès programme*/ 
+            options.AddPolicy(PolicyConstants.CAN_MANAG_PROGRAM, policy =>
+                policy.RequireAssertion(context =>
+                {
+                    // Vérifier s'il y a au moins un depart:manager
+                    return Utiles.HasPermission(context.User, ClaimsConstants.CAN_MANAGER_PRG, ClaimsConstants.PERMISSION) ||
+                            Utiles.HasPermission(context.User, ClaimsConstants.DEPART_MANAGER, ClaimsConstants.PERMISSION);
+                })
+            ); 
 
-            //CAN_CREATE_ROLE
-            options.AddPolicy(PolicyConstants.CAN_CREATE_PROGRAM, policy =>
+            // ACCES DEPARTEMENT PROGRAM
+            options.AddPolicy(PolicyConstants.CAN_MANG_DEPART_DETAIL, policy =>
                 policy.RequireAssertion(context =>
-                    context.User.IsInRole(RolesConstants.ADMIN) ||
-                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_PROGRAM)
-                    )); 
-            
-            options.AddPolicy(PolicyConstants.CAN_CREATE_DEPARTMENT_PROGRAM, policy =>
-                policy.RequireAssertion(context =>
-                    context.User.IsInRole(RolesConstants.ADMIN) ||
-                    context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_DEPARTMENT_PROGRAM)
-                    ));
+                {
+                    return Utiles.HasPermission(context.User, ClaimsConstants.MANAGE_PRG_DETAIL, ClaimsConstants.PERMISSION) ||
+                           Utiles.HasPermission(context.User, ClaimsConstants.DEPART_MANAGER, ClaimsConstants.PERMISSION);
+                })
+            );
 
             /*Fin Accès Program*/
 

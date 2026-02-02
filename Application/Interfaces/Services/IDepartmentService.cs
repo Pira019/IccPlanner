@@ -46,7 +46,7 @@ namespace Application.Interfaces.Services
         /// <param name="departmentProgramRequest"></param>
         /// <param name="userAuthId">Id de l'utilisateur connecter</param>
         /// <returns></returns>
-        public Task AddDepartmentsProgram(AddDepartmentProgramRequest departmentProgramRequest, Guid userAuthId);
+        public Task<Result<bool>> AddDepartmentProgram (AddDepartmentProgramRequest departmentProgramRequest, string userId);
 
         /// <summary>
         /// Permet de supprimer un ou plusieurs DepartmentProgram 
@@ -76,21 +76,24 @@ namespace Application.Interfaces.Services
         public Task<bool> IsValidDepartmentIds(IEnumerable<int> departmentIds);
 
         /// <summary>
-        ///     Obtenir les départements.
+        ///  Obtenir les départements.
         /// </summary>
         /// <param name="userAuthId">
-        ///     Id de utilisateur connecté.
+        ///     Id de l'utilisateur connecté.
         /// </param>
-        /// <param name="claimValues">
-        ///     Verifier si l'utilisateur a une des claims
+        /// <param name="claimValue">
+        ///     Permet de filtrer les départements selon le rôle de l'utilisateur.
         /// </param>
         /// <param name="pageNumber">
-        ///     
+        ///     Numéro de la page.
+        /// </param>
+        /// <param name="pageSize">
+        ///     Nombre d'éléments par page.
         /// </param>
         /// <returns>
         ///     Retourne un <see cref="GetDepartResponse"/>
         /// </returns>
-        public Task<GetDepartResponse> GetAsync(string userAuthId, List<string> claimValues, int pageNumber = 1, int pageSize=50);
+        public Task<GetDepartResponse> GetAsync(string userAuthId, string claimValue, int? pageNumber, int? pageSize);
 
         /// <summary>
         ///     Determine un département par son Id.

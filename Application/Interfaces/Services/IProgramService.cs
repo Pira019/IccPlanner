@@ -8,11 +8,21 @@ namespace Application.Interfaces.Services
     public interface IProgramService
     {
         /// <summary>
-        /// Permet d'ajouter un service
+        ///     Ajouter un nouveau programme.
         /// </summary>
-        /// <param name="request"> Model de donnée <see cref="AddProgramRequest"/> </param>
-        /// <returns> <see cref="AddProgramResponse"/> </returns>
-        public Task<AddProgramResponse> Add(AddProgramRequest request);
+        /// <param name="request">
+        ///     Model de requête <see cref="AddProgramRequest"/>
+        /// </param>
+        /// <param name="userId">
+        ///     Indique l'identifiant de l'utilisateur qui effectue l'opération
+        /// </param>
+        /// <param name="permissionName">
+        ///    Permet de spécifier le nom de la permission requise pour effectuer cette opération.
+        /// </param>
+        /// <returns>
+        ///     Retourne un objet <see cref="Result{AddProgramResponse}"/>
+        /// </returns>
+        public Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userId);
 
         /// <summary>
         /// Permet de savoir si le nom du programme existe 
@@ -32,6 +42,21 @@ namespace Application.Interfaces.Services
         ///     Un objet DTO <see cref="PaginatedDto{ProgramDto}"/>
         /// </returns>
         public Task<PaginatedDto<ProgramDto>> GetPaginatedProgram(int pageIndex, int pageSize);
+
+        /// <summary>
+        ///     Modifier le programme
+        /// </summary>
+        /// <param name="idPrg"> 
+        ///     Identifiant du programme à modifier.
+        /// </param>
+        /// <param name="request">
+        ///     Model de requête <see cref="AddProgramRequest"/>
+        /// </param>
+        /// <param name="permissionName">
+        ///     Specifie le nom de la permission requise pour effectuer cette opération.
+        /// </param>
+        /// <returns></returns>
+        public Task<Result<bool>> Update(int idPrg, AddProgramRequest request, string userId, string permissionName);
 
 
     }

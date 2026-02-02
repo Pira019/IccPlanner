@@ -10,7 +10,7 @@
         public int PosteId { get; set; }
         public DateOnly? StartAt { get; set; }
         public DateOnly? EndAt { get; set; }
-        public Poste Poste { get; set; } = null!;
+        public Poste Poste { get; set; } = null!; 
         public DepartmentMember DepartmentMember { get; set; } = null!;
     }
 }

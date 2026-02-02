@@ -11,10 +11,10 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<DepartmentProgram?> GetFirstExistingDepartmentProgramAsync(List<int> departmentIds, int programId, string programType)
+        public async Task<DepartmentProgram?> FindDepartmentProgramAsync(List<int> departmentIds, int programId, bool IndRecurent)
         {
             return await _dbSet.Where(dp => departmentIds.Contains(dp.DepartmentId) &&
-                   programId == dp.ProgramId && dp.Type == programType)
+                   programId == dp.ProgramId && dp.IndRecurent == IndRecurent)
                    .Include(dp => dp.Department)
                    .Include(dp => dp.Program)
                    .FirstOrDefaultAsync();

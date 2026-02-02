@@ -92,8 +92,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("ShortName")
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
@@ -199,11 +199,18 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreateById")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly?>("DateF")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("DateS")
+                        .HasColumnType("date");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -211,32 +218,26 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IndRecurent")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<int>("ProgramId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("character varying(25)");
-
-                    b.Property<Guid?>("UpdateById")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreateById");
-
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("UpdateById");
-
-                    b.HasIndex("ProgramId", "DepartmentId", "Type")
+                    b.HasIndex("ProgramId", "DepartmentId", "IndRecurent")
                         .IsUnique();
 
                     b.ToTable("DepartmentPrograms");
@@ -454,6 +455,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IndGest")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(55)
@@ -513,9 +517,9 @@ namespace Infrastructure.Migrations
                     b.PrimitiveCollection<List<DateOnly>>("Dates")
                         .HasColumnType("date[]");
 
-                    b.Property<string>("Days")
-                        .HasMaxLength(55)
-                        .HasColumnType("character varying(55)");
+                    b.Property<string>("Day")
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -531,8 +535,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentProgramId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentProgramId");
 
                     b.ToTable("PrgDepartmentInfos");
                 });
@@ -545,18 +548,36 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AddBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(55)
+                        .HasColumnType("character varying(55)");
 
                     b.Property<string>("ShortName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -981,12 +1002,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.DepartmentProgram", b =>
                 {
-                    b.HasOne("Domain.Entities.Member", "CreateBy")
-                        .WithMany()
-                        .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Department", "Department")
                         .WithMany("DepartmentPrograms")
                         .HasForeignKey("DepartmentId")
@@ -999,17 +1014,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Member", "UpdateBy")
-                        .WithMany()
-                        .HasForeignKey("UpdateById");
-
-                    b.Navigation("CreateBy");
-
                     b.Navigation("Department");
 
                     b.Navigation("Program");
-
-                    b.Navigation("UpdateBy");
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -1086,8 +1093,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.PrgDepartmentInfo", b =>
                 {
                     b.HasOne("Domain.Entities.DepartmentProgram", "DepartmentProgram")
-                        .WithOne("PrgDepartmentInfo")
-                        .HasForeignKey("Domain.Entities.PrgDepartmentInfo", "DepartmentProgramId")
+                        .WithMany("PrgDepartmentInfos")
+                        .HasForeignKey("DepartmentProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1212,7 +1219,7 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("FeedBacks");
 
-                    b.Navigation("PrgDepartmentInfo");
+                    b.Navigation("PrgDepartmentInfos");
                 });
 
             modelBuilder.Entity("Domain.Entities.Member", b =>

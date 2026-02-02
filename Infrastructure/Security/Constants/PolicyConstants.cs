@@ -18,8 +18,8 @@ namespace Infrastructure.Security.Constants
         
         
         // Permissions liées aux Programmes  
-        public const string CAN_CREATE_PROGRAM = "CAN_CREATE_PROGRAM";
-        public const string CAN_CREATE_DEPARTMENT_PROGRAM = "CanCreateDepartmentProgram";
+        public const string CAN_MANAG_PROGRAM = "CAN_MANAG_PROGRAM";
+        public const string CAN_MANG_DEPART_DETAIL = "CAN_MANG_DEPART_DETAIL";
 
         // Permissions liées aux Service 
         public const string MANAGER_SERVICE = "ManagerService";
