@@ -1,4 +1,5 @@
 ﻿using Application.Dtos;
+using Application.Responses.Program;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -30,5 +31,20 @@ namespace Application.Interfaces.Repositories
         ///     Retourne une collection de dates de type <see cref="DateOnly"/> correspondant aux programmes pour l'utilisateur spécifié.
         /// </returns>
         public Task<IEnumerable<DateOnly>> GetPrgDates(Guid userId, DateOnly dateFilter);
+
+
+        /// <summary>
+        ///     Obtient une liste de programmes pour un mois et une année donnés.
+        /// </summary>
+        /// <param name="month">   
+        ///     Mois pour lequel récupérer les programmes.
+        /// </param>
+        /// <param name="year">
+        ///     Année pour laquelle récupérer les programmes.
+        /// </param>
+        /// <returns>
+        ///     Liste des programmes correspondant au mois et à l'année spécifiés.
+        /// </returns>
+        public Task<GetPrg> GetByMonthYearAsync(int month, int year);
     }
 }
