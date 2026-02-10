@@ -112,13 +112,13 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> AddServicePrgDepartment([FromBody] AddServicePrgDepartmentRequest servicePrgDepartmentRequest, [FromServices] IServiceRepository serviceRepository, [FromServices] IPrgDateRepository prgDateRepository)
         {
             //Vérifier si le service est valide
-            if (!await serviceRepository.IsExist(servicePrgDepartmentRequest.ServiceId))
+            if (!await serviceRepository.IsExistAsync(servicePrgDepartmentRequest.ServiceId))
             {
                 return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.SERVICE_), null, null));
             }
 
             // Vérifier si Id Prg est correcte
-            if (!await prgDateRepository.IsExist(servicePrgDepartmentRequest.PrgDateId))
+            if (!await prgDateRepository.IsExistAsync(servicePrgDepartmentRequest.PrgDateId))
             {
                 return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.PROGRAM_), null, null));
             }

@@ -6,7 +6,9 @@ using Application.Interfaces.Services;
 using Application.Requests.Account;
 using Application.Responses.Account;
 using AutoMapper;
+using AutoMapper.Execution;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -17,21 +19,33 @@ namespace Application.Services
     /// <summary>
     /// Ce service permet de gérer les actions d'un compte
     /// </summary>
-    public class AccountService : IAccountService
+    public class AccountService : BaseService<User> , IAccountService
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly ISendEmailService _sendEmailService;
-        private readonly IMapper _mapper; 
+        private readonly ISendEmailService _sendEmailService; 
         private readonly IClaimRepository _claimRepository;
+        private readonly IInvitationRepository _invitationRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IDepartmentMemberRepository _departmentMemberRepository;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, ISendEmailService sendEmailService,
-             IClaimRepository claimRepository)
+        public AccountService(
+            IAccountRepository accountRepository,
+            ISendEmailService sendEmailService,
+            IClaimRepository claimRepository,
+            IInvitationRepository invitationRepository,
+            IDepartmentRepository departmentRepository,
+            IDepartmentMemberRepository departmentMemberRepository,
+            IBaseRepository<User> baseRepository, IMapper mapper, IHttpContextAccessor? httpContextAccessor = null) : base(baseRepository, mapper, httpContextAccessor)
         {
-            _accountRepository = accountRepository;
-            _mapper = mapper;
-            _sendEmailService = sendEmailService; 
+            _accountRepository = accountRepository; 
+            _sendEmailService = sendEmailService;
             _claimRepository = claimRepository;
+            _departmentRepository = departmentRepository;
+            _departmentMemberRepository = departmentMemberRepository;
+            _invitationRepository = invitationRepository;
         }
+
+
 
         /// <summary>
         /// Créer un compte 
@@ -117,6 +131,93 @@ namespace Application.Services
         public ClaimsResponse GetUserClaims()
         {
             return _claimRepository.GetUserClaims();
+        }
+
+        /// <summary>
+        ///     Permet de créer un compte.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private async Task<Result<IdentityResult>> CreateAccountAsync(User user, string password)
+        {
+            //1a Verifier si l`email est déjà utilisé
+            var existingUser = await _accountRepository.FindByEmailAsync(user.Email!);
+
+            if (existingUser != null)
+            {
+                return Result<IdentityResult>.Fail(ValidationMessages.AJ_EmailExiste);
+            }
+
+            //1b Verifier si le numéro de téléphone est déjà utilisé
+            var existingPhoneUser = user.PhoneNumber != null ?  await _accountRepository.IsTelExistAsync(user.PhoneNumber!) : false;
+
+            if (existingPhoneUser)
+            {
+                return Result<IdentityResult>.Fail(ValidationMessages.AJ_TelExist);
+            }
+             
+            var result = await _accountRepository.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                return Result<IdentityResult>.Fail(result.Errors.Select(e => e.Description).First());
+            }
+
+            return Result<IdentityResult>.Success(result);
+        }
+
+        public async Task<Result<bool>> CreateIntvAccount(CreateInvAccountRequest request)
+        {
+            //1a : Vérifier si l'invitation existe et est valide
+
+            var invitation = await _invitationRepository.GetByIdAsync(request.InvitationId);
+
+            if(invitation == null || !invitation.IndAct || invitation.DateExpiration < DateTime.UtcNow)
+            {
+                return Result<bool>.Fail(ValidationMessages.AJ_IdInvNonExist);
+            }
+
+            //1b Vérifier si l'invitation est déjà utilisée
+
+            if(invitation.IndUsed) {
+
+                return Result<bool>.Fail(ValidationMessages.AJ_IdInvUsed);
+            }
+
+            //1b : Vérifier si le département existe
+            bool isDepartmentExist = await _departmentRepository.IsExistAsync(invitation.DepartmentId);
+
+            if (!isDepartmentExist) { 
+
+                return Result<bool>.Fail(ValidationMessages.AJ_IdDepartNotFound);
+            }
+
+            //1d le code est invalide 
+            if (invitation.Code != request.Code)
+            {                 
+                return Result<bool>.Fail(ValidationMessages.AJ_CodeIncorrect);
+            } 
+
+            request.Email = invitation.Email;
+
+            var dto = _mapper.Map<CreateAccountDto>(request);
+
+            var result = await CreateAccountAsync(dto.User!, request.Password);
+
+            if (!result.IsSuccess) {                 
+                return Result<bool>.Fail( result.Error);
+            }
+
+            var departmentMember = _mapper.Map<DepartmentMember>(
+            dto,
+            opts => opts.Items["DepartmentId"] = invitation.DepartmentId
+            );
+
+            await _departmentMemberRepository.Insert(departmentMember);
+            // Ajouter le membre au département
+           await  _invitationRepository.MarkAsUsedAsync(invitation.Id); // Marquer l'invitation comme utilisée
+             
+           return Result<bool>.Success(true);
         }
     }
 }

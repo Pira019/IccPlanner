@@ -1,9 +1,12 @@
-﻿namespace Infrastructure.Configurations
+﻿using Application.Interfaces;
+using Shared;
+
+namespace Infrastructure.Configurations
 {
     /// <summary>
     ///   Configuration
     /// </summary>
-    public class AppSetting
+    public class AppSetting : IAppSettings
     {
         /// <summary>
         ///   Nom de l'application
@@ -44,6 +47,11 @@
         /// True si en prod
         /// </summary>
         public bool? SecureToken { get; set; }
+
+        /// <summary>
+        ///     Paramètres de l'application.
+        /// </summary>
+        public Parametres Parametres { get; set; }
 
 
     }

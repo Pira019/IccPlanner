@@ -13,6 +13,17 @@ namespace Application.Interfaces.Services
         public Task<IdentityResult> CreateAccount(CreateAccountRequest request, bool isAdmin = false);
 
         /// <summary>
+        ///     Creer un compte à partir d'une invitation, 
+        ///     en utilisant les informations fournies dans la requête <see cref="CreateInvAccountRequest"/>.
+        /// </summary>
+        /// <param name="request">
+        ///     Modele de création de compte d'invitation <see cref="CreateInvAccountRequest"/> 
+        ///     contenant les détails nécessaires pour créer le compte.
+        /// </param>
+        /// <returns></returns>
+        public Task<Result<bool>> CreateIntvAccount( CreateInvAccountRequest request);
+
+        /// <summary>
         ///  Confirmer l'adresse Email d'un compte
         /// </summary>
         /// <param name="user">L'utilisateur a valider</param>

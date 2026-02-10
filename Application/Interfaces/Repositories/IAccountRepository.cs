@@ -18,6 +18,17 @@ namespace Application.Interfaces.Repositories
         public Task<User?> FindByEmailAsync(string email);
 
         /// <summary>
+        ///     Verifier si un numéro de téléphone existe déjà
+        /// </summary>
+        /// <param name="tel">
+        ///     Teléphone à vérifier
+        /// </param>
+        /// <returns>
+        ///     Retourne true si le numéro de téléphone existe déjà, sinon false
+        /// </returns>
+        public Task<bool>IsTelExistAsync(string tel);
+
+        /// <summary>
         /// Trouver un compte(User) par l'Id
         /// </summary>
         /// <param name="id">Id de l'utilisateur</param>

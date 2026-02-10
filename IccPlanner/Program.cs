@@ -28,6 +28,7 @@ using Shared.Interfaces;
 using Shared;
 using Application.Interfaces.Responses.Errors;
 using Application.Responses.Errors;
+using Application.Interfaces;
 
 
 namespace IccPlanner
@@ -126,8 +127,10 @@ namespace IccPlanner
             builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+            builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
 
             builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
+            builder.Services.AddScoped<IAppSettings>(sp => sp.GetRequiredService<IOptions<AppSetting>>().Value);
 
             //Services             
             builder.Services.AddScoped<IRessourceLocalizer, RessourceLocalizer>();
@@ -140,6 +143,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IServiceTabService, ServiceTabService>();
             builder.Services.AddScoped<ITabServicePrgService, TabServicePrgService>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+            builder.Services.AddScoped<IInvitationService, InvitationService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -165,6 +169,8 @@ namespace IccPlanner
             {
                 opt.User.RequireUniqueEmail = true;
                 opt.SignIn.RequireConfirmedEmail = true;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 8; 
             })
              .AddEntityFrameworkStores<IccPlannerContext>()
              .AddDefaultTokenProviders();

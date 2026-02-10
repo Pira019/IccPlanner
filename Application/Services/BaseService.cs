@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Application.Services
@@ -10,15 +11,18 @@ namespace Application.Services
     /// </summary>
     public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : class
     {
-        private IBaseRepository<TEntity> _baseRepository;
+        private  IBaseRepository<TEntity> _baseRepository;
         protected readonly IMapper _mapper;
+        private IHttpContextAccessor? _httpContextAccessor;
 
-        public BaseService(IBaseRepository<TEntity> baseRepository, IMapper mapper)
+        public BaseService(IBaseRepository<TEntity> baseRepository, IMapper mapper, 
+            IHttpContextAccessor? httpContextAccessor = null)
         {
             _baseRepository = baseRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
-         
+
 
         public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
@@ -40,6 +44,11 @@ namespace Application.Services
             //Map le request body en une classe définit 
             var newEntity = _mapper.Map<TEntity>(requestBody);
             return Result<TEntity>.Success( await _baseRepository.Insert(newEntity));
+        }
+
+        protected string? GetCurrentUserId()
+        {
+            return _httpContextAccessor?.HttpContext?.User?.FindFirst("sub")?.Value;
         }
     }
 }

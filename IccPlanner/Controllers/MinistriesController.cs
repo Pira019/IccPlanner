@@ -106,7 +106,7 @@ namespace IccPlanner.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id, bool isConfirm = false)
         {
-            var ministryAn = await _ministryRepository.IsExist(id);
+            var ministryAn = await _ministryRepository.IsExistAsync(id);
 
             if (!ministryAn)
             {

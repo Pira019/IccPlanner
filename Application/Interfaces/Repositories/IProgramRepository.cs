@@ -35,6 +35,6 @@ namespace Application.Interfaces.Repositories
         /// <returns>
         ///     Retourne une valeur <see cref="bool"/> indiquant si l'utilisateur a accès au programme spécifié.
         /// </returns>
-        public Task<bool> CanUserAccessProgramAsync(int idPrg, string userId);
+        public Task<bool> CanUserAccessProgramAsync(int idPrg, string userId); 
     }
 }

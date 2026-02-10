@@ -61,6 +61,69 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The code provided is invalid. Please check your entry or contact the administrator..
+        /// </summary>
+        public static string AJ_CodeIncorrect {
+            get {
+                return ResourceManager.GetString("AJ_CodeIncorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This email is already in use. You can use the “Forgot Password” feature to regain access to your account..
+        /// </summary>
+        public static string AJ_EmailExiste {
+            get {
+                return ResourceManager.GetString("AJ_EmailExiste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The associated department was not found. Please contact the administrator..
+        /// </summary>
+        public static string AJ_IdDepartNotFound {
+            get {
+                return ResourceManager.GetString("AJ_IdDepartNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This invitation link is invalid or has expired. Please contact support if you believe this is a mistake..
+        /// </summary>
+        public static string AJ_IdInvNonExist {
+            get {
+                return ResourceManager.GetString("AJ_IdInvNonExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This invitation link has already been used. If you need access, please contact the administrator or request a new invitation..
+        /// </summary>
+        public static string AJ_IdInvUsed {
+            get {
+                return ResourceManager.GetString("AJ_IdInvUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Unable to send a new invitation: this email has already been used for an invitation. Please check if the user has already been added to the system before retrying..
+        /// </summary>
+        public static string AJ_InvitExist {
+            get {
+                return ResourceManager.GetString("AJ_InvitExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This phone number is already in use..
+        /// </summary>
+        public static string AJ_TelExist {
+            get {
+                return ResourceManager.GetString("AJ_TelExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Availability not found. Please try again later or contact the support team..
         /// </summary>
         public static string AVAILAIBILITY_NOT_FOUND {
@@ -93,6 +156,15 @@ namespace Shared.Ressources {
         public static string CANT_DELETE_AVAIBILITY {
             get {
                 return ResourceManager.GetString("CANT_DELETE_AVAIBILITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à City.
+        /// </summary>
+        public static string CITY {
+            get {
+                return ResourceManager.GetString("CITY", resourceCulture);
             }
         }
         
@@ -259,6 +331,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Email.
+        /// </summary>
+        public static string EMAIL {
+            get {
+                return ResourceManager.GetString("EMAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à End time.
         /// </summary>
         public static string END_TIME {
@@ -318,6 +399,15 @@ namespace Shared.Ressources {
         public static string FILE_TOO_LARGE {
             get {
                 return ResourceManager.GetString("FILE_TOO_LARGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à First name.
+        /// </summary>
+        public static string FIRSTNAME {
+            get {
+                return ResourceManager.GetString("FIRSTNAME", resourceCulture);
             }
         }
         
@@ -466,6 +556,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Id Invitation .
+        /// </summary>
+        public static string Invitation {
+            get {
+                return ResourceManager.GetString("Invitation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {PropertyName} must not exceed {MaxLength} characters..
         /// </summary>
         public static string MAX_LENGTH {
@@ -507,6 +606,15 @@ namespace Shared.Ressources {
         public static string MEMBER_ARRIVAL {
             get {
                 return ResourceManager.GetString("MEMBER_ARRIVAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must be at least {MinLength} characters long..
+        /// </summary>
+        public static string MIN_LENGHT {
+            get {
+                return ResourceManager.GetString("MIN_LENGHT", resourceCulture);
             }
         }
         
@@ -583,6 +691,24 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must contain at least one number..
+        /// </summary>
+        public static string MUST_DIGIT {
+            get {
+                return ResourceManager.GetString("MUST_DIGIT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {PropertyName} must contain at least one uppercase letter..
+        /// </summary>
+        public static string MUST_UPPER {
+            get {
+                return ResourceManager.GetString("MUST_UPPER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Name.
         /// </summary>
         public static string NAME {
@@ -624,6 +750,42 @@ namespace Shared.Ressources {
         public static string NOT_NULL {
             get {
                 return ResourceManager.GetString("NOT_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Pasword.
+        /// </summary>
+        public static string PASSWORD {
+            get {
+                return ResourceManager.GetString("PASSWORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Password confirmation.
+        /// </summary>
+        public static string PASSWORD_CONFIRM {
+            get {
+                return ResourceManager.GetString("PASSWORD_CONFIRM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The password and confirmation must match..
+        /// </summary>
+        public static string PASSWORD_CONFIRM_INVALID {
+            get {
+                return ResourceManager.GetString("PASSWORD_CONFIRM_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The password must be alphanumeric and contain at least one uppercase letter..
+        /// </summary>
+        public static string PASSWORD_INVALID {
+            get {
+                return ResourceManager.GetString("PASSWORD_INVALID", resourceCulture);
             }
         }
         
@@ -682,6 +844,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Quarter.
+        /// </summary>
+        public static string QUARTER {
+            get {
+                return ResourceManager.GetString("QUARTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Service.
         /// </summary>
         public static string SERVICE {
@@ -732,6 +903,24 @@ namespace Shared.Ressources {
         public static string SERVICE_PRG {
             get {
                 return ResourceManager.GetString("SERVICE_PRG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Sex.
+        /// </summary>
+        public static string SEX {
+            get {
+                return ResourceManager.GetString("SEX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The value of sex must be &apos;M&apos; or &apos;F&apos;..
+        /// </summary>
+        public static string SEXE_IVALID {
+            get {
+                return ResourceManager.GetString("SEXE_IVALID", resourceCulture);
             }
         }
         

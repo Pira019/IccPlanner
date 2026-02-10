@@ -14,16 +14,19 @@ namespace Application.Services
     public class ProgramService : BaseService<Program>, IProgramService
     {
         private readonly IProgramRepository _IProgramRepository;
+        private readonly IPrgDateRepository _prgDateRepository;
         private readonly IClaimRepository _ClaimRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
 
         public ProgramService(IBaseRepository<Program> baseRepository, IMapper mapper,
+            IPrgDateRepository prgDateRepository,
             IProgramRepository programRepository, IClaimRepository claimRepository, IDepartmentMemberRepository departmentMemberRepository)
             : base(baseRepository, mapper)
         {
             _IProgramRepository = programRepository;
             _ClaimRepository = claimRepository;
             _departmentMemberRepository = departmentMemberRepository;
+            _prgDateRepository = prgDateRepository;
         }
 
         public async Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userAuth)
@@ -101,6 +104,12 @@ namespace Application.Services
             await _IProgramRepository.UpdateAsync(program);
 
             return Result<bool>.Success(true);
+        }
+
+        public async Task<Result<GetPrg>> GetByMonthYear(int month, int year)
+        {
+            var result = await  _prgDateRepository.GetByMonthYearAsync(month, year); 
+            return Result<GetPrg>.Success(result);
         }
     }
 }

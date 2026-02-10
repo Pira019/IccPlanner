@@ -45,7 +45,7 @@ namespace Application.Helper.Validators
 
         private bool IsDepartementExist(int departmentId)
         {
-            return _departmentRepository.IsExist(departmentId).Result;
+            return _departmentRepository.IsExistAsync(departmentId).Result;
         }
 
         // Fonction pour valider que le fichier est bien un fichier Excel

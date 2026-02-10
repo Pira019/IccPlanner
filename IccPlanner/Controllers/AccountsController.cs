@@ -5,6 +5,7 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Account;
 using Application.Responses.Errors;
+using Application.Services;
 using Domain.Enums;
 using Infrastructure.Configurations.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -97,6 +98,26 @@ namespace IccPlanner.Controllers
             await tokenProvider.AppendUserCookie(token, Response, request.Remember);
             return Ok();
         }
+
+        // <summary>
+        /// Authentifier un utilisateur
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] CreateInvAccountRequest request)
+        { 
+            var result = await _accountService.CreateIntvAccount(request);
+
+            if(!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            } 
+            return Created(string.Empty,string.Empty);
+        }
+
 
         /// <summary>
         ///     Récupérer les claims de l'utilisateur authentifié et rafraîchir le token JWT.

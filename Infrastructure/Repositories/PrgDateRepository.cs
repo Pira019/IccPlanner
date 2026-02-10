@@ -1,5 +1,6 @@
 ﻿
 using Application.Interfaces.Repositories;
+using Application.Responses.Program;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,43 @@ namespace Infrastructure.Repositories
     {
         public PrgDateRepository(IccPlannerContext plannerContext) : base(plannerContext)
         {
+        }
+
+        public async Task<GetPrg> GetByMonthYearAsync(int month, int year)
+        {
+            var query = _dbSet
+                  .Where(x => x.Date.HasValue
+                              && x.Date.Value.Month == month
+                              && x.Date.Value.Year == year);
+
+            // Liste complète des événements
+            var events = await query
+                .Select(prgDate => new GetEvent
+                {
+                    Id = prgDate.Id,
+                    IdPrg = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Id,
+                    Title = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
+                    IndRecurrent = prgDate.PrgDepartmentInfo.DepartmentProgram.IndRecurent,
+                    Date = prgDate.Date!.Value.ToString("yyyy-MM-dd")
+                })
+                .ToListAsync();
+
+            // Liste distincte des programmes
+            var programs = events
+                .GroupBy(e => new { e.IdPrg, e.Title })       
+                .Select(g => new PrgResponse
+                {
+                    Id = g.Key.IdPrg,       
+                    Name = g.Key.Title
+                })
+                .OrderBy(p => p.Name) 
+                .ToList();
+
+            return new GetPrg
+            {
+                Events = events,
+                Prgs = programs
+            };
         }
 
         // <inheritdoc />

@@ -43,24 +43,15 @@ namespace IccPlanner.Controllers
             return Created(string.Empty, res.Value);
         }
 
-        [HttpGet]
-        [Authorize(Policy = PolicyConstants.CAN_MANAG_PROGRAM)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)] 
-        [ProducesResponseType<PaginatedDto<ProgramDto>>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProgram(int page=1,int pageSize = 25)
-        {
-            var result = await _programService.GetPaginatedProgram(page,pageSize);
-            return Ok(result);
-        }
-
-        [HttpPost("filter")]
+        [HttpGet("{month}/{year}")]
+        [Authorize()]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<GetProgramFilterResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProgramFilterAsync([FromBody] GetProgramFilterRequest filter)
+        [ProducesResponseType<GetPrg>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get(int month, int year)
         {
-            return Ok(/* await _programRepository.GetProgramFilterAsync(filter) */);
+            var result = await _programService.GetByMonthYear(month, year);
+            return Ok(result.Value);
         }
 
         [HttpPut("{id}")]
