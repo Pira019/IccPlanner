@@ -81,7 +81,7 @@ namespace Test.Application.UnitTest.Services
         {
             //Arrange
             var id =10;
-            _ministryRepository.IsExist(id).Returns(Task.FromResult(false));
+            _ministryRepository.IsExistAsync(id).Returns(Task.FromResult(false));
 
             //Act
             var result = await _ministryService.IsMinistryExistsById(id);

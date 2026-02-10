@@ -96,7 +96,7 @@ namespace Application.Services
                 return Result<bool>.Fail(ValidationMessages.DEPARTMENT_INVALID_IDS); 
             }
 
-            var prgExis = await _programRepository.IsExist(departmentProgramRequest.ProgramId);
+            var prgExis = await _programRepository.IsExistAsync(departmentProgramRequest.ProgramId);
 
             //Check si le programme existe
             if (!prgExis) {

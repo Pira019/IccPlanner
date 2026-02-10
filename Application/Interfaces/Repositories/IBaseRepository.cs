@@ -35,7 +35,7 @@
         /// <param name="id">Id du model</param>
         /// <returns>Return <see cref="Task"/> qui représente l'opération asynchrone de type <see cref="bool"/>
         /// true si il existe un entité et false si non</returns>
-        public Task<bool> IsExist(object id);
+        public Task<bool> IsExistAsync(object id);
 
         /// <summary>
         /// Exécuter une opération en masse pour créer plusieurs entités 

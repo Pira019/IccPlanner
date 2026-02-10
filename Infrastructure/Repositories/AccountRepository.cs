@@ -90,6 +90,11 @@ namespace Infrastructure.Repositories
             return _iccPlannerContext.Members.AnyAsync(x => x.Id == Guid.Parse(memberId));
         }
 
+        public async Task<bool> IsTelExistAsync(string tel)
+        {
+            return await _iccPlannerContext.Users.AnyAsync(u => u.PhoneNumber == tel);
+        }
+
         public async Task<int> SaveImportedMembersDepartment(IEnumerable<User> users)
         {
             var usersImported = await FilterUsersWithUniquePhoneNumbers(users);

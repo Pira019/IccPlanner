@@ -39,7 +39,7 @@ namespace Infrastructure.Repositories
             return entity;
         }
 
-        public async Task<bool> IsExist(object id)
+        public async Task<bool> IsExistAsync(object id)
         {
             // Convertir le paramètre id en chaîne ou entier si possible
             var idValue = id switch

@@ -73,7 +73,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
             await _baseRepository.InsertAllAsync(dataTest);
 
             //Act
-            var result = await _baseRepository.IsExist(objetId);
+            var result = await _baseRepository.IsExistAsync(objetId);
             
             // Assert
             result.Should().BeTrue();  
@@ -83,7 +83,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
         public async Task IsExist_ShouldReturnFalse()
         {             
             //Act
-            var result = await _baseRepository.IsExist(Arg.Any<string>());
+            var result = await _baseRepository.IsExistAsync(Arg.Any<string>());
 
             // Assert
             result.Should().BeFalse();
@@ -93,7 +93,7 @@ namespace Test.Infrastructure.UnitTest.Repositories
         public async Task IsExist_WhenInt_ShouldReturnFalse()
         {
             //Act
-            var result = await _baseRepository.IsExist(Arg.Any<int>());
+            var result = await _baseRepository.IsExistAsync(Arg.Any<int>());
 
             // Assert
             result.Should().BeFalse();

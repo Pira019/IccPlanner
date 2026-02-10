@@ -366,4 +366,67 @@
   <data name="DATES_SUP" xml:space="preserve">
     <value>La date de début doit être inférieure à la date de fin.</value>
   </data>
+  <data name="AJ_InvitExist" xml:space="preserve">
+    <value>Impossible d’envoyer une nouvelle invitation : cet email a déjà utilisé une invitation. Vérifiez si l’utilisateur a déjà été ajouté dans le système avant de réessayer. </value>
+  </data>
+  <data name="AJ_IdInvNonExist" xml:space="preserve">
+    <value>Cette invitation est invalide ou a expiré. Si vous pensez qu’il s’agit d’une erreur, veuillez contacter le support.                                                            </value>
+  </data>
+  <data name="AJ_IdInvUsed" xml:space="preserve">
+    <value>Ce lien d’invitation a déjà été utilisé. Si vous avez besoin d’un accès, veuillez contacter l’administrateur ou demander une nouvelle invitation.</value>
+  </data>
+  <data name="AJ_IdDepartNotFound" xml:space="preserve">
+    <value>Le département associé n’a pas été trouvé. Veuillez contacter l’administrateur.</value>
+  </data>
+  <data name="AJ_CodeIncorrect" xml:space="preserve">
+    <value>Le code fourni est invalide. Merci de vérifier votre saisie ou de contacter l’administrateur.</value>
+  </data>
+  <data name="AJ_EmailExiste" xml:space="preserve">
+    <value>Cet email est déjà utilisé. Vous pouvez utiliser la fonction « Mot de passe oublié » pour récupérer l’accès à votre compte.</value>
+  </data>
+  <data name="AJ_TelExist" xml:space="preserve">
+    <value>Ce numéro de téléphone est déjà utilisé.</value>
+  </data>
+  <data name="Invitation" xml:space="preserve">
+    <value>Id Invitation </value>
+  </data>
+  <data name="FIRSTNAME" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="EMAIL" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SEX" xml:space="preserve">
+    <value>Sexe</value>
+  </data>
+  <data name="SEXE_IVALID" xml:space="preserve">
+    <value>La valeur du sexe doit être 'M' ou 'F'.</value>
+  </data>
+  <data name="CITY" xml:space="preserve">
+    <value>Ville</value>
+  </data>
+  <data name="QUARTER" xml:space="preserve">
+    <value>Quartier</value>
+  </data>
+  <data name="PASSWORD" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="PASSWORD_INVALID" xml:space="preserve">
+    <value>Le mot de passe doit être alphanumérique et contenir au moins une lettre majuscule.</value>
+  </data>
+  <data name="PASSWORD_CONFIRM" xml:space="preserve">
+    <value>La confirmation du mot de passe</value>
+  </data>
+  <data name="PASSWORD_CONFIRM_INVALID" xml:space="preserve">
+    <value>Le mot de passe et la confirmation doivent être identiques.</value>
+  </data>
+  <data name="MUST_DIGIT" xml:space="preserve">
+    <value>{PropertyName} doit contenir au moins un chiffre.</value>
+  </data>
+  <data name="MIN_LENGHT" xml:space="preserve">
+    <value>{PropertyName} doit contenir au moins {MinLength} caractères.</value>
+  </data>
+  <data name="MUST_UPPER" xml:space="preserve">
+    <value>{PropertyName} doit contenir au moins une lettre majuscule.</value>
+  </data>
 </root>
