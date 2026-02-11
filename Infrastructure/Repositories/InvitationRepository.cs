@@ -18,6 +18,13 @@ namespace Infrastructure.Repositories
             return _dbSet.FirstOrDefaultAsync(invitation => invitation.Email.ToLower() == email.ToLower());
         }
 
+        public async Task<Invitation?> FindValidInv(int invitationId)
+        {
+           return await _dbSet.FirstOrDefaultAsync(i => i.Id == invitationId
+                                                    &&  i.DateExpiration > DateTime.UtcNow 
+                                                    && !i.IndUsed);
+        }
+
         public async Task<bool> IsEmailUsedAsync(string email)
         {
             return await _dbSet.AnyAsync(invitation => invitation.Email.ToLower() == email.ToLower() 

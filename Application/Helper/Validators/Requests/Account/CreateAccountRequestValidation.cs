@@ -30,7 +30,7 @@ namespace Application.Helper.Validators.Requests.Account
 
             // Téléphone (optionnel)
             RuleFor(x => x.Tel)
-                .Matches(@"^\+?[0-9]{7,15}$").WithMessage(string.Format(ValidationMessages.INVALID_VALUE, ValidationMessages.EMAIL))
+                .Matches(@"^\+?[0-9]{7,15}$").WithMessage(string.Format(ValidationMessages.INVALID_VALUE, ValidationMessages.TEL))
                 .When(x => !string.IsNullOrEmpty(x.Tel));
 
             // Ville (optionnel)

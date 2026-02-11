@@ -429,4 +429,7 @@
   <data name="MUST_UPPER" xml:space="preserve">
     <value>{PropertyName} doit contenir au moins une lettre majuscule.</value>
   </data>
+  <data name="TEL" xml:space="preserve">
+    <value>Téléphone </value>
+  </data>
 </root>

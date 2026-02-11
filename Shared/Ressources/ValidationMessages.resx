@@ -429,4 +429,7 @@
   <data name="MUST_UPPER" xml:space="preserve">
     <value>{PropertyName} must contain at least one uppercase letter.</value>
   </data>
+  <data name="TEL" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
 </root>

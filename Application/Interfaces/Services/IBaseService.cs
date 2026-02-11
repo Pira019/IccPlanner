@@ -30,6 +30,6 @@
         /// <param name="id"></param>
         /// <returns></returns>
         public Task DeleteByIdAsync(int id);
-        public Task DeleteSoftByIdAsync(int id);
+        public Task DeleteSoftByIdAsync(int id); 
     }
 } 

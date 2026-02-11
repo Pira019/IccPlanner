@@ -943,6 +943,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Phone number.
+        /// </summary>
+        public static string TEL {
+            get {
+                return ResourceManager.GetString("TEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unauthorized access..
         /// </summary>
         public static string UNAUTHORIZED {
