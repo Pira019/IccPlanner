@@ -1,8 +1,10 @@
-﻿using Application.Interfaces.Services;
+﻿using Application;
+using Application.Interfaces.Services;
 using Application.Requests.Invitation;
 using Application.Responses;
 using Application.Responses.Department;
 using Application.Responses.Errors;
+using Application.Responses.Invitation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Ressources;
@@ -45,15 +47,17 @@ namespace IccPlanner.Controllers
         }
 
         // PUT api/<InvitationsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("{id}")] 
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<InvitationResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get(int id)
         {
-        }
-
-        // DELETE api/<InvitationsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            var response = await _invitationService.FindValidInviation(id);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(response.Error, null, null));
+            }
+            return Ok(response.Value);
+        } 
     }
 }

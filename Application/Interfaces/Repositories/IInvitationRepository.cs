@@ -35,5 +35,12 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <returns></returns>
         public Task MarkAsUsedAsync(int invitationId); 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="invitationId"></param>
+    /// <returns></returns>
+        public Task<Invitation?> FindValidInv(int invitationId); 
     }
 }

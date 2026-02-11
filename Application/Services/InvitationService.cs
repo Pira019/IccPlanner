@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Invitation;
+using Application.Responses.Invitation;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,17 @@ namespace Application.Services
             _invitationRepository = invitationRepository;
             _httpContextAccessor = httpContextAccessor;
             _appSettings = appSettings;
+        }
+
+        public async Task<Result<InvitationResponse>> FindValidInviation(int id)
+        {
+          var invitation = await _invitationRepository.FindValidInv(id);
+
+            if (invitation == null) { 
+
+                return Result<InvitationResponse>.Fail(ValidationMessages.AJ_IdInvNonExist);
+            }
+            return Result<InvitationResponse>.Success(_mapper.Map<InvitationResponse>(invitation));
         }
 
         public async Task<Result<bool>> SendInvitationAnsyc(SendRequest request)
@@ -77,6 +89,7 @@ namespace Application.Services
         {
             var user = _httpContextAccessor.HttpContext?.User;
             return user?.FindFirst("sub")?.Value ?? string.Empty;
-        }
+        }         
+        
     }
 }
