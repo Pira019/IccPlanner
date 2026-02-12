@@ -7,6 +7,7 @@ using Application.Requests.Account;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Shared.Utiles;
 
 namespace Application.Dtos.UserDTOs
 {
@@ -29,11 +30,11 @@ namespace Application.Dtos.UserDTOs
 
 
             CreateMap<CreateAccountRequest, Member>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => SharedUtiles.CapitalizeFirstLetter(src.Name)))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => SharedUtiles.CapitalizeFirstLetter(src.LastName!)))
             .ForMember(dest => dest.Sexe, opt => opt.MapFrom(src => src.Sexe))
-            .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
-            .ForMember(dest => dest.Quarter, opt => opt.MapFrom(src => src.Quarter));
+            .ForMember(dest => dest.City, opt => opt.MapFrom(src => SharedUtiles.CapitalizeFirstLetter(src.City)))
+            .ForMember(dest => dest.Quarter, opt => opt.MapFrom(src => SharedUtiles.CapitalizeFirstLetter((src.Quarter))));
 
             // Pour CreateInvAccountRequest : pas besoin d'IncludeBase, les propriétés publiques sont déjà mappées
             CreateMap<CreateInvAccountRequest, Member>();
