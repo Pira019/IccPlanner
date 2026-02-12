@@ -44,9 +44,8 @@ namespace IccPlanner.Controllers
                 return BadRequest(response.Error);
             }
             return Created(string.Empty, string.Empty);
-        }
+        } 
 
-        // PUT api/<InvitationsController>/5
         [HttpGet("{id}")] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<InvitationResponse>(StatusCodes.Status200OK)]

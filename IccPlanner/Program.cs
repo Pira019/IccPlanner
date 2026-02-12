@@ -128,6 +128,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
             builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
+            builder.Services.AddScoped<IMemberRepository, MemberRespository>();
 
             builder.Services.AddScoped<IAccountResponseError, AccountResponseError>();
             builder.Services.AddScoped<IAppSettings>(sp => sp.GetRequiredService<IOptions<AppSetting>>().Value);
@@ -144,6 +145,7 @@ namespace IccPlanner
             builder.Services.AddScoped<ITabServicePrgService, TabServicePrgService>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
             builder.Services.AddScoped<IInvitationService, InvitationService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
