@@ -21,19 +21,14 @@ namespace Application.Helper.Validators.Requests.ServieTab
             RuleFor(x => x.PrgDateId)
                 .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM)
                 .GreaterThan(0).WithMessage(ValidationMessages.INVALID_ENTRY).WithName(ValidationMessages.PROGRAM);
-
-            RuleFor(x => x.DisplayName)
-               .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.DISPLAY_NAME);
+             
 
             RuleFor(x => x.MemberArrivalTime)
-                .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.PROGRAM)
-               .Must((model, arrivalTime) =>
-               {
-                   if (string.IsNullOrWhiteSpace(arrivalTime))
-                       return true; 
-                   return SharedUtiles.BeAValidTimeOnly(arrivalTime);
+              .Must(SharedUtiles.BeAValidTimeOnly)
+              .When(x => !string.IsNullOrWhiteSpace(x.MemberArrivalTime))
+              .WithMessage(ValidationMessages.INVALID_ENTRY)
+              .WithName(ValidationMessages.MEMBER_ARRIVAL);
 
-               }).WithMessage(ValidationMessages.INVALID_ENTRY).WithName(ValidationMessages.MEMBER_ARRIVAL);    
         }
     }
 }

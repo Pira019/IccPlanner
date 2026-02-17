@@ -18,16 +18,14 @@ namespace IccPlanner.Controllers
     public class ServicesController : PlannerBaseController
     {
         private IServiceTabService _serviceTabService;
-        private ITabServicePrgService _tabServicePrgService;
-        private ITabServicePrgRepository _tabServicePrgRepository;
+        private ITabServicePrgService _tabServicePrgService; 
         private IDepartmentRepository _departmentRepository;
 
         public ServicesController(IAccountRepository accountRepository, IServiceTabService serviceTabService, ITabServicePrgService tabServicePrgService,
-            ITabServicePrgRepository tabServicePrgRepository, IDepartmentRepository departmentRepository) : base(accountRepository)
+            IDepartmentRepository departmentRepository) : base(accountRepository)
         {
             _serviceTabService = serviceTabService;
-            _tabServicePrgService = tabServicePrgService;
-            _tabServicePrgRepository = tabServicePrgRepository;
+            _tabServicePrgService = tabServicePrgService; 
             _departmentRepository = departmentRepository;
         }
 
@@ -38,25 +36,21 @@ namespace IccPlanner.Controllers
         ///     Modèle de donnée a recevoir 
         /// </param>
         /// <returns></returns>
-       /* [HttpPost]
-        [Authorize(Policy = PolicyConstants.MANAGER_SERVICE)]
+        [HttpPost] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseAddResponse>(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] AddServiceRequest serviceRequest)
         {
-            var isServiceExist = await _serviceTabService.IsServiceExist(serviceRequest.StartTime, serviceRequest.EndTime, serviceRequest.DisplayName);
+            var resultat = await _serviceTabService.Add(serviceRequest);
 
-            if (isServiceExist)
+            if (!resultat.IsSuccess)
             {
-                return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.SERVICE_EXISTS,
-                        serviceRequest.DisplayName, serviceRequest.StartTime, serviceRequest.EndTime), null, null));
-            }
-
-          //  var resultat = await _serviceTabService.Add(serviceRequest);
-            return Created(string.Empty, resultat);
-        }*/
+                return BadRequest(ApiError.ErrorMessage(resultat.Error, null, null));
+            } 
+            return Created(string.Empty, resultat.Value);
+        }
 
         /// <summary>
         ///     Obtenir tous les services
@@ -104,32 +98,41 @@ namespace IccPlanner.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPost("program-department")]
-        [Authorize(Policy = PolicyConstants.MANAGER_SERVICE)]
+        [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseAddResponse>(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddServicePrgDepartment([FromBody] AddServicePrgDepartmentRequest servicePrgDepartmentRequest, [FromServices] IServiceRepository serviceRepository, [FromServices] IPrgDateRepository prgDateRepository)
+        public async Task<IActionResult> AddServicePrgDepartment([FromBody] AddServicePrgDepartmentRequest servicePrgDepartmentRequest)
         {
-            //Vérifier si le service est valide
-            if (!await serviceRepository.IsExistAsync(servicePrgDepartmentRequest.ServiceId))
-            {
-                return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.SERVICE_), null, null));
-            }
+            var res = await _tabServicePrgService.AddServicePrg(servicePrgDepartmentRequest);
 
-            // Vérifier si Id Prg est correcte
-            if (!await prgDateRepository.IsExistAsync(servicePrgDepartmentRequest.PrgDateId))
+            if (!res.IsSuccess)
             {
-                return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.PROGRAM_), null, null));
-            }
-
-            if (await _tabServicePrgRepository.IsServicePrgExist(servicePrgDepartmentRequest.ServiceId, servicePrgDepartmentRequest.PrgDateId))
-            {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.PGM_SERVICE_EXIST, null, null));
-            }
-
-            await _tabServicePrgService.AddServicePrg(servicePrgDepartmentRequest);
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            } 
             return Created(string.Empty, string.Empty);
+        }
+
+        /// <summary>
+        ///     Recherche des programme
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("search-programs")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)] 
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<GetServicesListResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchPrgDepartment([FromBody] ServicesRequest request)
+        {
+            var res = await _tabServicePrgService.GetPrgServices(request);
+
+            if (!res.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            }
+            return Ok(res.Value);
         }
     }
 }

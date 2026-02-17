@@ -149,13 +149,18 @@ namespace Application.Services
             }
 
             //1b Verifier si le numéro de téléphone est déjà utilisé
-            var existingPhoneUser = user.PhoneNumber != null ?  await _accountRepository.IsTelExistAsync(user.PhoneNumber!) : false;
+            bool existingPhoneUser = false;
+
+            if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
+            {
+                existingPhoneUser = await _accountRepository.IsTelExistAsync(user.PhoneNumber);
+            }
 
             if (existingPhoneUser)
             {
                 return Result<IdentityResult>.Fail(ValidationMessages.AJ_TelExist);
             }
-             
+
             var result = await _accountRepository.CreateAsync(user, password);
 
             if (!result.Succeeded)

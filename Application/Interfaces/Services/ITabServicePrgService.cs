@@ -2,6 +2,7 @@
  
 using Application.Requests.ServiceTab;
 using Application.Responses.TabService;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Application.Interfaces.Services
 {
@@ -14,7 +15,7 @@ namespace Application.Interfaces.Services
         /// <param name="prgDepartmentRequest">
         ///     Corps de la requête <see cref="AddServicePrgDepartmentRequest"/>
         /// </param> 
-        public Task AddServicePrg(AddServicePrgDepartmentRequest prgDepartmentRequest);
+        public Task<Result<bool>> AddServicePrg(AddServicePrgDepartmentRequest prgDepartmentRequest);
 
         /// <summary>
         ///     Permet de récupérer les dates d'un programme pour un utilisateur.
@@ -32,5 +33,6 @@ namespace Application.Interfaces.Services
         ///     Retourne un objet <see cref="GetDatesResponse"/> contenant les dates du programme pour l'utilisateur spécifié.
         /// </returns>
         public Task<GetDatesResponse> GetDates( Guid? userId,int? month = null, int? year = null);  
+        public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);  
     }
 }
