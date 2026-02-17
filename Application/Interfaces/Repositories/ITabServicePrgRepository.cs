@@ -2,6 +2,8 @@
 
 // Ignore Spelling: Prg
 
+using Application.Requests.ServiceTab;
+using Application.Responses.TabService;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -20,7 +22,7 @@ namespace Application.Interfaces.Repositories
         /// <returns>
         ///     Une valeur <see cref="bool"/> 
         /// </returns>
-        public Task<bool> IsServicePrgExist(int tabServiceId, int prgDateId);
+        public Task<bool> IsServicePrgExistAsync(int tabServiceId, int prgDateId);
 
         /// <summary>
         ///     Permet de récupérer l'id du département par depuis ID de la table TabServicePrg.     
@@ -32,5 +34,12 @@ namespace Application.Interfaces.Repositories
         ///     Id du département. 
         /// </returns>
         public Task<int?> GetDepartmentIdByServicePrgId(int servicePrgId);
+
+        /// <summary>
+        ///         Retourne la liste des services d'un programme selon les critères de recherche.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public Task<List<GetServicesListResponse>> GetServicesAsync(ServicesRequest request);
     }
 }

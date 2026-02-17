@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,8 +12,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
-        {
-            builder.HasIndex(x => x.PhoneNumber).IsUnique();
+        { 
 
             builder.Property(m => m.Status)
                 .HasConversion(
@@ -24,6 +24,7 @@ namespace Infrastructure.Persistence.EntityConfigurations
                 .WithOne(member => member.User)
                 .HasForeignKey<User>(u => u.MemberId)
                 .OnDelete(DeleteBehavior.Restrict);
+             
         }
     }
 }

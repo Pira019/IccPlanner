@@ -2,9 +2,11 @@
 using Application.Interfaces.Services;
 using Application.Requests.ServiceTab;
 using Application.Responses;
+using Application.Responses.Errors;
 using Application.Responses.TabService;
 using AutoMapper;
 using Domain.Entities;
+using Shared.Ressources;
 
 namespace Application.Services
 {
@@ -18,14 +20,27 @@ namespace Application.Services
         {
             _serviceRepository = repository;
         }
-
-       /* public override async Task<TabServices> Add(TabServices entity)
+         
+        public async Task<Result<int>> Add(AddServiceRequest request)
         {
-            /*var result = await base.Add(entity);
-            return _mapper.Map<BaseAddResponse>(result);
-        }*/
+            var start = TimeOnly.Parse(request.StartTime);
+            var end = TimeOnly.Parse(request.EndTime);
 
-        public async Task<bool> IsServiceExist(string startTime, string endTime, string displayServiceName)
+            var existService = await _serviceRepository.IsServiceExist(start, end, request.DisplayName);
+
+            if (existService)
+            {
+                return Result<int>.Fail(string.Format(ValidationMessages.SERVICE_EXISTS,request.DisplayName, request.StartTime, request.EndTime ));
+            }
+             
+            var mapService = _mapper.Map<TabServices>(request);
+
+            var rsl = await _serviceRepository.Insert(mapService);
+
+            return Result<int>.Success(mapService.Id);  
+        }
+
+        public async  Task<bool> IsServiceExist(string startTime, string endTime, string displayServiceName)
         {
             var start = TimeOnly.Parse(startTime);
             var end = TimeOnly.Parse(endTime);

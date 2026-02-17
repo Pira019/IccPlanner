@@ -2,17 +2,15 @@
 {
     public class SharedUtiles
     {
-        public static string CapitalizeFirstLetter(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-                return input;
+            public static string CapitalizeFirstLetter(string? input) =>
+            input switch
+            {
+                null => string.Empty,
+                "" => string.Empty,
+                var s when s.Length == 1 => s.ToUpper(),
+                var s => char.ToUpper(s[0]) + s.Substring(1).ToLower()
+            };
 
-            // Si la chaîne a une longueur supérieure à 1, on capitalise la première lettre et on met le reste en minuscules
-            if (input.Length == 1)
-                return input.ToUpper(); 
-
-            return char.ToUpper(input[0]) + input.Substring(1).ToLower();
-        }
 
         public static bool BeAValidTimeOnly(string time)
         {
