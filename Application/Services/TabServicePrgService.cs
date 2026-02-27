@@ -3,6 +3,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using AutoMapper;
 using Domain.Entities;
@@ -92,6 +93,12 @@ namespace Application.Services
         {
             var rsl = await _tabServicePrgRepository.GetServicesAsync(request);
             return Result<List<GetServicesListResponse>>.Success(rsl);
+        }
+
+        public async Task<Result<List<GetServiceByDepart>>> GetServicePrgByDepartAsync(int idDepart, int month, int year)
+        {
+            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, month, year);
+            return Result<List<GetServiceByDepart>>.Success(rsl);
         }
     }
 }

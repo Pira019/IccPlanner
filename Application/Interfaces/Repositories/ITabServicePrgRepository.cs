@@ -3,6 +3,7 @@
 // Ignore Spelling: Prg
 
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using Domain.Entities;
 
@@ -41,5 +42,6 @@ namespace Application.Interfaces.Repositories
         /// <param name="request"></param>
         /// <returns></returns>
         public Task<List<GetServicesListResponse>> GetServicesAsync(ServicesRequest request);
+        public Task<List<GetServiceByDepart>> GetServicePrgByDepart(int idDepart, int month, int year);
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Prg
  
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -33,6 +34,7 @@ namespace Application.Interfaces.Services
         ///     Retourne un objet <see cref="GetDatesResponse"/> contenant les dates du programme pour l'utilisateur spécifié.
         /// </returns>
         public Task<GetDatesResponse> GetDates( Guid? userId,int? month = null, int? year = null);  
-        public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);  
+        public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);
+        public Task<Result<List<GetServiceByDepart>>> GetServicePrgByDepartAsync(int idDepart, int month, int year);
     }
 }

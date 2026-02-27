@@ -1,9 +1,11 @@
 ﻿// Ignore Spelling: Prg
 
 using System.Security.Cryptography;
+using Application;
 using Application.Dtos.TabServicePrgDto;
 using Application.Interfaces.Repositories;
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -25,6 +27,38 @@ namespace Infrastructure.Repositories
                  .Where(service => service.Id == servicePrgId)
                  .Select(service => service.PrgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId)
                  .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<GetServiceByDepart>> GetServicePrgByDepart(int idDepart, int month, int year)
+        {
+            return await PlannerContext.PrgDates
+                    .Where(pd => pd.TabServicePrgs.Any() && pd.Date.Value.Year == year && pd.Date.Value.Month ==  month 
+                            && pd.PrgDepartmentInfo.DepartmentProgram.DepartmentId == idDepart)
+                    .Select(pd => new GetServiceByDepart
+                    {
+                        Date = pd.Date,
+                        ServicePrgDates = pd.TabServicePrgs
+                            .GroupBy(s => new
+                            {
+                                s.PrgDate.PrgDepartmentInfo.DepartmentProgramId,
+                                s.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name
+                            })
+                            .Select(g => new ServicePrgLst
+                            {
+                                PrgName = g.Key.Name,
+                                ServicePrg = g.Select(s => new ServicePrg
+                                {
+                                    Id = s.Id,
+                                    DisplayName = s.DisplayName,
+                                    Comment = s.Notes,
+                                    StartTime = s.TabServices.StartTime.ToString(),
+                                    EndTime = s.TabServices.EndTime.ToString(),
+                                    ArrivalTime = s.ArrivalTimeOfMember.HasValue ? s.ArrivalTimeOfMember.ToString() : string.Empty
+                                }).ToList()
+                            })
+                            .ToList()
+                    })
+                    .ToListAsync();
         }
 
         public async Task<List<GetServicesListResponse>> GetServicesAsync(ServicesRequest request)
