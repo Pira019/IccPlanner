@@ -80,14 +80,7 @@ namespace Application.Services
 
             await _tabServicePrgRepository.InsertAllAsync(servicePrgs); 
             return Result<bool>.Success(true);
-        }
-
-        public async Task<GetDatesResponse> GetDates(Guid? userId, int? month = null, int? year = null)
-        {
-            var date = DateOnly.Parse($"{year ?? DateTime.Now.Year}-{month ?? DateTime.Now.Month}-01");
-            var dates = await _prgDateRepository.GetPrgDates(userId ?? Guid.Empty, date);
-            return _mapper.Map<GetDatesResponse>(dates);
-        }
+        } 
 
         public async Task<Result<List<GetServicesListResponse>>> GetPrgServices(ServicesRequest request)
         {
@@ -99,6 +92,13 @@ namespace Application.Services
         {
             var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, month, year);
             return Result<List<GetServiceByDepart>>.Success(rsl);
+        }
+
+        public async Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync(int month, int year, int IdDepart)
+        {
+            var rsl = await _prgDateRepository.GetPrgServiceDatesAsync(month, year, IdDepart);
+            var response = rsl.Select(date => new GetDatesResponse { Date = date }).ToList();
+            return Result<List<GetDatesResponse>>.Success(response);
         }
     }
 }

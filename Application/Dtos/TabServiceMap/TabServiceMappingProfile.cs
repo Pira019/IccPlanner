@@ -13,7 +13,7 @@ namespace Application.Dtos.TabServiceMap
             CreateMap<TabServices, BaseAddResponse>();
 
             CreateMap<IEnumerable<DateOnly>, GetDatesResponse>()
-            .ForMember(dest => dest.Dates, opt => opt.MapFrom(src => src));
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src));
 
             CreateMap<AddServiceRequest, TabServices>() 
              .ForMember(dest => dest.ArrivalTimeOfMember, opt => opt.MapFrom(src => src.MemberArrivalTime))
