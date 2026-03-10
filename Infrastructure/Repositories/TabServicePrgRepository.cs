@@ -29,36 +29,47 @@ namespace Infrastructure.Repositories
                  .FirstOrDefaultAsync();
         }
 
-        public async Task<List<GetServiceByDepart>> GetServicePrgByDepart(int idDepart, int month, int year)
+        public async Task<GetServiceByDepart?> GetServicePrgByDepart(int idDepart, DateOnly dateOnly)
         {
-            return await PlannerContext.PrgDates
-                    .Where(pd => pd.TabServicePrgs.Any() && pd.Date.Value.Year == year && pd.Date.Value.Month ==  month 
-                            && pd.PrgDepartmentInfo.DepartmentProgram.DepartmentId == idDepart)
-                    .Select(pd => new GetServiceByDepart
+            // Récupère les services groupés par programme
+            var servicePrgList = await _dbSet
+                .AsNoTracking()
+                .Where(s =>
+                    s.PrgDate.Date.HasValue &&
+                    s.PrgDate.Date.Value == dateOnly &&
+                    s.PrgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId == idDepart)
+               .GroupBy(s => new { s.PrgDate.PrgDepartmentInfo.DepartmentProgram.ProgramId, s.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name })
+                .Select(g => new ServicePrgLst
+                {
+                    PrgName = g.Key.Name,
+                    ServicePrg =
+                    g.OrderBy(s => s.ArrivalTimeOfMember ?? s.TabServices.StartTime) // ArrivalTime si existe sinon StartTime
+                    .ThenBy(s => s.TabServices.StartTime)
+                    .ThenBy(s => s.TabServices.EndTime)
+                    .ThenBy(s => s.DisplayName)
+                    .Select(s => new ServicePrg
                     {
-                        Date = pd.Date,
-                        ServicePrgDates = pd.TabServicePrgs
-                            .GroupBy(s => new
-                            {
-                                s.PrgDate.PrgDepartmentInfo.DepartmentProgramId,
-                                s.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name
-                            })
-                            .Select(g => new ServicePrgLst
-                            {
-                                PrgName = g.Key.Name,
-                                ServicePrg = g.Select(s => new ServicePrg
-                                {
-                                    Id = s.Id,
-                                    DisplayName = s.DisplayName,
-                                    Comment = s.Notes,
-                                    StartTime = s.TabServices.StartTime.ToString(),
-                                    EndTime = s.TabServices.EndTime.ToString(),
-                                    ArrivalTime = s.ArrivalTimeOfMember.HasValue ? s.ArrivalTimeOfMember.ToString() : string.Empty
-                                }).ToList()
-                            })
-                            .ToList()
-                    })
-                    .ToListAsync();
+                        Id = s.Id,
+                        DisplayName = s.DisplayName,
+                        Comment = s.Notes,
+                        StartTime = s.TabServices.StartTime.ToString(),
+                        EndTime = s.TabServices.EndTime.ToString(),
+                        ArrivalTime = s.ArrivalTimeOfMember.HasValue
+                            ? s.ArrivalTimeOfMember.ToString()
+                            : string.Empty
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            // Crée l'objet final
+            if (!servicePrgList.Any())
+                return null;
+
+            return new GetServiceByDepart
+            {
+                Date = dateOnly,
+                ServicePrgDates = servicePrgList
+            };
         }
 
         public async Task<List<GetServicesListResponse>> GetServicesAsync(ServicesRequest request)

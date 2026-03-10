@@ -25,13 +25,13 @@ namespace IccPlanner.Controllers
 
 
         // GET: api/<ServicePrgController>
-        [HttpGet("{idDepart}/{month}/{year}")]
+        [HttpGet("{idDepart}/{dateprg}")]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetServiceByDepart>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(int idDepart,int month, int year)
+        public async Task<IActionResult> Get(int idDepart, DateOnly dateprg)
         {
-            var result = await _tabServicePrgService.GetServicePrgByDepartAsync(idDepart,month,year);
+            var result = await _tabServicePrgService.GetServicePrgByDepartAsync(idDepart, dateprg);
             return Ok(result.Value);
         } 
     }

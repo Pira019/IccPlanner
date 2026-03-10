@@ -88,10 +88,10 @@ namespace Application.Services
             return Result<List<GetServicesListResponse>>.Success(rsl);
         }
 
-        public async Task<Result<List<GetServiceByDepart>>> GetServicePrgByDepartAsync(int idDepart, int month, int year)
+        public async Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly)
         {
-            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, month, year);
-            return Result<List<GetServiceByDepart>>.Success(rsl);
+            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, dateOnly);
+            return Result<GetServiceByDepart?>.Success(rsl);
         }
 
         public async Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync(int month, int year, int IdDepart)

@@ -42,6 +42,6 @@ namespace Application.Interfaces.Repositories
         /// <param name="request"></param>
         /// <returns></returns>
         public Task<List<GetServicesListResponse>> GetServicesAsync(ServicesRequest request);
-        public Task<List<GetServiceByDepart>> GetServicePrgByDepart(int idDepart, int month, int year);
+        public Task<GetServiceByDepart?> GetServicePrgByDepart(int idDepart, DateOnly dateOnly);
     }
 }
