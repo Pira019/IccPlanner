@@ -21,13 +21,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore API dependencies
-        run: dotnet restore ./IccPlanner.csproj
+        run: dotnet restore ./IccPlanner/IccPlanner.csproj
 
       - name: Build API only
-        run: dotnet build ./IccPlanner.csproj --configuration Release
+        run: dotnet build ./IccPlanner/IccPlanner.csproj --configuration Release
 
       - name: Publish API only
-        run: dotnet publish ./IccPlanner.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish ./IccPlanner/IccPlanner.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
@@ -61,4 +61,3 @@ jobs:
           app-name: 'iccAgendaApiDev'
           slot-name: 'Production'
           package: .
-
