@@ -3,6 +3,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using AutoMapper;
 using Domain.Entities;
@@ -79,19 +80,25 @@ namespace Application.Services
 
             await _tabServicePrgRepository.InsertAllAsync(servicePrgs); 
             return Result<bool>.Success(true);
-        }
-
-        public async Task<GetDatesResponse> GetDates(Guid? userId, int? month = null, int? year = null)
-        {
-            var date = DateOnly.Parse($"{year ?? DateTime.Now.Year}-{month ?? DateTime.Now.Month}-01");
-            var dates = await _prgDateRepository.GetPrgDates(userId ?? Guid.Empty, date);
-            return _mapper.Map<GetDatesResponse>(dates);
-        }
+        } 
 
         public async Task<Result<List<GetServicesListResponse>>> GetPrgServices(ServicesRequest request)
         {
             var rsl = await _tabServicePrgRepository.GetServicesAsync(request);
             return Result<List<GetServicesListResponse>>.Success(rsl);
+        }
+
+        public async Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly)
+        {
+            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, dateOnly);
+            return Result<GetServiceByDepart?>.Success(rsl);
+        }
+
+        public async Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync(int month, int year, int IdDepart)
+        {
+            var rsl = await _prgDateRepository.GetPrgServiceDatesAsync(month, year, IdDepart);
+            var response = rsl.Select(date => new GetDatesResponse { Date = date }).ToList();
+            return Result<List<GetDatesResponse>>.Success(response);
         }
     }
 }

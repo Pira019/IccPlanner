@@ -52,7 +52,7 @@ namespace Infrastructure.Repositories
         }
 
         // <inheritdoc />
-        public async Task<IEnumerable<DateOnly>> GetPrgDates(Guid userId, DateOnly dateFilter)
+        public async Task<IEnumerable<DateOnly>> GetPrgDatesAsync(Guid userId, DateOnly dateFilter)
         {
             return await _dbSet
                 .Where(x => x.PrgDepartmentInfo.DepartmentProgram.Department.Members.Any(m => m.Id == userId)
@@ -61,6 +61,22 @@ namespace Infrastructure.Repositories
                         )
                 .Select(prgDate => prgDate.Date)
                 .Select(date => date.Value)
+                .Distinct()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<DateOnly>> GetPrgServiceDatesAsync( int month, int year, int idDepart)
+        {
+            var startDate = new DateOnly(year, month, 1);
+            var endDate = startDate.AddMonths(1);
+
+           return await _dbSet
+                .Where(x => x.PrgDepartmentInfo.DepartmentProgram.DepartmentId == idDepart
+                        && x.Date.HasValue
+                        && x.Date.Value >= startDate && x.Date.Value < endDate
+                        && x.TabServicePrgs.Any()
+                        )
+                .Select(prgDate => prgDate.Date!.Value) 
                 .Distinct()
                 .ToListAsync();
         }

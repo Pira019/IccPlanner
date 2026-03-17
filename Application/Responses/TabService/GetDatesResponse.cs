@@ -6,8 +6,8 @@
     public class GetDatesResponse
     {
         /// <summary>
-        ///     Liste des dates disponibles.
+        ///     Liste des dates disponibles pour la disponibilité.
         /// </summary>
-        public IEnumerable<DateOnly>? Dates { get; set; }
+        public DateOnly Date { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Prg
  
 using Application.Requests.ServiceTab;
+using Application.Responses.ServicePrg;
 using Application.Responses.TabService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -18,21 +19,16 @@ namespace Application.Interfaces.Services
         public Task<Result<bool>> AddServicePrg(AddServicePrgDepartmentRequest prgDepartmentRequest);
 
         /// <summary>
-        ///     Permet de récupérer les dates d'un programme pour un utilisateur.
+        ///     Obtient les dates des programme pour un département donné, un mois et une année donnés
         /// </summary>
-        /// <param name="userId">
-        ///     User Id pour lequel on veut récupérer les dates.
-        /// </param>
-        /// <param name="month">
-        ///  Mois pour lequel on veut récupérer les dates.
-        /// </param>
-        /// <param name="year">
-        ///     Pour l'année pour laquelle on veut récupérer les dates.
-        /// </param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="IdDepart"></param>
         /// <returns>
-        ///     Retourne un objet <see cref="GetDatesResponse"/> contenant les dates du programme pour l'utilisateur spécifié.
+        ///     Retourne une liste de dates correspondant aux programmes du département pour le mois et l'année spécifiés, ou une erreur en cas d'échec de l'opération.
         /// </returns>
-        public Task<GetDatesResponse> GetDates( Guid? userId,int? month = null, int? year = null);  
-        public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);  
+        public Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync( int month, int year, int IdDepart);  
+        public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);
+        public Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly);
     }
 }

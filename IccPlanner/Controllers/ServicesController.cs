@@ -67,15 +67,16 @@ namespace IccPlanner.Controllers
             return Ok(await _serviceTabService.GetAll());
         }
 
-        [HttpGet("dates/{month:int}/{year:int}")]
+        [HttpGet("dates/{month:int}/{year:int}/{idDepartment:int}")]
         [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<IEnumerable<GetDatesResponse>>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetServiceDate(int? month,int? year)
+        public async Task<IActionResult> GetServiceDate(int month,int year, int idDepartment)
         { 
-            return Ok(await _tabServicePrgService.GetDates(await GetMemberAuthIdAsync(), month, year));
+            var req = await _tabServicePrgService.GetDatesByDepartAsync(month, year,idDepartment);
+            return Ok(req.Value);
         }
 
         [HttpGet("department-services/{datePrg}")]

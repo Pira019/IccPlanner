@@ -18,19 +18,15 @@ namespace Application.Interfaces.Repositories
         public Task<IEnumerable<int>> GetRecurringPrgDateIdsFromNowAsync(int prgDateId);
 
         /// <summary>
-        ///     Permet de récupérer les dates des programmes pour un utilisateur spécifique à partir d'une date donnée.
+        ///     Obtient une liste de dates de programmes pour un département, un mois et une année donnés.
         /// </summary>
-        /// <param name="dateFilter">
-        ///     Date à partir de laquelle on veut filtrer les dates des programmes.
-        ///     Juste le mois et l'année sont pris en compte.
-        /// </param>
-        /// <param name="userId">
-        ///     Id de l'utilisateur pour lequel on veut récupérer les dates des programmes.
-        /// </param>
+        /// <param name="idDepart"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
         /// <returns>
-        ///     Retourne une collection de dates de type <see cref="DateOnly"/> correspondant aux programmes pour l'utilisateur spécifié.
+        ///     Retourne une liste de dates de programmes correspondant au département, au mois et à l'année spécifiés. Chaque date représente un jour où un programme est prévu pour le département donné.
         /// </returns>
-        public Task<IEnumerable<DateOnly>> GetPrgDates(Guid userId, DateOnly dateFilter);
+        public Task<IEnumerable<DateOnly>> GetPrgServiceDatesAsync(int idDepart, int month, int year);
 
 
         /// <summary>
