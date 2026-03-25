@@ -68,6 +68,7 @@ namespace Infrastructure.Configurations
                 Secure = true,
                 SameSite = SameSiteMode.None,
                 MaxAge = TimeSpan.FromMinutes((GetExpirationInMinutes(rememberMe))),
+                 Extensions = { "Partitioned" }
             };
 
             httpResponse.Cookies.Append(AccessToken, token, cookieOption);
