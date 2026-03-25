@@ -158,7 +158,7 @@ namespace IccPlanner
             // Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            // Chaîne de connexion a la DB
+            // Chaï¿½ne de connexion a la DB
             var conString = builder.Configuration.GetConnectionString("IccPlannerDb") ?? throw new InvalidOperationException("Connection string not found");
             builder.Services.AddDbContext<IccPlannerContext>(option =>
                 option.UseNpgsql(conString));
@@ -176,6 +176,12 @@ namespace IccPlanner
             })
              .AddEntityFrameworkStores<IccPlannerContext>()
              .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
 
             builder.Services.Configure<DataProtectionTokenProviderOptions>
                (options => options.TokenLifespan = TimeSpan.FromMinutes(20));
@@ -218,7 +224,7 @@ namespace IccPlanner
             //Localization
             builder.Services.AddLocalization(options => options.ResourcesPath = "Ressources");
 
-            // Définir les cultures acceptées (français et anglais US)
+            // Dï¿½finir les cultures acceptï¿½es (franï¿½ais et anglais US)
             builder.Services.Configure<RequestLocalizationOptions>(
                options =>
                {
@@ -254,7 +260,7 @@ namespace IccPlanner
 
             app.UseRequestLocalization();
 
-            // ConfiguInvalidOperationException : 'The service collection cannot be modified because it is read-only.'re the HTTP request pipeline.
+            // ConfiguInvalidOperationExceptionï¿½: 'The service collection cannot be modified because it is read-only.'re the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
