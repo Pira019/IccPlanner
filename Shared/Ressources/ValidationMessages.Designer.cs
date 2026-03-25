@@ -19,7 +19,7 @@ namespace Shared.Ressources {
     // à l'aide d'un outil, tel que ResGen ou Visual Studio.
     // Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
     // avec l'option /str ou régénérez votre projet VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ValidationMessages {
@@ -664,6 +664,15 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You cannot enter your availability because you are not a member of this department..
+        /// </summary>
+        public static string MJ_UtiliNonAutor {
+            get {
+                return ResourceManager.GetString("MJ_UtiliNonAutor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à This ministry name is already assigned; modification is not possible..
         /// </summary>
         public static string MO_MinistryNameExist {
@@ -903,6 +912,15 @@ namespace Shared.Ressources {
         public static string SERVICE_PRG {
             get {
                 return ResourceManager.GetString("SERVICE_PRG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Service program not found..
+        /// </summary>
+        public static string ServicePrgNonExist {
+            get {
+                return ResourceManager.GetString("ServicePrgNonExist", resourceCulture);
             }
         }
         

@@ -27,6 +27,6 @@ namespace Application.Interfaces.Services
         ///     Id du membre dans le département pour lequel on veut ajouter la disponibilité.
         /// </param>
         /// <returns></returns>
-        public Task<TabServices> Add( AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember); 
+        public Task<Result<int>> Add( AddAvailabilityRequest addAvailabilityRequest); 
     }
 }
