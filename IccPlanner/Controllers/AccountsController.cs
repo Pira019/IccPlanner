@@ -96,7 +96,7 @@ namespace IccPlanner.Controllers
             } 
             var token = tokenProvider.Create(resultat.Value.userId, resultat.Value.roles,resultat.Value.claims, request.Remember);
             await tokenProvider.AppendUserCookie(token, Response, request.Remember);
-            return Ok();
+            return Ok(new { accessToken = token });
         }
 
         // <summary>
