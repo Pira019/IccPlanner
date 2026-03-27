@@ -10,10 +10,7 @@ namespace Application.Dtos.TabServiceMap
     public class AvailabilityMappingProfile : Profile
     {
         public AvailabilityMappingProfile()
-        {
-            CreateMap<AddAvailabilityRequest, Availability>()
-             .ForMember(dest => dest.TabServicePrgId, opt => opt.MapFrom(src => src.ServicePrgId))
-             .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes));
-        }
+        { }
+            
     }
 }

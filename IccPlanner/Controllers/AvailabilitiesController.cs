@@ -3,6 +3,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Availability;
 using Application.Responses;
+using Application.Responses.Availability;
 using Application.Responses.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,60 +19,35 @@ namespace IccPlanner.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AvailabilitiesController : PlannerBaseController
-    {
-        private readonly ITabServicePrgRepository _tabServicePrgRepository;
+    { 
         private readonly IAvailabilityRepository _availabilityRepository;
 
         private readonly IAvailabilityService _availabilityService;
-        public AvailabilitiesController(ITabServicePrgRepository tabServicePrgRepository,
+        public AvailabilitiesController(
                    IAvailabilityRepository availabilityRepository,
                    IAvailabilityService availabilityService,
                    IAccountRepository accountRepository)
                    : base(accountRepository)
-        {
-            _tabServicePrgRepository = tabServicePrgRepository;
+        { 
             _availabilityService = availabilityService;
             _availabilityRepository = availabilityRepository;
         }
 
         [Authorize]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<BaseAddResponse>(StatusCodes.Status201Created)]
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddAvailabilityRequest addAvailabilityRequest)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpPost("{idDepart}")]
+        public async Task<IActionResult> Post(int idDepart, [FromBody] AddAvailabilityRequest addAvailabilityRequest)
         {
-            var servicePrgDepartmentId = await _tabServicePrgRepository.GetDepartmentIdByServicePrgId(addAvailabilityRequest.ServicePrgId);
+            var rsq = await _availabilityService.Add(addAvailabilityRequest, idDepart);
 
-            if (servicePrgDepartmentId == 0)
+            if (!rsq.IsSuccess) 
             {
-                return BadRequest(ApiError.ErrorMessage(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.SERVICE_), null, null));
+                return BadRequest(ApiError.ErrorMessage(rsq.Error, null, null));
             }
 
-            // Récupérer l'ID de l'utilisateur à partir des claims
-            var userAuthId = Utiles.GetUserIdFromClaims(User);
-            // Récupérer le membre authentifié
-            var member = await GetMemberAuthIdAsync();
-
-            if (member == Guid.Empty)
-            {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.USER_NOT_FOUND, null, null));
-            }
-
-            var departMemberId = await _availabilityService.GetIdDepartmentMember(member, servicePrgDepartmentId);
-
-            if (departMemberId == null)
-            {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.SERVICE_NOT_AVAILABITY, null, null));
-            }
-
-            if (await _availabilityRepository.HasAlreadyChosenAvailability(addAvailabilityRequest.ServicePrgId, (int)departMemberId))
-            {
-                return BadRequest(ApiError.ErrorMessage(ValidationMessages.SERVICE_ALREADY_CHOSEN, null, null));
-            }
-            await _availabilityService.Add(addAvailabilityRequest, (int)departMemberId);
-            return Created(string.Empty, null);
+            return Created();
         }
 
         [HttpDelete("{idTabServicePrg}")]
@@ -95,6 +71,16 @@ namespace IccPlanner.Controllers
             }
             await _availabilityRepository.DeleteAsync((int)avability?.Id!);
             return Ok();
+        }
+
+        [HttpGet("me/{departmentId}/{month}/{year}")]
+        [Authorize]
+        [ProducesResponseType<List<UserAvailabilityResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyAvailabilities(int departmentId, int month, int year)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+            var result = await _availabilityRepository.GetUserAvailabilitiesAsync(memberId, month, year, departmentId);
+            return Ok(result);
         }
     }
 }

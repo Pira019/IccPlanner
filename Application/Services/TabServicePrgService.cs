@@ -88,9 +88,9 @@ namespace Application.Services
             return Result<List<GetServicesListResponse>>.Success(rsl);
         }
 
-        public async Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly)
+        public async Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly, Guid? memberId)
         {
-            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, dateOnly);
+            var rsl = await _tabServicePrgRepository.GetServicePrgByDepart(idDepart, dateOnly, memberId);
             return Result<GetServiceByDepart?>.Success(rsl);
         }
 

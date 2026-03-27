@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Responses;
 using Application.Responses.Errors;
 using Application.Responses.Invitation;
@@ -11,11 +12,12 @@ namespace IccPlanner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MembersController : ControllerBase
+    public class MembersController : PlannerBaseController
     {
         private readonly IMemberService _memberService;
 
-        public MembersController(IMemberService memberService)
+        public MembersController(IMemberService memberService, IAccountRepository accountRepository)
+            : base(accountRepository)
         {
             _memberService = memberService;
         }
@@ -33,6 +35,16 @@ namespace IccPlanner.Controllers
                 return BadRequest(ApiError.ErrorMessage(response.Error, null, null));
             }
             return Ok(response.Value);
+        }
+
+        [HttpGet("belongs/{departmentId}")]
+        [Authorize]
+        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> BelongsToDepartment(int departmentId)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+            var belongs = await _memberService.IsMemberInDepartmentAsync(memberId, departmentId);
+            return Ok(belongs);
         }
     }
 }

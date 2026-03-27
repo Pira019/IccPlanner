@@ -432,4 +432,10 @@
   <data name="TEL" xml:space="preserve">
     <value>Phone number</value>
   </data>
+  <data name="ServicePrgNonExist" xml:space="preserve">
+    <value>Service program not found.</value>
+  </data>
+  <data name="MJ_UtiliNonAutor" xml:space="preserve">
+    <value>You cannot enter your availability because you are not a member of this department.</value>
+  </data>
 </root>
