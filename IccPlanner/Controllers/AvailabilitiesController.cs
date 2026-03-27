@@ -3,6 +3,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Availability;
 using Application.Responses;
+using Application.Responses.Availability;
 using Application.Responses.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,18 +36,18 @@ namespace IccPlanner.Controllers
         [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<int>(StatusCodes.Status201Created)]
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddAvailabilityRequest addAvailabilityRequest)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpPost("{idDepart}")]
+        public async Task<IActionResult> Post(int idDepart, [FromBody] AddAvailabilityRequest addAvailabilityRequest)
         {
-            var rsq = await _availabilityService.Add(addAvailabilityRequest);
+            var rsq = await _availabilityService.Add(addAvailabilityRequest, idDepart);
 
             if (!rsq.IsSuccess) 
             {
                 return BadRequest(ApiError.ErrorMessage(rsq.Error, null, null));
             }
 
-            return Created(string.Empty, rsq.Value);
+            return Created();
         }
 
         [HttpDelete("{idTabServicePrg}")]
@@ -70,6 +71,16 @@ namespace IccPlanner.Controllers
             }
             await _availabilityRepository.DeleteAsync((int)avability?.Id!);
             return Ok();
+        }
+
+        [HttpGet("me/{departmentId}/{month}/{year}")]
+        [Authorize]
+        [ProducesResponseType<List<UserAvailabilityResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyAvailabilities(int departmentId, int month, int year)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+            var result = await _availabilityRepository.GetUserAvailabilitiesAsync(memberId, month, year, departmentId);
+            return Ok(result);
         }
     }
 }

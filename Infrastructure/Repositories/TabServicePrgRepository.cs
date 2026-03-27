@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories
                  .FirstOrDefaultAsync();
         }
 
-        public async Task<GetServiceByDepart?> GetServicePrgByDepart(int idDepart, DateOnly dateOnly)
+        public async Task<GetServiceByDepart?> GetServicePrgByDepart(int idDepart, DateOnly dateOnly, Guid? memberId)
         {
             // Récupère les services groupés par programme
             var servicePrgList = await _dbSet
@@ -50,6 +50,7 @@ namespace Infrastructure.Repositories
                     .Select(s => new ServicePrg
                     {
                         Id = s.Id,
+                        IsAvailable = s.Availabilities.Where(a => a.DepartmentMember.MemberId == memberId).Any(),
                         DisplayName = s.DisplayName,
                         Comment = s.Notes,
                         StartTime = s.TabServices.StartTime.ToString(),
@@ -158,6 +159,16 @@ namespace Infrastructure.Repositories
         public Task<bool> IsServicePrgExistAsync(int tabServiceId, int prgDateId)
         {
             return _dbSet.Where(service => service.TabServicesId == tabServiceId && service.PrgDateId == prgDateId).AnyAsync();
+        }
+
+        public async Task<bool> AllBelongToDepartmentAsync(List<int> servicePrgIds, int departmentId)
+        {
+            var count = await _dbSet
+                .Where(s => servicePrgIds.Contains(s.Id)
+                    && s.PrgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId == departmentId)
+                .CountAsync();
+
+            return count == servicePrgIds.Count;
         }
     }
 }

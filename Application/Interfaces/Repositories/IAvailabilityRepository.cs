@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Prg
 
 using Application.Dtos.AvailabilityDto;
+using Application.Responses.Availability;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -36,5 +37,15 @@ namespace Application.Interfaces.Repositories
         ///     Retourne l'Id de la table Availability si trouvé, sinon null.
         /// </returns>
         public Task<GetAvailabityDto?> GetIdByAsync(int tabServicePrgId, Guid userId);
+
+        /// <summary>
+        ///     Récupère les TabServicePrgId déjà existants pour un membre donné parmi une liste.
+        /// </summary>
+        public Task<List<int>> GetExistingServicePrgIdsAsync(int departmentMemberId, List<int> servicePrgIds);
+
+        /// <summary>
+        ///     Récupère les disponibilités d'un utilisateur pour un mois donné.
+        /// </summary>
+        public Task<List<UserAvailabilityResponse>> GetUserAvailabilitiesAsync(Guid memberId, int month, int year, int departmentId);
     }
 }

@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet
                  .Where(dm => dm.DepartmentId == departmentId && dm.MemberId == memberId)
-                 .Select(dm => dm.Id)
+                 .Select(dm => (int?)dm.Id)
                  .FirstOrDefaultAsync();
         }
     }

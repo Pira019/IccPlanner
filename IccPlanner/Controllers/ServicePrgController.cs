@@ -14,11 +14,12 @@ namespace IccPlanner.Controllers
     [Route("api/[controller]")]
     [ApiController] 
     [Authorize]
-    public class ServicePrgController : ControllerBase
+    public class ServicePrgController : PlannerBaseController
     {
         private readonly ITabServicePrgService _tabServicePrgService;
 
-        public ServicePrgController(ITabServicePrgService tabServicePrgService)
+        public ServicePrgController(ITabServicePrgService tabServicePrgService, IAccountRepository accountRepository)
+            : base(accountRepository)
         {
            _tabServicePrgService = tabServicePrgService;
         }
@@ -31,7 +32,8 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<GetServiceByDepart>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(int idDepart, DateOnly dateprg)
         {
-            var result = await _tabServicePrgService.GetServicePrgByDepartAsync(idDepart, dateprg);
+            var memberId = await GetMemberAuthIdAsync();
+            var result = await _tabServicePrgService.GetServicePrgByDepartAsync(idDepart, dateprg, memberId);
             return Ok(result.Value);
         } 
     }

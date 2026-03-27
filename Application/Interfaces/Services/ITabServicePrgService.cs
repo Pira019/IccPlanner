@@ -29,6 +29,6 @@ namespace Application.Interfaces.Services
         /// </returns>
         public Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync( int month, int year, int IdDepart);  
         public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);
-        public Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly);
+        public Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly, Guid? memberId);
     }
 }

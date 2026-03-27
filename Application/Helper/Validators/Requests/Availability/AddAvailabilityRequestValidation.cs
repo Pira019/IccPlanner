@@ -12,8 +12,11 @@ namespace Application.Helper.Validators.Requests.Availability
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(x => x.ServicePrgId)
-                .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.SERVICE_PRG); 
+            RuleFor(x => x.ServicePrgIds)
+                .NotEmpty().WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.SERVICE_PRG);
+
+            RuleForEach(x => x.ServicePrgIds)
+                .GreaterThan(0).WithMessage(ValidationMessages.NOT_NULL).WithName(ValidationMessages.SERVICE_PRG);
         }
     }
 }

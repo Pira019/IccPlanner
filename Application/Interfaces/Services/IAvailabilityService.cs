@@ -20,13 +20,9 @@ namespace Application.Interfaces.Services
         /// <summary>
         ///     Permet d'ajouter une disponibilité pour un membre dans un département spécifique.
         /// </summary>
-        /// <param name="addAvailabilityRequest">
-        ///     Objet contenant les informations de disponibilité à ajouter.
-        /// </param>
-        /// <param name="idDepartmentMember">
-        ///     Id du membre dans le département pour lequel on veut ajouter la disponibilité.
-        /// </param>
+        /// <param name="addAvailabilityRequest"></param>
+        /// <param name="idDepart"></param>
         /// <returns></returns>
-        public Task<Result<int>> Add( AddAvailabilityRequest addAvailabilityRequest); 
+        public Task<Result<bool>> Add( AddAvailabilityRequest addAvailabilityRequest, int? idDepart); 
     }
 }

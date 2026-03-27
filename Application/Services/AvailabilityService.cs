@@ -6,6 +6,7 @@ using Application.Requests.Availability;
 using Application.Responses.ServicePrg;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Shared.Ressources;
 
 namespace Application.Services
@@ -23,15 +24,15 @@ namespace Application.Services
 
         public AvailabilityService(IBaseRepository<Availability> baseRepository, IMapper mapper,
             IDepartmentMemberRepository departmentMemberRepository, ITabServicePrgRepository tabServicePrgRepository, IAccountRepository accountRepository,
-            IAvailabilityRepository availabilityRepository) : base(baseRepository, mapper)
+            IAvailabilityRepository availabilityRepository, IHttpContextAccessor httpContextAccessor) : base(baseRepository, mapper, httpContextAccessor)
         {
             _departmentMemberRepository = departmentMemberRepository;
             _accountRepository = accountRepository;
             _tabServicePrgRepository = tabServicePrgRepository;
             _availabilityRepository  = availabilityRepository;
 
-        }
-         
+        } 
+
 
         /// <inheritdoc />
         /*  public Task<TabServices> Add(AddAvailabilityRequest addAvailabilityRequest, int idDepartmentMember)
@@ -46,38 +47,48 @@ namespace Application.Services
         {
             return await _departmentMemberRepository.GetMemberInDepartmentIdAsync(idDepartment, authMemberGuid);
         } 
-
-        async Task<Result<int>> IAvailabilityService.Add(AddAvailabilityRequest addAvailabilityRequest)
+         
+        async Task<Result<bool>> IAvailabilityService.Add(AddAvailabilityRequest addAvailabilityRequest, int? idDepart)
         {
-            var departId = await _tabServicePrgRepository.GetDepartmentIdByServicePrgId(addAvailabilityRequest.ServicePrgId);
-
-            if (departId == null)
-            {
-                return Result<int>.Fail(ValidationMessages.ServicePrgNonExist);
-            }
-
             var userId = GetCurrentUserId();
-            var checkDepartmentMemberId = null as int?;
-
-            if (Guid.TryParse(userId, out Guid userId_))
+            if (!Guid.TryParse(userId, out Guid userId_))
             {
-                var member = await _accountRepository.GetAuthMemberAsync(userId_);
-                checkDepartmentMemberId = await _departmentMemberRepository.GetMemberInDepartmentIdAsync(departId, member.Id);
-            }               
-
-            if (checkDepartmentMemberId == null) {
-
-                return Result<int>.Fail(ValidationMessages.MJ_UtiliNonAutor);
+                return Result<bool>.Fail(ValidationMessages.MJ_UtiliNonAutor);
             }
 
-            var availabilityEntity = new Availability 
-            {   
-                DepartmentMemberId =(int)checkDepartmentMemberId,
-                TabServicePrgId = addAvailabilityRequest.ServicePrgId,
-            };
+            // Vérifier que tous les ServicePrg appartiennent au département
+            var allBelong = await _tabServicePrgRepository.AllBelongToDepartmentAsync(addAvailabilityRequest.ServicePrgIds, (int)idDepart!);
+            if (!allBelong)
+            {
+                return Result<bool>.Fail(ValidationMessages.ServicePrgNonExist);
+            }
 
-            await _availabilityRepository.Insert (availabilityEntity);
-            return Result<int>.Success(availabilityEntity.Id);
+            var member = await _accountRepository.GetAuthMemberAsync(userId_);
+            var departmentMemberId = await _departmentMemberRepository.GetMemberInDepartmentIdAsync(idDepart, member.Id);
+
+            if (departmentMemberId == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.MJ_UtiliNonAutor);
+            } 
+            // Récupérer les doublons existants en une seule requête
+            var existingIds = await _availabilityRepository.GetExistingServicePrgIdsAsync((int)departmentMemberId, addAvailabilityRequest.ServicePrgIds);
+
+            var listServicePrgIds = addAvailabilityRequest.ServicePrgIds
+                .Where(id => !existingIds.Contains(id))
+                .Select(servicePrgId => new Availability
+                {
+                    DepartmentMemberId = (int)departmentMemberId,
+                    TabServicePrgId = servicePrgId,
+                })
+                .ToList();
+
+            if (listServicePrgIds.Any())
+            {
+                await _availabilityRepository.InsertAllAsync(listServicePrgIds);
+            }
+
+            return Result<bool>.Success(true);
         }
+         
     }
 }
