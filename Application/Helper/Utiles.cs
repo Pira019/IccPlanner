@@ -134,6 +134,49 @@ namespace Application.Helper
             }
         }
 
+        /// <summary>
+        ///     Vérifie si l'utilisateur a le droit de gestion sur un département spécifique.
+        ///     Le claim est au format "depart:manager:1,2,4" où les chiffres sont les IDs des départements.
+        /// </summary>
+        /// <param name="user">Claims de l'utilisateur</param>
+        /// <param name="permissionPrefix">Préfixe du claim (ex: "depart:manager")</param>
+        /// <param name="departmentId">ID du département à vérifier</param>
+        /// <param name="typePermission">Type de claim (ex: "Permission")</param>
+        /// <returns>Vrai si l'utilisateur a le droit sur ce département</returns>
+        public static bool HasDepartmentPermission(ClaimsPrincipal user, string permissionPrefix, int departmentId, string typePermission)
+        {
+            var permissionClaim = user.Claims
+                .FirstOrDefault(c => c.Type == typePermission)?.Value;
+
+            if (string.IsNullOrEmpty(permissionClaim))
+                return false;
+
+            try
+            {
+                var permissions = JsonSerializer.Deserialize<List<string>>(permissionClaim);
+                if (permissions == null)
+                    return false;
+
+                // Chercher un claim qui commence par le préfixe (ex: "depart:manager:")
+                var match = permissions.FirstOrDefault(p => p.StartsWith($"{permissionPrefix}:"));
+                if (match == null)
+                    return false;
+
+                // Extraire les IDs après le préfixe (ex: "1,2,4")
+                var idsPart = match.Substring(permissionPrefix.Length + 1);
+                var ids = idsPart.Split(',')
+                    .Select(id => int.TryParse(id.Trim(), out var parsed) ? parsed : (int?)null)
+                    .Where(id => id.HasValue)
+                    .Select(id => id!.Value);
+
+                return ids.Contains(departmentId);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
     }
 }

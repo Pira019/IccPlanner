@@ -33,5 +33,13 @@ namespace Application.Interfaces.Repositories
         ///     Retourne un objet <see cref="Task"/> qui représente l'opération asynchrone,
         /// </returns>
         public Task<bool> CanManageMembersAsync(string userId);
+
+        /// <summary>
+        ///     Vérifie si un membre a le droit de gestion (IndGest = true) dans un département spécifique.
+        /// </summary>
+        /// <param name="memberId">ID du membre</param>
+        /// <param name="departmentId">ID du département</param>
+        /// <returns>Vrai si le membre a un poste avec IndGest = true dans ce département</returns>
+        public Task<bool> HasManagementRightAsync(Guid memberId, int departmentId);
     }
 }
