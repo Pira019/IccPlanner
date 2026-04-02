@@ -438,4 +438,7 @@
   <data name="MJ_UtiliNonAutor" xml:space="preserve">
     <value>You cannot enter your availability because you are not a member of this department.</value>
   </data>
+  <data name="CAPITALIZE_FORMAT" xml:space="preserve">
+    <value>{0} must start with an uppercase letter followed by lowercase letters.</value>
+  </data>
 </root>

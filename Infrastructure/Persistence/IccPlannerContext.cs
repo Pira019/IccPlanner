@@ -79,8 +79,21 @@ namespace Infrastructure.Persistence
                .WithMany(t => t.TabServicePrgs)
                .UsingEntity<Availability>(
                     r => r.HasOne<DepartmentMember>(d => d.DepartmentMember).WithMany(dm => dm.Availabilities).HasForeignKey(a => a.DepartmentMemberId),
-                    l => l.HasOne<TabServicePrg>(t => t.TabServicePrg).WithMany(a => a.Availabilities).HasForeignKey(a => a.TabServicePrgId)
+                    l => l.HasOne<TabServicePrg>(t => t.TabServicePrg).WithMany(a => a.Availabilities).HasForeignKey(a => a.TabServicePrgId),
+                    j => j.HasIndex(a => new { a.DepartmentMemberId, a.TabServicePrgId }).IsUnique()
                 );
+
+            // Relation 1-to-1 entre Availability et Planning
+            builder.Entity<Availability>()
+                .HasOne(a => a.Planning)
+                .WithOne(p => p.Availability)
+                .HasForeignKey<Planning>(p => p.AvailabilityId);
+
+            // Relation many-to-many entre Department et Poste
+            builder.Entity<Department>()
+                .HasMany(d => d.Postes)
+                .WithMany(p => p.Departments)
+                .UsingEntity("DepartmentPostes");
 
             // Renommer les tables t'identité
             builder.Entity<IdentityUser>().ToTable("Users");

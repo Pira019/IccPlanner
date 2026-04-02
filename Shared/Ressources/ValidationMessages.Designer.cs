@@ -1022,5 +1022,14 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("VALIDATION_FAILED", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0} must start with an uppercase letter followed by lowercase letters..
+        /// </summary>
+        public static string CAPITALIZE_FORMAT {
+            get {
+                return ResourceManager.GetString("CAPITALIZE_FORMAT", resourceCulture);
+            }
+        }
     }
 }

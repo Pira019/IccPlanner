@@ -18,6 +18,6 @@ namespace Domain.Entities
         public List<DepartmentMember> DepartmentMembers { get; } = [];
         public List<Program> Programs { get; } = [];
         public List<DepartmentProgram> DepartmentPrograms { get; } = [];
-
+        public List<Poste> Postes { get; } = [];
     }
 }

@@ -146,6 +146,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
             builder.Services.AddScoped<IInvitationService, InvitationService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<IPosteService, PosteService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 

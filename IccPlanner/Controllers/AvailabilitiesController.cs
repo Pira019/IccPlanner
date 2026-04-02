@@ -79,8 +79,20 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> GetMyAvailabilities(int departmentId, int month, int year)
         {
             var memberId = await GetMemberAuthIdAsync();
-            var result = await _availabilityRepository.GetUserAvailabilitiesAsync(memberId, month, year, departmentId);
-            return Ok(result);
+            var result = await _availabilityService.GetUserAvailabilitiesAsync(memberId, month, year, departmentId);
+            return Ok(result.Value);
+        }
+
+        /// <summary>
+        ///     Récupère les membres disponibles par département et date, groupés par service.
+        /// </summary>
+        [HttpGet("{departmentId}/{date}")]
+        [Authorize]
+        [ProducesResponseType<List<AvailableMembersByDateResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAvailableMembersByDate(int departmentId, DateOnly date)
+        {
+            var result = await _availabilityService.GetAvailableMembersByDateAsync(departmentId, date);
+            return Ok(result.Value);
         }
     }
 }

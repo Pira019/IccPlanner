@@ -21,5 +21,8 @@ namespace Domain.Entities
         public Member? UpdatedBy { get; set; }
         public string? Comment { get; set; } 
         public PlanningType PlanningType { get; set; } // ex Formation, Observation etc
+        public bool IsTraining { get; set; } = false;
+        public int? PosteId { get; set; }
+        public Poste? Poste { get; set; }
     }
 }

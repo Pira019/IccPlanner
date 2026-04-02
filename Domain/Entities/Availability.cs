@@ -23,5 +23,10 @@
         ///     Notes 
         /// </summary>
         public string? Notes { get; set; }
+
+        /// <summary>
+        ///     Planning associé (relation 1-to-1)
+        /// </summary>
+        public Planning? Planning { get; set; }
     }
 }

@@ -74,5 +74,56 @@ namespace Infrastructure.Repositories
                 .OrderBy(r => r.Date)
                 .ToListAsync();
         }
+
+        public async Task<List<AvailableMembersByDateResponse>> GetAvailableMembersByDateAsync(int departmentId, DateOnly date)
+        {
+            var rawData = await _dbSet
+                .AsNoTracking()
+                .Where(a => a.DepartmentMember.DepartmentId == departmentId
+                    && a.TabServicePrg.PrgDate.Date.HasValue
+                    && a.TabServicePrg.PrgDate.Date.Value == date)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.TabServicePrgId,
+                    ServiceName = a.TabServicePrg.DisplayName,
+                    ProgramName = a.TabServicePrg.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
+                    StartTime = a.TabServicePrg.TabServices.StartTime,
+                    EndTime = a.TabServicePrg.TabServices.EndTime,
+                    ArrivalTime = a.TabServicePrg.ArrivalTimeOfMember,
+                    MemberId = a.DepartmentMember.MemberId,
+                    MemberName = a.DepartmentMember.Member.Name,
+                    MemberLastName = a.DepartmentMember.Member.LastName,
+                    IsPlanned = a.Planning != null,
+                    IsTraining = a.Planning != null && a.Planning.IsTraining,
+                    CreatedAt = a.CreatedAt
+                })
+                .ToListAsync();
+
+            return rawData
+                .GroupBy(a => new { a.TabServicePrgId, a.ServiceName, a.ProgramName, a.StartTime, a.EndTime, a.ArrivalTime })
+                .Select(g => new AvailableMembersByDateResponse
+                {
+                    ServicePrgId = g.Key.TabServicePrgId,
+                    ServiceName = g.Key.ServiceName,
+                    ProgramName = g.Key.ProgramName,
+                    StartTime = g.Key.StartTime.ToString(),
+                    EndTime = g.Key.EndTime.ToString(),
+                    ArrivalTime = g.Key.ArrivalTime?.ToString(),
+                    AvailableMembers = g.OrderBy(a => a.MemberName)
+                        .ThenBy(a => a.MemberLastName)
+                        .Select(a => new AvailableMemberItem
+                        {
+                            AvailabilityId = a.Id,
+                            MemberId = a.MemberId,
+                            DisplayName = a.MemberName + " " + a.MemberLastName.Substring(0, 1) + ".",
+                            IsPlanned = a.IsPlanned,
+                            IsTraining = a.IsTraining,
+                            CreatedAt = a.CreatedAt
+                        }).ToList()
+                })
+                .OrderBy(r => r.StartTime)
+                .ToList();
+        }
     }
 }

@@ -137,5 +137,42 @@ namespace Infrastructure.Repositories
             await PlannerContext.DepartmentMemberPosts.AddAsync(departmentMemberPost);
             PlannerContext.SaveChanges();
         }
+
+        public async Task<List<PosteResponse>> GetPostesByDepartmentAsync(int departmentId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(d => d.Id == departmentId)
+                .SelectMany(d => d.Postes)
+                .Select(p => new PosteResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    ShortName = p.ShortName
+                })
+                .ToListAsync();
+        }
+
+        public async Task AssignPostesAsync(int departmentId, List<int> posteIds)
+        {
+            var department = await _dbSet
+                .Include(d => d.Postes)
+                .FirstOrDefaultAsync(d => d.Id == departmentId);
+
+            if (department == null) return;
+
+            var postesToAdd = await PlannerContext.Postes
+                .Where(p => posteIds.Contains(p.Id))
+                .ToListAsync();
+
+            // Ajouter seulement ceux qui ne sont pas déjà affectés
+            foreach (var poste in postesToAdd)
+            {
+                if (!department.Postes.Any(p => p.Id == poste.Id))
+                    department.Postes.Add(poste);
+            }
+
+            await PlannerContext.SaveChangesAsync();
+        }
     }
 }

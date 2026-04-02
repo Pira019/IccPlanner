@@ -347,5 +347,20 @@ namespace Application.Services
             var dept =  _departmentRepository.GetByIdAsync(idDept);
             return dept.ContinueWith(t => _mapper.Map<DeptResponse>(t.Result) );
         }
+
+        public async Task<List<PosteResponse>> GetPostesByDepartmentAsync(int departmentId)
+        {
+            return await _departmentRepository.GetPostesByDepartmentAsync(departmentId);
+        }
+
+        public async Task<Result<bool>> AssignPostesAsync(int departmentId, List<int> posteIds)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            if (department == null)
+                return Result<bool>.Fail(ValidationMessages.DEPARTMENT_NOT_EXIST);
+
+            await _departmentRepository.AssignPostesAsync(departmentId, posteIds);
+            return Result<bool>.Success(true);
+        }
     }
 }

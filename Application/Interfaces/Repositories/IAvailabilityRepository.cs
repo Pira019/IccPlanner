@@ -47,5 +47,10 @@ namespace Application.Interfaces.Repositories
         ///     Récupère les disponibilités d'un utilisateur pour un mois donné.
         /// </summary>
         public Task<List<UserAvailabilityResponse>> GetUserAvailabilitiesAsync(Guid memberId, int month, int year, int departmentId);
+
+        /// <summary>
+        ///     Récupère les membres disponibles par département et date, groupés par service.
+        /// </summary>
+        public Task<List<AvailableMembersByDateResponse>> GetAvailableMembersByDateAsync(int departmentId, DateOnly date);
     }
 }

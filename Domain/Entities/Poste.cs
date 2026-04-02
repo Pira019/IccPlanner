@@ -18,5 +18,7 @@ namespace Domain.Entities
         ///     Indique si le poste confère le droit de gérer des membres dans le département.
         /// </summary>
         public bool IndGest { get; set; } = default;
+
+        public List<Department> Departments { get; } = [];
     }
 }

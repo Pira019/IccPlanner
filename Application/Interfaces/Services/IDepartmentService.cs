@@ -104,6 +104,18 @@ namespace Application.Interfaces.Services
         /// </returns>
         public Task<DeptResponse> GetByIdAsync(int idDept);
 
+        /// <summary>
+        ///     Récupère les postes associés à un département.
+        /// </summary>
+        /// <param name="departmentId">Id du département</param>
+        /// <returns>Liste des postes</returns>
+        public Task<List<PosteResponse>> GetPostesByDepartmentAsync(int departmentId);
+
+        /// <summary>
+        ///     Affecte une liste de postes à un département.
+        /// </summary>
+        public Task<Result<bool>> AssignPostesAsync(int departmentId, List<int> posteIds);
+
 
     }
 }

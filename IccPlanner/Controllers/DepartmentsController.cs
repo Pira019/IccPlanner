@@ -173,6 +173,27 @@ namespace IccPlanner.Controllers
             return Ok(dept);
         }
 
+        [HttpGet("{id}/postes")]
+        [Authorize]
+        [ProducesResponseType<List<PosteResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPostes(int id)
+        {
+            var postes = await _departmentService.GetPostesByDepartmentAsync(id);
+            return Ok(postes);
+        }
+
+        [HttpPost("{id}/postes")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AssignPostes(int id, AssignPostesRequest request)
+        {
+            var result = await _departmentService.AssignPostesAsync(id, request.PosteIds);
+            if (!result.IsSuccess)
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            return Ok();
+        }
+
 
     }
 }

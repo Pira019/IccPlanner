@@ -3,6 +3,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Availability;
+using Application.Responses.Availability;
 using Application.Responses.ServicePrg;
 using AutoMapper;
 using Domain.Entities;
@@ -89,6 +90,17 @@ namespace Application.Services
 
             return Result<bool>.Success(true);
         }
-         
+
+        public async Task<Result<List<UserAvailabilityResponse>>> GetUserAvailabilitiesAsync(Guid memberId, int month, int year, int departmentId)
+        {
+            var result = await _availabilityRepository.GetUserAvailabilitiesAsync(memberId, month, year, departmentId);
+            return Result<List<UserAvailabilityResponse>>.Success(result);
+        }
+
+        public async Task<Result<List<AvailableMembersByDateResponse>>> GetAvailableMembersByDateAsync(int departmentId, DateOnly date)
+        {
+            var result = await _availabilityRepository.GetAvailableMembersByDateAsync(departmentId, date);
+            return Result<List<AvailableMembersByDateResponse>>.Success(result);
+        }
     }
 }

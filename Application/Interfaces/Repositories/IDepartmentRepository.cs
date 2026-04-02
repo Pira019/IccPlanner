@@ -56,5 +56,17 @@ namespace Application.Interfaces.Repositories
         ///     Retourne une liste des départements.
         /// </returns>
         public Task<GetDepartResponse> GetDepartAsync(string? membreId, int? pageNumber, int? pageSize);
+
+        /// <summary>
+        ///     Récupère les postes associés à un département.
+        /// </summary>
+        /// <param name="departmentId">Id du département</param>
+        /// <returns>Liste des postes</returns>
+        public Task<List<PosteResponse>> GetPostesByDepartmentAsync(int departmentId);
+
+        /// <summary>
+        ///     Affecte une liste de postes à un département.
+        /// </summary>
+        public Task AssignPostesAsync(int departmentId, List<int> posteIds);
     }
 }
