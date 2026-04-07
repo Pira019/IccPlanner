@@ -35,5 +35,13 @@ namespace Infrastructure.Repositories
                 && dm.DepartmentId == departmentId
                 && dm.DepartmentMemberPosts.Any(dmp => dmp.Poste.IndGest));
         }
+
+        public async Task<bool> HasPlanningRightAsync(Guid memberId, int departmentId)
+        {
+            return await _dbSet.AnyAsync(dm =>
+                dm.MemberId == memberId
+                && dm.DepartmentId == departmentId
+                && dm.IndPlanning);
+        }
     }
 }

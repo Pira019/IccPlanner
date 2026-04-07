@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(IccPlannerContext))]
-    partial class IccPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20260407131047_AddPlanningPeriod")]
+    partial class AddPlanningPeriod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,9 +147,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IndPlanning")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -485,10 +485,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IndObservation")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IndTraining")
+                    b.Property<bool>("IsTraining")
                         .HasColumnType("boolean");
 
                     b.Property<string>("MemberName")
@@ -497,6 +494,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<int>("PlanningPeriodId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlanningType")
                         .HasColumnType("integer");
 
                     b.Property<int?>("PosteId")
@@ -541,12 +541,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IndArchived")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IndPublished")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("Month")
                         .HasColumnType("integer");
 
@@ -555,6 +549,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid?>("PublishedById")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Year")
                         .HasColumnType("integer");

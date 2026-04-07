@@ -444,4 +444,19 @@
   <data name="CANT_ADD_PAST_AVAILABILITY" xml:space="preserve">
     <value>Vous ne pouvez pas déclarer une disponibilité pour une date passée.</value>
   </data>
+  <data name="PLANNING_AVAILABILITY_NOT_FOUND" xml:space="preserve">
+    <value>La disponibilité est introuvable ou a été retirée par le membre.</value>
+  </data>
+  <data name="PLANNING_MEMBER_ALREADY_ASSIGNED" xml:space="preserve">
+    <value>Ce membre est déjà assigné à ce service.</value>
+  </data>
+  <data name="PLANNING_ARCHIVED" xml:space="preserve">
+    <value>Le planning de ce mois est archivé et ne peut plus être modifié.</value>
+  </data>
+  <data name="PLANNING_NOT_AUTHORIZED" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à gérer le planning de ce département.</value>
+  </data>
+  <data name="PLANNING_OVERLAP" xml:space="preserve">
+    <value>Ce membre est déjà assigné à un autre service sur ce créneau horaire.</value>
+  </data>
 </root>

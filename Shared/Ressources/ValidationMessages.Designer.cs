@@ -1040,5 +1040,50 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("CANT_ADD_PAST_AVAILABILITY", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   The availability was not found or has been removed by the member.
+        /// </summary>
+        public static string PLANNING_AVAILABILITY_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("PLANNING_AVAILABILITY_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This member is already assigned to this service.
+        /// </summary>
+        public static string PLANNING_MEMBER_ALREADY_ASSIGNED {
+            get {
+                return ResourceManager.GetString("PLANNING_MEMBER_ALREADY_ASSIGNED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The planning for this month is archived and can no longer be modified.
+        /// </summary>
+        public static string PLANNING_ARCHIVED {
+            get {
+                return ResourceManager.GetString("PLANNING_ARCHIVED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   You are not authorized to manage the planning for this department.
+        /// </summary>
+        public static string PLANNING_NOT_AUTHORIZED {
+            get {
+                return ResourceManager.GetString("PLANNING_NOT_AUTHORIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This member is already assigned to another service during this time slot.
+        /// </summary>
+        public static string PLANNING_OVERLAP {
+            get {
+                return ResourceManager.GetString("PLANNING_OVERLAP", resourceCulture);
+            }
+        }
     }
 }

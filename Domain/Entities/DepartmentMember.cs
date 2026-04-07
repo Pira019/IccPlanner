@@ -15,7 +15,13 @@ namespace Domain.Entities
         [MaxLength(55)]
         public string? NickName {  get; set; }
         public DateOnly? DateEntry { get; set; }
-        public MemberStatus Status { get; set; } = MemberStatus.Active;      
+        public MemberStatus Status { get; set; } = MemberStatus.Active;
+
+        /// <summary>
+        ///     Indique si le membre a le droit de gérer les assignations au planning.
+        /// </summary>
+        public bool IndPlanning { get; set; } = false;
+
         public List<Poste> Postes { get; } = [];
         public List<TabServicePrg> TabServicePrgs { get; } = [];
         public List<Availability> Availabilities { get; } = [];

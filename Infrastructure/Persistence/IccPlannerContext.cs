@@ -35,6 +35,7 @@ namespace Infrastructure.Persistence
         public DbSet<FeedBack> FeedBacks { get; set; } 
         public DbSet<Availability> Availabilities { get; set; } 
         public DbSet<Planning> Plannings { get; set; }
+        public DbSet<PlanningPeriod> PlanningPeriods { get; set; }
 #pragma warning disable CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<Role> Roles { get; set; }
 #pragma warning restore CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
@@ -94,6 +95,16 @@ namespace Infrastructure.Persistence
                 .HasMany(d => d.Postes)
                 .WithMany(p => p.Departments)
                 .UsingEntity("DepartmentPostes");
+
+            // PlanningPeriod: un seul par département/mois/année
+            builder.Entity<PlanningPeriod>()
+                .HasIndex(pp => new { pp.DepartmentId, pp.Month, pp.Year })
+                .IsUnique();
+
+            builder.Entity<Planning>()
+                .HasOne(p => p.PlanningPeriod)
+                .WithMany(pp => pp.Plannings)
+                .HasForeignKey(p => p.PlanningPeriodId);
 
             // Renommer les tables t'identité
             builder.Entity<IdentityUser>().ToTable("Users");

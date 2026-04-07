@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -15,13 +14,15 @@ namespace Domain.Entities
         public required string MemberName { get; set; }
         public DateOnly ProgramDate { get; set; } // DepartmentProgram
         public Availability Availability { get; set; } = null!;
+        public int PlanningPeriodId { get; set; }
+        public PlanningPeriod PlanningPeriod { get; set; } = null!;
         public Guid ProgrammedById { get; set; } // Member Id
         public Member ProgrammedBy { get; set; } = null!;
         public Guid? UpdatedById { get; set; } // Member Id
         public Member? UpdatedBy { get; set; }
         public string? Comment { get; set; } 
-        public PlanningType PlanningType { get; set; } // ex Formation, Observation etc
-        public bool IsTraining { get; set; } = false;
+        public bool IndTraining { get; set; } = false;
+        public bool IndObservation { get; set; } = false;
         public int? PosteId { get; set; }
         public Poste? Poste { get; set; }
     }

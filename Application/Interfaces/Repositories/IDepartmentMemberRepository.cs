@@ -41,5 +41,10 @@ namespace Application.Interfaces.Repositories
         /// <param name="departmentId">ID du département</param>
         /// <returns>Vrai si le membre a un poste avec IndGest = true dans ce département</returns>
         public Task<bool> HasManagementRightAsync(Guid memberId, int departmentId);
+
+        /// <summary>
+        ///     Vérifie si un membre a le droit de gérer le planning (IndPlanning = true) dans un département.
+        /// </summary>
+        public Task<bool> HasPlanningRightAsync(Guid memberId, int departmentId);
     }
 }

@@ -444,4 +444,19 @@
   <data name="CANT_ADD_PAST_AVAILABILITY" xml:space="preserve">
     <value>You cannot declare availability for a past date.</value>
   </data>
+  <data name="PLANNING_AVAILABILITY_NOT_FOUND" xml:space="preserve">
+    <value>The availability was not found or has been removed by the member.</value>
+  </data>
+  <data name="PLANNING_MEMBER_ALREADY_ASSIGNED" xml:space="preserve">
+    <value>This member is already assigned to this service.</value>
+  </data>
+  <data name="PLANNING_ARCHIVED" xml:space="preserve">
+    <value>The planning for this month is archived and can no longer be modified.</value>
+  </data>
+  <data name="PLANNING_NOT_AUTHORIZED" xml:space="preserve">
+    <value>You are not authorized to manage the planning for this department.</value>
+  </data>
+  <data name="PLANNING_OVERLAP" xml:space="preserve">
+    <value>This member is already assigned to another service during this time slot.</value>
+  </data>
 </root>

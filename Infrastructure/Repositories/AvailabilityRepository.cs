@@ -95,7 +95,7 @@ namespace Infrastructure.Repositories
                     MemberName = a.DepartmentMember.Member.Name,
                     MemberLastName = a.DepartmentMember.Member.LastName,
                     IsPlanned = a.Planning != null,
-                    IsTraining = a.Planning != null && a.Planning.IsTraining,
+                    IsTraining = a.Planning != null && a.Planning.IndTraining,
                     CreatedAt = a.CreatedAt
                 })
                 .ToListAsync();
