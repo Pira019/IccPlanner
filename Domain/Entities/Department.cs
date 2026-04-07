@@ -19,5 +19,10 @@ namespace Domain.Entities
         public List<Program> Programs { get; } = [];
         public List<DepartmentProgram> DepartmentPrograms { get; } = [];
         public List<Poste> Postes { get; } = [];
+
+        /// <summary>
+        ///     Nombre de jours à l'avance pour générer les dates récurrentes. Null = valeur globale.
+        /// </summary>
+        public int? RecurrentDaysAhead { get; set; }
     }
 }

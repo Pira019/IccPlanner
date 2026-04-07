@@ -18,6 +18,7 @@ using System.Text;
 using Infrastructure.Security;
 using Infrastructure.Configurations.Interface;
 using Infrastructure.Middlewares;
+using Infrastructure.Jobs;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Infrastructure.Configurations.Filter;
@@ -149,6 +150,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPosteService, PosteService>();
             builder.Services.AddScoped<IPlanningService, PlanningService>();
             builder.Services.AddScoped<IPlanningRepository, PlanningRepository>();
+            builder.Services.AddScoped<IRecurrentDateService, RecurrentDateService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -258,6 +260,9 @@ namespace IccPlanner
                     policy.WithOrigins(appSetting.FrontUrl!).AllowCredentials().AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
+            // Background Jobs
+            builder.Services.AddHostedService<RecurrentDateGeneratorJob>();
 
             var app = builder.Build();
 

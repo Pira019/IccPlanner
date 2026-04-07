@@ -3,7 +3,9 @@ using Application.Requests.Account;
 using Application.Responses;
 using Application.Responses.Errors;
 using Domain.Abstractions;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace IccPlanner.Controllers
 {
@@ -16,11 +18,19 @@ namespace IccPlanner.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly IAccountService _accountService;
+        private readonly IRecurrentDateService _recurrentDateService;
+        private readonly int _defaultDaysAhead;
 
-        public AdminController(ILogger<AdminController> logger, IAccountService accountService)
+        public AdminController(
+            ILogger<AdminController> logger,
+            IAccountService accountService,
+            IRecurrentDateService recurrentDateService,
+            IOptions<AppSetting> appSettings)
         {
             _logger = logger;
             _accountService = accountService;
+            _recurrentDateService = recurrentDateService;
+            _defaultDaysAhead = appSettings.Value.Parametres?.RecurrentDaysAhead ?? 30;
         }
 
         // POST api/<AdminController>
@@ -58,6 +68,17 @@ namespace IccPlanner.Controllers
                 _logger.LogError(ex, AccountErrors.CREATE_ADMIN_ERROR.Message);
                  return BadRequest(AccountResponseError.InternalServerError(AccountErrors.CREATE_ADMIN_ERROR.Message)); 
             }
+        }
+
+        /// <summary>
+        ///     Exécuter manuellement la génération des dates récurrentes.
+        /// </summary>
+        [HttpPost("generate-recurrent-dates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GenerateRecurrentDates()
+        {
+            var totalCreated = await _recurrentDateService.GenerateRecurrentDatesAsync(_defaultDaysAhead);
+            return Ok(new { datesCreated = totalCreated });
         }
     }
 }
