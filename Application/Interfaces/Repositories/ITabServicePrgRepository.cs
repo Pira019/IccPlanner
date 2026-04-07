@@ -51,5 +51,12 @@ namespace Application.Interfaces.Repositories
         /// <param name="departmentId">ID du département attendu.</param>
         /// <returns>true si tous les ServicePrg appartiennent au département, false sinon.</returns>
         public Task<bool> AllBelongToDepartmentAsync(List<int> servicePrgIds, int departmentId);
+
+        /// <summary>
+        ///     Vérifie si au moins un ServicePrg a une date passée.
+        /// </summary>
+        /// <param name="servicePrgIds">Liste des IDs de ServicePrg à vérifier.</param>
+        /// <returns>true si au moins un ServicePrg a une date passée, false sinon.</returns>
+        public Task<bool> AnyHasPastDateAsync(List<int> servicePrgIds);
     }
 }

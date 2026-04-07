@@ -1031,5 +1031,14 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("CAPITALIZE_FORMAT", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à You cannot declare availability for a past date..
+        /// </summary>
+        public static string CANT_ADD_PAST_AVAILABILITY {
+            get {
+                return ResourceManager.GetString("CANT_ADD_PAST_AVAILABILITY", resourceCulture);
+            }
+        }
     }
 }

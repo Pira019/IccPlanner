@@ -441,4 +441,7 @@
   <data name="CAPITALIZE_FORMAT" xml:space="preserve">
     <value>{0} must start with an uppercase letter followed by lowercase letters.</value>
   </data>
+  <data name="CANT_ADD_PAST_AVAILABILITY" xml:space="preserve">
+    <value>You cannot declare availability for a past date.</value>
+  </data>
 </root>

@@ -64,6 +64,13 @@ namespace Application.Services
                 return Result<bool>.Fail(ValidationMessages.ServicePrgNonExist);
             }
 
+            // Vérifier qu'aucun ServicePrg n'a une date passée
+            var hasPastDate = await _tabServicePrgRepository.AnyHasPastDateAsync(addAvailabilityRequest.ServicePrgIds);
+            if (hasPastDate)
+            {
+                return Result<bool>.Fail(ValidationMessages.CANT_ADD_PAST_AVAILABILITY);
+            }
+
             var member = await _accountRepository.GetAuthMemberAsync(userId_);
             var departmentMemberId = await _departmentMemberRepository.GetMemberInDepartmentIdAsync(idDepart, member.Id);
 

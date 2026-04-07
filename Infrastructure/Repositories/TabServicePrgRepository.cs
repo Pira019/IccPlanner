@@ -170,5 +170,14 @@ namespace Infrastructure.Repositories
 
             return count == servicePrgIds.Count;
         }
+
+        public async Task<bool> AnyHasPastDateAsync(List<int> servicePrgIds)
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            return await _dbSet
+                .AnyAsync(s => servicePrgIds.Contains(s.Id)
+                    && s.PrgDate.Date.HasValue
+                    && s.PrgDate.Date.Value < today);
+        }
     }
 }

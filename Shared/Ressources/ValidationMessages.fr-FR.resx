@@ -438,4 +438,10 @@
   <data name="MJ_UtiliNonAutor" xml:space="preserve">
     <value>Vous ne pouvez pas entrer vos disponibilités, car vous ne faites pas partie des membres de ce département.</value>
   </data>
+  <data name="CAPITALIZE_FORMAT" xml:space="preserve">
+    <value>{0} doit commencer par une majuscule suivie de minuscules.</value>
+  </data>
+  <data name="CANT_ADD_PAST_AVAILABILITY" xml:space="preserve">
+    <value>Vous ne pouvez pas déclarer une disponibilité pour une date passée.</value>
+  </data>
 </root>
