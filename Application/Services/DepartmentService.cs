@@ -29,11 +29,13 @@ namespace Application.Services
         private readonly IClaimRepository _claimRepository;
         private readonly IMinistryRepository _ministryRepository;
         private readonly IProgramRepository _programRepository;
+        private readonly IRecurrentDateService _recurrentDateService;
+        private readonly IAppSettings _appSettings;
 
         public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper, IDepartmentRepository departmentRepository, IPostRepository postRepository,
             IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository,
             IClaimRepository claimRepository, IMinistryRepository ministryRepository,
-            IProgramRepository programRepository )
+            IProgramRepository programRepository, IRecurrentDateService recurrentDateService, IAppSettings appSettings)
             : base(baseRepository, mapper)
         {
             _departmentRepository = departmentRepository;
@@ -43,6 +45,8 @@ namespace Application.Services
             _claimRepository = claimRepository;
             _ministryRepository = ministryRepository;
             _programRepository = programRepository;
+            _recurrentDateService = recurrentDateService;
+            _appSettings = appSettings;
         }
 
         public async Task<Result<AddDepartmentResponse>> AddDepartment(AddDepartmentRequest addDepartmentRequest)
@@ -117,6 +121,12 @@ namespace Application.Services
 
             var newDepartmentPrograms = await InitializeDepartmentProgramModel(departmentProgramRequest, userId);
             await _departmentProgramRepository.InsertAllAsync(newDepartmentPrograms);
+
+            // Si récurrent sans date de fin, générer immédiatement les dates pour le prochain mois
+            if (departmentProgramRequest.IndRecurrent && string.IsNullOrWhiteSpace(departmentProgramRequest.DateEnd))
+            {
+                await _recurrentDateService.GenerateRecurrentDatesAsync(_appSettings.Parametres.RecurrentDaysAhead);
+            }
 
             return Result<bool>.Success(true);
         }
