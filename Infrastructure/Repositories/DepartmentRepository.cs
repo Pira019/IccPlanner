@@ -67,41 +67,47 @@ namespace Infrastructure.Repositories
             };
         }
 
-        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly)
+        public async Task<List<DepartmentServicesResponse>> GetDepartmentServicesByDateAsync(DateOnly datePrg)
         {
-            throw new NotImplementedException();
+            var rawData = await PlannerContext.TabServicePrgs
+                .AsNoTracking()
+                .Where(tsp => tsp.PrgDate.Date.HasValue && tsp.PrgDate.Date.Value == datePrg)
+                .Select(tsp => new
+                {
+                    DepartmentId = tsp.PrgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId,
+                    DepartmentName = tsp.PrgDate.PrgDepartmentInfo.DepartmentProgram.Department.Name,
+                    DepartmentShortName = tsp.PrgDate.PrgDepartmentInfo.DepartmentProgram.Department.ShortName,
+                    ServicePrgId = tsp.Id,
+                    ServiceName = tsp.DisplayName,
+                    ProgramName = tsp.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
+                    StartTime = tsp.TabServices.StartTime,
+                    EndTime = tsp.TabServices.EndTime,
+                    ArrivalTime = tsp.ArrivalTimeOfMember
+                })
+                .ToListAsync();
+
+            return rawData
+                .GroupBy(r => new { r.DepartmentId, r.DepartmentName, r.DepartmentShortName })
+                .Select(g => new DepartmentServicesResponse
+                {
+                    DepartmentId = g.Key.DepartmentId,
+                    DepartmentName = g.Key.DepartmentName,
+                    DepartmentShortName = g.Key.DepartmentShortName,
+                    Services = g.OrderBy(s => s.StartTime)
+                        .Select(s => new DepartmentServiceItem
+                        {
+                            ServicePrgId = s.ServicePrgId,
+                            ServiceName = s.ServiceName,
+                            ProgramName = s.ProgramName,
+                            StartTime = s.StartTime.ToString(),
+                            EndTime = s.EndTime.ToString(),
+                            ArrivalTime = s.ArrivalTime?.ToString()
+                        }).ToList()
+                })
+                .OrderBy(d => d.DepartmentName)
+                .ToList();
         }
 
-
-        ///inheritdoc />
-        /* public async Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly datePrg)
-         {
-             return await _dbSet.Where(department => department.Members.Any(member => member.Id == userId))
-                 .Select(department => new GetServicesListResponse
-                 {
-                     DepartmentName = department.Name,
-                     ServicePrograms = department.DepartmentPrograms
-                    .Where(dp => dp.PrgDepartmentInfo != null)
-                    .SelectMany(dp => dp.PrgDepartmentInfo!.PrgDate
-                         .Where(pd => pd.Date == datePrg)
-                        .SelectMany(pd =>
-                         pd.TabServicePrgs.Select(service =>
-                         new ServiceProgramDto
-                         {
-                             ProgramName = dp.Program.Name,
-                             ProgramShortName = dp.Program.ShortName,
-                             ServiceProgramId = service.Id,
-                             DisplayName = service.DisplayName,
-                             ServantArrivalTime = service.ArrivalTimeOfMember.ToString(),
-                             StartTime = service.TabServices.StartTime,
-                             EndTime = service.TabServices.EndTime.ToString(),
-                             IsAvailable = service.Availabilities.Any(x => x.DepartmentMember.Member.Id == userId)
-
-                         })))
-                             .OrderBy(X => X.StartTime).ToList()
-                 }).Where(dpt => dpt.ServicePrograms.Any())
-                 .ToListAsync();
-         }*/
 
         public async Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds)
         {

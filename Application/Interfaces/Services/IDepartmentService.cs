@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Requests.Department;
 using Application.Responses.Department;
+using Application.Responses.TabService;
 using Domain.Entities;
 
 namespace Application.Interfaces.Services
@@ -115,6 +116,11 @@ namespace Application.Interfaces.Services
         ///     Affecte une liste de postes à un département.
         /// </summary>
         public Task<Result<bool>> AssignPostesAsync(int departmentId, List<int> posteIds);
+
+        /// <summary>
+        ///     Obtient la liste des services de tous les départements pour une date donnée.
+        /// </summary>
+        public Task<List<DepartmentServicesResponse>> GetDepartmentServicesByDateAsync(DateOnly datePrg);
 
 
     }

@@ -7,6 +7,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses.Department; 
+using Application.Responses.TabService;
 using AutoMapper; 
 using Domain.Abstractions;
 using Domain.Entities;
@@ -357,10 +358,17 @@ namespace Application.Services
         {
             var department = await _departmentRepository.GetByIdAsync(departmentId);
             if (department == null)
+            {
                 return Result<bool>.Fail(ValidationMessages.DEPARTMENT_NOT_EXIST);
+            }
 
             await _departmentRepository.AssignPostesAsync(departmentId, posteIds);
             return Result<bool>.Success(true);
+        }
+
+        public async Task<List<DepartmentServicesResponse>> GetDepartmentServicesByDateAsync(DateOnly datePrg)
+        {
+            return await _departmentRepository.GetDepartmentServicesByDateAsync(datePrg);
         }
     }
 }

@@ -2,12 +2,10 @@
 
 using Application.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Security.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Application.Requests.ServiceTab;
 using Application.Interfaces.Services;
 using Application.Responses.Errors;
-using Shared.Ressources;
 using Application.Responses.TabService;
 using Application.Interfaces.Repositories;
 
@@ -17,26 +15,25 @@ namespace IccPlanner.Controllers
     [ApiController]
     public class ServicesController : PlannerBaseController
     {
-        private IServiceTabService _serviceTabService;
-        private ITabServicePrgService _tabServicePrgService; 
-        private IDepartmentRepository _departmentRepository;
+        private readonly IServiceTabService _serviceTabService;
+        private readonly ITabServicePrgService _tabServicePrgService;
+        private readonly IDepartmentService _departmentService;
 
-        public ServicesController(IAccountRepository accountRepository, IServiceTabService serviceTabService, ITabServicePrgService tabServicePrgService,
-            IDepartmentRepository departmentRepository) : base(accountRepository)
+        public ServicesController(
+            IAccountRepository accountRepository,
+            IServiceTabService serviceTabService,
+            ITabServicePrgService tabServicePrgService,
+            IDepartmentService departmentService) : base(accountRepository)
         {
             _serviceTabService = serviceTabService;
-            _tabServicePrgService = tabServicePrgService; 
-            _departmentRepository = departmentRepository;
+            _tabServicePrgService = tabServicePrgService;
+            _departmentService = departmentService;
         }
 
         /// <summary>
         ///     Ajouter un service
         /// </summary>
-        /// <param name="serviceRequest">
-        ///     Modèle de donnée a recevoir 
-        /// </param>
-        /// <returns></returns>
-        [HttpPost] 
+        [HttpPost]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
@@ -48,60 +45,52 @@ namespace IccPlanner.Controllers
             if (!resultat.IsSuccess)
             {
                 return BadRequest(ApiError.ErrorMessage(resultat.Error, null, null));
-            } 
+            }
+
             return Created(string.Empty, resultat.Value);
         }
 
         /// <summary>
         ///     Obtenir tous les services
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<IEnumerable<GetTabServiceListResponse>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             return Ok(await _serviceTabService.GetAll());
         }
 
+        /// <summary>
+        ///     Obtenir les dates de services par département
+        /// </summary>
         [HttpGet("dates/{month:int}/{year:int}/{idDepartment:int}")]
         [Authorize]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<IEnumerable<GetDatesResponse>>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetServiceDate(int month,int year, int idDepartment)
-        { 
-            var req = await _tabServicePrgService.GetDatesByDepartAsync(month, year,idDepartment);
+        public async Task<IActionResult> GetServiceDate(int month, int year, int idDepartment)
+        {
+            var req = await _tabServicePrgService.GetDatesByDepartAsync(month, year, idDepartment);
             return Ok(req.Value);
         }
 
+        /// <summary>
+        ///     Obtenir les services groupés par département pour une date donnée
+        /// </summary>
         [HttpGet("department-services/{datePrg}")]
         [Authorize]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<IEnumerable<GetServicesListResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<List<DepartmentServicesResponse>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetServiceByDate(DateOnly datePrg)
         {
-            return Ok( await _departmentRepository.GetDepartmentServicesByDate(await GetMemberAuthIdAsync(), datePrg));
+            return Ok(await _departmentService.GetDepartmentServicesByDateAsync(datePrg));
         }
 
-
         /// <summary>
-        ///      Ajouter un service d'un programme d'un département
+        ///     Ajouter un service d'un programme d'un département
         /// </summary>
-        /// <param name="servicePrgDepartmentRequest">
-        ///     Modèle de donnée a recevoir 
-        /// </param>
-        /// <returns></returns>
         [HttpPost("program-department")]
         [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<BaseAddResponse>(StatusCodes.Status201Created)]
         public async Task<IActionResult> AddServicePrgDepartment([FromBody] AddServicePrgDepartmentRequest servicePrgDepartmentRequest)
@@ -111,18 +100,17 @@ namespace IccPlanner.Controllers
             if (!res.IsSuccess)
             {
                 return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
-            } 
+            }
+
             return Created(string.Empty, string.Empty);
         }
 
         /// <summary>
-        ///     Recherche des programme
+        ///     Recherche des programmes
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         [HttpPost("search-programs")]
         [Authorize]
-        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)] 
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<GetServicesListResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchPrgDepartment([FromBody] ServicesRequest request)
@@ -133,6 +121,7 @@ namespace IccPlanner.Controllers
             {
                 return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
             }
+
             return Ok(res.Value);
         }
     }

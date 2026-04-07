@@ -42,11 +42,11 @@ namespace Application.Interfaces.Repositories
         public Task<IEnumerable<int?>> GetValidDepartmentIds(IEnumerable<int> departmentIds);  
 
         /// <summary>
-        ///     Obtient la liste des services des départements d'un utilisateur par date
+        ///     Obtient la liste des services de tous les départements pour une date donnée.
         /// </summary>
-        /// <param name="dateOnly"></param>
-        /// <returns></returns>
-        public Task<IEnumerable<GetServicesListResponse>> GetDepartmentServicesByDate(Guid userId, DateOnly dateOnly);
+        /// <param name="dateOnly">Date du programme</param>
+        /// <returns>Services groupés par département</returns>
+        public Task<List<DepartmentServicesResponse>> GetDepartmentServicesByDateAsync(DateOnly datePrg);
 
         /// <summary>
         ///     Obtenir la liste des départements.
