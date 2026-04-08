@@ -109,5 +109,10 @@ namespace Application.Services
                 PlanningId = created.Id
             });
         }
+
+        public async Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId)
+        {
+            return await _planningRepository.GetMonthlyPlanningAsync(month, year, departmentId);
+        }
     }
 }

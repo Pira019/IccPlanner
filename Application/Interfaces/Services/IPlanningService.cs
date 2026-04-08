@@ -7,5 +7,6 @@ namespace Application.Interfaces.Services
     public interface IPlanningService
     {
         public Task<Result<AssignMemberResponse>> AssignMemberAsync(AssignMemberRequest request, Guid actionById, int departmentId);
+        public Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId);
     }
 }

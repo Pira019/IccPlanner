@@ -3,6 +3,7 @@ using Application.Interfaces.Services;
 using Application.Interfaces.Repositories;
 using Application.Requests.Planning;
 using Application.Responses.Errors;
+using Application.Responses.Planning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Responses;
@@ -51,6 +52,19 @@ namespace IccPlanner.Controllers
 
             // Étape 6 — Créé avec succès
             return Created(string.Empty, new { planningId = result.Value.PlanningId });
+        }
+
+        /// <summary>
+        ///     Récapitulatif mensuel du planning, groupé par programme.
+        ///     Le département est obligatoire.
+        /// </summary>
+        [HttpGet("{month:int}/{year:int}")]
+        [Authorize]
+        [ProducesResponseType<List<MonthlyPlanningResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMonthlyPlanning(int month, int year, [FromQuery] int departmentId)
+        {
+            var result = await _planningService.GetMonthlyPlanningAsync(month, year, departmentId);
+            return Ok(result);
         }
     }
 }

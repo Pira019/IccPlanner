@@ -1,4 +1,5 @@
 using Application.Dtos.Planning;
+using Application.Responses.Planning;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -10,5 +11,6 @@ namespace Application.Interfaces.Repositories
         public Task<Planning?> GetByIdWithDetailsAsync(int id);
         public Task<AvailabilityDetailDto?> GetByAvailabilityDetailAsync(int availabilityId);
         public Task<List<OverlapConflictDto>> GetOverlappingAssignmentsAsync(Guid memberId, DateOnly date, TimeOnly startTime, TimeOnly endTime);
+        public Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId);
     }
 }
