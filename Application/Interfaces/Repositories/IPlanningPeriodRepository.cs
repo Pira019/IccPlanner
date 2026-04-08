@@ -6,8 +6,11 @@ namespace Application.Interfaces.Repositories
     {
         /// <summary>
         ///     Archive les PlanningPeriods dont le mois est passé.
-        ///     Retourne le nombre de périodes archivées.
         /// </summary>
         Task<int> ArchivePastPeriodsAsync();
+
+        Task<PlanningPeriod?> GetByDepartmentMonthYearAsync(int departmentId, int month, int year);
+        Task DeletePublishedPlanningsAsync(int periodId);
+        Task AddPublishedPlanningsAsync(List<PublishedPlanning> plannings);
     }
 }

@@ -13,5 +13,6 @@ namespace Application.Interfaces.Repositories
         public Task<AvailabilityDetailDto?> GetByAvailabilityDetailAsync(int availabilityId);
         public Task<List<OverlapConflictDto>> GetOverlappingAssignmentsAsync(Guid memberId, DateOnly date, TimeOnly startTime, TimeOnly endTime);
         public Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId);
+        public Task<List<PublishedPlanning>> GetPlanningsForPublishAsync(int periodId);
     }
 }

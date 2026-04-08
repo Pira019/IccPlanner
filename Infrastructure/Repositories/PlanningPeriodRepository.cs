@@ -11,9 +11,6 @@ namespace Infrastructure.Repositories
         {
         }
 
-        /// <summary>
-        ///     Archive les PlanningPeriods dont le mois est passé.
-        /// </summary>
         public async Task<int> ArchivePastPeriodsAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -41,6 +38,36 @@ namespace Infrastructure.Repositories
             }
 
             return archived;
+        }
+
+        public async Task<PlanningPeriod?> GetByDepartmentMonthYearAsync(int departmentId, int month, int year)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(pp => pp.DepartmentId == departmentId
+                    && pp.Month == month
+                    && pp.Year == year);
+        }
+
+        public async Task DeletePublishedPlanningsAsync(int periodId)
+        {
+            var existing = await PlannerContext.PublishedPlannings
+                .Where(pp => pp.PlanningPeriodId == periodId)
+                .ToListAsync();
+
+            if (existing.Any())
+            {
+                PlannerContext.PublishedPlannings.RemoveRange(existing);
+                await PlannerContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddPublishedPlanningsAsync(List<PublishedPlanning> plannings)
+        {
+            if (plannings.Any())
+            {
+                await PlannerContext.PublishedPlannings.AddRangeAsync(plannings);
+                await PlannerContext.SaveChangesAsync();
+            }
         }
     }
 }

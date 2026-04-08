@@ -68,6 +68,18 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
+        ///     Statut du PlanningPeriod (publié, archivé, date de publication).
+        /// </summary>
+        [HttpGet("{month:int}/{year:int}/status")]
+        [Authorize]
+        [ProducesResponseType<PlanningPeriodStatusResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPeriodStatus(int month, int year, [FromQuery] int departmentId)
+        {
+            var result = await _planningService.GetPeriodStatusAsync(departmentId, month, year);
+            return Ok(result);
+        }
+
+        /// <summary>
         ///     Retirer un membre du planning.
         ///     Voir documentation : Scénario principal - Retirer un membre
         /// </summary>
@@ -108,6 +120,28 @@ namespace IccPlanner.Controllers
             }
 
             return NoContent();
+        }
+
+        /// <summary>
+        ///     Publier le planning d'un département pour un mois/année.
+        ///     Crée un snapshot dans PublishedPlannings.
+        /// </summary>
+        [HttpPost("{departmentId:int}/publish")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Publish(int departmentId, [FromQuery] int month, [FromQuery] int year)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+
+            var result = await _planningService.PublishPlanningAsync(departmentId, month, year, memberId);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+
+            return Ok();
         }
     }
 }

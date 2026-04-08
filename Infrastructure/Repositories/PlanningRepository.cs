@@ -163,7 +163,31 @@ namespace Infrastructure.Repositories
                 })
                 .OrderBy(p => p.ProgramName)
                 .ToList();
+
+
         }
 
+        public async Task<List<PublishedPlanning>> GetPlanningsForPublishAsync(int periodId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(p => p.PlanningPeriodId == periodId)
+                .Select(p => new PublishedPlanning
+                {
+                    PlanningPeriodId = periodId,
+                    SourcePlanningId = p.Id,
+                    MemberName = p.MemberName,
+                    MemberId = p.Availability.DepartmentMember.MemberId,
+                    ProgramDate = p.ProgramDate,
+                    ProgramName = p.Availability.TabServicePrg.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
+                    ProgramShortName = p.Availability.TabServicePrg.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.ShortName,
+                    ServiceName = p.Availability.TabServicePrg.DisplayName,
+                    PosteName = p.Poste != null ? p.Poste.Name : null,
+                    IndTraining = p.IndTraining,
+                    IndObservation = p.IndObservation,
+                    PublishedAt = DateTime.UtcNow
+                })
+                .ToListAsync();
+        }
     }
 }

@@ -10,15 +10,18 @@ namespace Application.Services
     public class PlanningService : IPlanningService
     {
         private readonly IPlanningRepository _planningRepository;
+        private readonly IPlanningPeriodRepository _planningPeriodRepository;
         private readonly IAvailabilityRepository _availabilityRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
 
         public PlanningService(
             IPlanningRepository planningRepository,
+            IPlanningPeriodRepository planningPeriodRepository,
             IAvailabilityRepository availabilityRepository,
             IDepartmentMemberRepository departmentMemberRepository)
         {
             _planningRepository = planningRepository;
+            _planningPeriodRepository = planningPeriodRepository;
             _availabilityRepository = availabilityRepository;
             _departmentMemberRepository = departmentMemberRepository;
         }
@@ -103,6 +106,13 @@ namespace Application.Services
 
             var created = await _planningRepository.Insert(planning);
 
+            // Marquer le planning comme ayant des modifications non publiées
+            if (period.IndPublished)
+            {
+                period.IndPublished = false;
+                await _planningPeriodRepository.UpdateAsync(period);
+            }
+
             // Étape 6 — Le membre apparaît comme planifié
             return Result<AssignMemberResponse>.Success(new AssignMemberResponse
             {
@@ -113,6 +123,22 @@ namespace Application.Services
         public async Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId)
         {
             return await _planningRepository.GetMonthlyPlanningAsync(month, year, departmentId);
+        }
+
+        public async Task<PlanningPeriodStatusResponse?> GetPeriodStatusAsync(int departmentId, int month, int year)
+        {
+            var period = await _planningPeriodRepository.GetByDepartmentMonthYearAsync(departmentId, month, year);
+            if (period == null)
+            {
+                return null;
+            }
+
+            return new PlanningPeriodStatusResponse
+            {
+                IndPublished = period.IndPublished,
+                IndArchived = period.IndArchived,
+                PublishedAt = period.PublishedAt
+            };
         }
 
         /// <summary>
@@ -150,6 +176,13 @@ namespace Application.Services
 
             // Étape 5 — Supprimer le planning
             await _planningRepository.DeleteAsync(planningId);
+
+            // Marquer le planning comme ayant des modifications non publiées
+            if (planning.PlanningPeriod.IndPublished)
+            {
+                planning.PlanningPeriod.IndPublished = false;
+                await _planningPeriodRepository.UpdateAsync(planning.PlanningPeriod);
+            }
 
             return Result<bool>.Success(true);
         }
@@ -195,6 +228,55 @@ namespace Application.Services
             planning.UpdatedById = actionById;
 
             await _planningRepository.UpdateAsync(planning);
+
+            // Marquer le planning comme ayant des modifications non publiées
+            if (planning.PlanningPeriod.IndPublished)
+            {
+                planning.PlanningPeriod.IndPublished = false;
+                await _planningPeriodRepository.UpdateAsync(planning.PlanningPeriod);
+            }
+
+            return Result<bool>.Success(true);
+        }
+
+        /// <summary>
+        ///     Publier le planning : copie les Plannings dans PublishedPlannings (snapshot).
+        ///     Les membres voient uniquement PublishedPlannings.
+        /// </summary>
+        public async Task<Result<bool>> PublishPlanningAsync(int departmentId, int month, int year, Guid actionById)
+        {
+            // Étape 1 — Vérifier les droits
+            var hasRight = await _departmentMemberRepository.HasPlanningRightAsync(actionById, departmentId);
+            if (!hasRight)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_AUTHORIZED);
+            }
+
+            // Étape 2 — Récupérer le PlanningPeriod
+            var period = await _planningPeriodRepository.GetByDepartmentMonthYearAsync(departmentId, month, year);
+            if (period == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_FOUND);
+            }
+
+            // Étape 3 — Vérifier que le planning n'est pas archivé
+            if (period.IndArchived)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_ARCHIVED);
+            }
+
+            // Étape 4 — Supprimer l'ancien snapshot
+            await _planningPeriodRepository.DeletePublishedPlanningsAsync(period.Id);
+
+            // Étape 5 — Créer le nouveau snapshot depuis les Plannings
+            var snapshot = await _planningRepository.GetPlanningsForPublishAsync(period.Id);
+            await _planningPeriodRepository.AddPublishedPlanningsAsync(snapshot);
+
+            // Étape 6 — Mettre à jour le PlanningPeriod
+            period.IndPublished = true;
+            period.PublishedAt = DateTime.UtcNow;
+            period.PublishedById = actionById;
+            await _planningPeriodRepository.UpdateAsync(period);
 
             return Result<bool>.Success(true);
         }

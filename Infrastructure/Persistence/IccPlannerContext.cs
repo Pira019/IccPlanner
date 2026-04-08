@@ -36,6 +36,7 @@ namespace Infrastructure.Persistence
         public DbSet<Availability> Availabilities { get; set; } 
         public DbSet<Planning> Plannings { get; set; }
         public DbSet<PlanningPeriod> PlanningPeriods { get; set; }
+        public DbSet<PublishedPlanning> PublishedPlannings { get; set; }
 #pragma warning disable CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
         public DbSet<Role> Roles { get; set; }
 #pragma warning restore CS0114 // Un membre masque un membre hérité ; le mot clé override est manquant
