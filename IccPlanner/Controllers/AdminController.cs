@@ -19,17 +19,20 @@ namespace IccPlanner.Controllers
         private readonly ILogger<AdminController> _logger;
         private readonly IAccountService _accountService;
         private readonly IRecurrentDateService _recurrentDateService;
+        private readonly IPlanningArchiveService _planningArchiveService;
         private readonly int _defaultDaysAhead;
 
         public AdminController(
             ILogger<AdminController> logger,
             IAccountService accountService,
             IRecurrentDateService recurrentDateService,
+            IPlanningArchiveService planningArchiveService,
             IOptions<AppSetting> appSettings)
         {
             _logger = logger;
             _accountService = accountService;
             _recurrentDateService = recurrentDateService;
+            _planningArchiveService = planningArchiveService;
             _defaultDaysAhead = appSettings.Value.Parametres?.RecurrentDaysAhead ?? 30;
         }
 
@@ -79,6 +82,17 @@ namespace IccPlanner.Controllers
         {
             var totalCreated = await _recurrentDateService.GenerateRecurrentDatesAsync(_defaultDaysAhead);
             return Ok(new { datesCreated = totalCreated });
+        }
+
+        /// <summary>
+        ///     Exécuter manuellement l'archivage des plannings passés.
+        /// </summary>
+        [HttpPost("archive-past-plannings")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ArchivePastPlannings()
+        {
+            var totalArchived = await _planningArchiveService.ArchivePastPeriodsAsync();
+            return Ok(new { periodsArchived = totalArchived });
         }
     }
 }

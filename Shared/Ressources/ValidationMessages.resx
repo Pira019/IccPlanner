@@ -457,6 +457,6 @@
     <value>You are not authorized to manage the planning for this department.</value>
   </data>
   <data name="PLANNING_OVERLAP" xml:space="preserve">
-    <value>This member is already assigned to another service during this time slot.</value>
+    <value>This person is already scheduled on</value>
   </data>
 </root>

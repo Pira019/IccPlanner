@@ -457,6 +457,6 @@
     <value>Vous n'êtes pas autorisé à gérer le planning de ce département.</value>
   </data>
   <data name="PLANNING_OVERLAP" xml:space="preserve">
-    <value>Ce membre est déjà assigné à un autre service sur ce créneau horaire.</value>
+    <value>Cette personne est déjà programmée sur</value>
   </data>
 </root>

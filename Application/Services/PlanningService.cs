@@ -77,13 +77,13 @@ namespace Application.Services
             if (conflicts.Any() && !request.ForceAssign)
             {
                 // Construire le message avec les détails des conflits
-                var conflictDetails = string.Join("; ", conflicts.Select(c =>
+                var conflictDetails = string.Join(" et ", conflicts.Select(c =>
                     $"« {c.ServiceName} » ({c.StartTime}-{c.EndTime}) - {c.DepartmentName}"));
 
                 return Result<AssignMemberResponse>.Success(new AssignMemberResponse
                 {
                     IsWarning = true,
-                    Message = $"{ValidationMessages.PLANNING_OVERLAP} : {conflictDetails}"
+                    Message = $"{ValidationMessages.PLANNING_OVERLAP} {conflictDetails}."
                 });
             }
 

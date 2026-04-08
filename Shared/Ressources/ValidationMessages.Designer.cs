@@ -1078,7 +1078,7 @@ namespace Shared.Ressources {
         }
         
         /// <summary>
-        ///   This member is already assigned to another service during this time slot.
+        ///   This person is already scheduled on
         /// </summary>
         public static string PLANNING_OVERLAP {
             get {

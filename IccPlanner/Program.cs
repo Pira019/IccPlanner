@@ -151,6 +151,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPlanningService, PlanningService>();
             builder.Services.AddScoped<IPlanningRepository, PlanningRepository>();
             builder.Services.AddScoped<IRecurrentDateService, RecurrentDateService>();
+            builder.Services.AddScoped<IPlanningArchiveService, PlanningArchiveService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -263,6 +264,7 @@ namespace IccPlanner
 
             // Background Jobs
             builder.Services.AddHostedService<RecurrentDateGeneratorJob>();
+            builder.Services.AddHostedService<PlanningArchiveJob>();
 
             var app = builder.Build();
 
