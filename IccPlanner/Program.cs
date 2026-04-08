@@ -150,6 +150,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPosteService, PosteService>();
             builder.Services.AddScoped<IPlanningService, PlanningService>();
             builder.Services.AddScoped<IPlanningRepository, PlanningRepository>();
+            builder.Services.AddScoped<IPlanningPeriodRepository, PlanningPeriodRepository>();
             builder.Services.AddScoped<IRecurrentDateService, RecurrentDateService>();
             builder.Services.AddScoped<IPlanningArchiveService, PlanningArchiveService>();
 

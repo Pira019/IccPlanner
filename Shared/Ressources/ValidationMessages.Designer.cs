@@ -1085,5 +1085,23 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("PLANNING_OVERLAP", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   The planning assignment was not found.
+        /// </summary>
+        public static string PLANNING_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("PLANNING_NOT_FOUND", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   You cannot modify a planning for a past date.
+        /// </summary>
+        public static string PLANNING_PAST_DATE {
+            get {
+                return ResourceManager.GetString("PLANNING_PAST_DATE", resourceCulture);
+            }
+        }
     }
 }

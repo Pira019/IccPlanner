@@ -66,5 +66,48 @@ namespace IccPlanner.Controllers
             var result = await _planningService.GetMonthlyPlanningAsync(month, year, departmentId);
             return Ok(result);
         }
+
+        /// <summary>
+        ///     Retirer un membre du planning.
+        ///     Voir documentation : Scénario principal - Retirer un membre
+        /// </summary>
+        [HttpDelete("{planningId:int}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Unassign(int planningId)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+
+            var result = await _planningService.UnassignMemberAsync(planningId, memberId);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        ///     Modifier une assignation existante (poste, formation, observation, commentaire).
+        /// </summary>
+        [HttpPut("{planningId:int}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update(int planningId, [FromBody] UpdatePlanningRequest request)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+
+            var result = await _planningService.UpdatePlanningAsync(planningId, request, memberId);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+
+            return NoContent();
+        }
     }
 }

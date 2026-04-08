@@ -47,6 +47,13 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public async Task<Planning?> GetByIdWithPeriodAsync(int id)
+        {
+            return await _dbSet
+                .Include(p => p.PlanningPeriod)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<AvailabilityDetailDto?> GetByAvailabilityDetailAsync(int availabilityId)
         {
             return await PlannerContext.Availabilities
@@ -157,5 +164,6 @@ namespace Infrastructure.Repositories
                 .OrderBy(p => p.ProgramName)
                 .ToList();
         }
+
     }
 }

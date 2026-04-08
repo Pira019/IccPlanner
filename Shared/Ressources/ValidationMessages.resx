@@ -459,4 +459,10 @@
   <data name="PLANNING_OVERLAP" xml:space="preserve">
     <value>This person is already scheduled on</value>
   </data>
+  <data name="PLANNING_NOT_FOUND" xml:space="preserve">
+    <value>The planning assignment was not found.</value>
+  </data>
+  <data name="PLANNING_PAST_DATE" xml:space="preserve">
+    <value>You cannot modify a planning for a past date.</value>
+  </data>
 </root>

@@ -1,17 +1,15 @@
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Domain.Entities;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
     public class PlanningArchiveService : IPlanningArchiveService
     {
-        private readonly IccPlannerContext _context;
+        private readonly IPlanningPeriodRepository _planningPeriodRepository;
 
-        public PlanningArchiveService(IccPlannerContext context)
+        public PlanningArchiveService(IPlanningPeriodRepository planningPeriodRepository)
         {
-            _context = context;
+            _planningPeriodRepository = planningPeriodRepository;
         }
 
         /// <summary>
@@ -20,33 +18,7 @@ namespace Application.Services
         /// </summary>
         public async Task<int> ArchivePastPeriodsAsync()
         {
-            var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
-            // Récupérer les périodes non archivées dont le mois est terminé
-            var periodsToArchive = await _context.PlanningPeriods
-                .Where(pp => !pp.IndArchived)
-                .ToListAsync();
-
-            var archived = 0;
-
-            foreach (var period in periodsToArchive)
-            {
-                // Dernier jour du mois de la période
-                var lastDayOfMonth = new DateOnly(period.Year, period.Month, DateTime.DaysInMonth(period.Year, period.Month));
-
-                if (lastDayOfMonth < today)
-                {
-                    period.IndArchived = true;
-                    archived++;
-                }
-            }
-
-            if (archived > 0)
-            {
-                await _context.SaveChangesAsync();
-            }
-
-            return archived;
+            return await _planningPeriodRepository.ArchivePastPeriodsAsync();
         }
     }
 }

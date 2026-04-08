@@ -57,7 +57,7 @@ namespace Application.Services
             // Extension 3e — La date du programme est passée
             if (detail.ProgramDate < DateOnly.FromDateTime(DateTime.UtcNow))
             {
-                return Result<AssignMemberResponse>.Fail(ValidationMessages.CANT_ADD_PAST_AVAILABILITY);
+                return Result<AssignMemberResponse>.Fail(ValidationMessages.PLANNING_PAST_DATE);
             }
 
             // Étape 4 — Vérifier qu'un PlanningPeriod existe, sinon le créer
@@ -113,6 +113,90 @@ namespace Application.Services
         public async Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId)
         {
             return await _planningRepository.GetMonthlyPlanningAsync(month, year, departmentId);
+        }
+
+        /// <summary>
+        ///     Retirer un membre du planning.
+        ///     Vérifications : droit, existence, archivé, date passée.
+        /// </summary>
+        public async Task<Result<bool>> UnassignMemberAsync(int planningId, Guid actionById)
+        {
+            // Étape 1 — Le planning existe
+            var planning = await _planningRepository.GetByIdWithPeriodAsync(planningId);
+            if (planning == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_FOUND);
+            }
+
+            // Étape 2 — L'utilisateur a le droit d'assigner sur ce département
+            var hasRight = await _departmentMemberRepository.HasPlanningRightAsync(
+                actionById, planning.PlanningPeriod.DepartmentId);
+            if (!hasRight)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_AUTHORIZED);
+            }
+
+            // Étape 3 — Le planning n'est pas archivé
+            if (planning.PlanningPeriod.IndArchived)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_ARCHIVED);
+            }
+
+            // Étape 4 — La date n'est pas passée
+            if (planning.ProgramDate < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_PAST_DATE);
+            }
+
+            // Étape 5 — Supprimer le planning
+            await _planningRepository.DeleteAsync(planningId);
+
+            return Result<bool>.Success(true);
+        }
+
+        /// <summary>
+        ///     Modifier une assignation existante (poste, formation, observation, commentaire).
+        ///     Vérifications : existence, droit, archivé, date passée.
+        /// </summary>
+        public async Task<Result<bool>> UpdatePlanningAsync(int planningId, UpdatePlanningRequest request, Guid actionById)
+        {
+            // Étape 1 — Le planning existe
+            var planning = await _planningRepository.GetByIdWithPeriodAsync(planningId);
+            if (planning == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_FOUND);
+            }
+
+            // Étape 2 — L'utilisateur a le droit
+            var hasRight = await _departmentMemberRepository.HasPlanningRightAsync(
+                actionById, planning.PlanningPeriod.DepartmentId);
+            if (!hasRight)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_NOT_AUTHORIZED);
+            }
+
+            // Étape 3 — Le planning n'est pas archivé
+            if (planning.PlanningPeriod.IndArchived)
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_ARCHIVED);
+            }
+
+            // Étape 4 — La date n'est pas passée
+            if (planning.ProgramDate < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                return Result<bool>.Fail(ValidationMessages.PLANNING_PAST_DATE);
+            }
+
+            // Étape 5 — Mettre à jour les champs
+            planning.PosteId = request.PosteId;
+            planning.IndTraining = request.IndTraining;
+            planning.IndObservation = request.IndObservation;
+            planning.Comment = request.Comment;
+            planning.UpdatedById = actionById;
+
+            await _planningRepository.UpdateAsync(planning);
+
+            return Result<bool>.Success(true);
         }
     }
 }

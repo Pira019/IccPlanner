@@ -14,6 +14,8 @@ namespace Application.Responses.Availability
     public class AvailableMemberItem
     {
         public int AvailabilityId { get; set; }
+        public int? PlanningId { get; set; }
+        public int? PosteId { get; set; }
         public Guid MemberId { get; set; }
         public string DisplayName { get; set; } = string.Empty;
         public bool IsPlanned { get; set; }

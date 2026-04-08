@@ -95,6 +95,8 @@ namespace Infrastructure.Repositories
                     MemberName = a.DepartmentMember.Member.Name,
                     MemberLastName = a.DepartmentMember.Member.LastName,
                     IsPlanned = a.Planning != null,
+                    PlanningId = a.Planning != null ? (int?)a.Planning.Id : null,
+                    PosteId = a.Planning != null ? a.Planning.PosteId : null,
                     IsTraining = a.Planning != null && a.Planning.IndTraining,
                     CreatedAt = a.CreatedAt
                 })
@@ -115,6 +117,8 @@ namespace Infrastructure.Repositories
                         .Select(a => new AvailableMemberItem
                         {
                             AvailabilityId = a.Id,
+                            PlanningId = a.PlanningId,
+                            PosteId = a.PosteId,
                             MemberId = a.MemberId,
                             DisplayName = a.MemberName + " " + a.MemberLastName.Substring(0, 1) + ".",
                             IsPlanned = a.IsPlanned,
