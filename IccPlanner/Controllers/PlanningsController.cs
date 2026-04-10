@@ -80,6 +80,31 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
+        ///     Mon planning — retourne les assignations publiées du membre connecté.
+        /// </summary>
+        [HttpGet("my-planning/{month:int}/{year:int}")]
+        [Authorize]
+        [ProducesResponseType<List<MyPlanningResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyPlanning(int month, int year, [FromQuery] int? departmentId = null)
+        {
+            var memberId = await GetMemberAuthIdAsync();
+            var result = await _planningService.GetMyPlanningAsync(memberId, month, year, departmentId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        ///     Planning d'équipe — tous les membres programmés d'un département (version publiée).
+        /// </summary>
+        [HttpGet("team/{departmentId:int}/{month:int}/{year:int}")]
+        [Authorize]
+        [ProducesResponseType<List<TeamPlanningResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTeamPlanning(int departmentId, int month, int year)
+        {
+            var result = await _planningService.GetTeamPlanningAsync(departmentId, month, year);
+            return Ok(result);
+        }
+
+        /// <summary>
         ///     Retirer un membre du planning.
         ///     Voir documentation : Scénario principal - Retirer un membre
         /// </summary>

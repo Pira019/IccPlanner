@@ -141,6 +141,16 @@ namespace Application.Services
             };
         }
 
+        public async Task<List<MyPlanningResponse>> GetMyPlanningAsync(Guid memberId, int month, int year, int? departmentId)
+        {
+            return await _planningPeriodRepository.GetMyPlanningAsync(memberId, month, year, departmentId);
+        }
+
+        public async Task<List<TeamPlanningResponse>> GetTeamPlanningAsync(int departmentId, int month, int year)
+        {
+            return await _planningPeriodRepository.GetTeamPlanningAsync(departmentId, month, year);
+        }
+
         /// <summary>
         ///     Retirer un membre du planning.
         ///     Vérifications : droit, existence, archivé, date passée.

@@ -140,7 +140,7 @@ namespace Application.Services
             }
 
             // Vérifier les droits : IndGest sur le département concerné OU claim CanManagDepart
-           /* var departmentId = await _tabServicePrgRepository.GetDepartmentIdByServicePrgId(servicePrgId);
+           var departmentId = await _tabServicePrgRepository.GetDepartmentIdByServicePrgId(servicePrgId);
             if (departmentId.HasValue)
             {
                 var hasRight = await _departmentMemberRepository.HasManagementRightAsync(actionById, departmentId.Value)
@@ -149,7 +149,7 @@ namespace Application.Services
                 {
                     return Result<bool>.Fail(ValidationMessages.FORBIDDEN_ACCESS);
                 }
-            }*/
+            }
 
             // Changer le service de base si demandé
             if (request.TabServicesId.HasValue && request.TabServicesId.Value != service.TabServicesId)

@@ -1,4 +1,5 @@
 using Application.Interfaces.Repositories;
+using Application.Responses.Planning;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +69,59 @@ namespace Infrastructure.Repositories
                 await PlannerContext.PublishedPlannings.AddRangeAsync(plannings);
                 await PlannerContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<MyPlanningResponse>> GetMyPlanningAsync(Guid memberId, int month, int year, int? departmentId)
+        {
+            var query = PlannerContext.PublishedPlannings
+                .AsNoTracking()
+                .Where(pp => pp.MemberId == memberId
+                    && pp.ProgramDate.Month == month
+                    && pp.ProgramDate.Year == year
+                    && pp.PlanningPeriod.IndPublished);
+
+            if (departmentId.HasValue)
+            {
+                query = query.Where(pp => pp.PlanningPeriod.DepartmentId == departmentId.Value);
+            }
+
+            return await query
+                .OrderBy(pp => pp.ProgramDate)
+                .Select(pp => new MyPlanningResponse
+                {
+                    Date = pp.ProgramDate,
+                    ProgramName = pp.ProgramName,
+                    ProgramShortName = pp.ProgramShortName,
+                    ServiceName = pp.ServiceName,
+                    PosteName = pp.PosteName,
+                    IndTraining = pp.IndTraining,
+                    DepartmentName = pp.PlanningPeriod.Department.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<TeamPlanningResponse>> GetTeamPlanningAsync(int departmentId, int month, int year)
+        {
+            return await PlannerContext.PublishedPlannings
+                .AsNoTracking()
+                .Where(pp => pp.PlanningPeriod.DepartmentId == departmentId
+                    && pp.ProgramDate.Month == month
+                    && pp.ProgramDate.Year == year
+                    && pp.PlanningPeriod.IndPublished)
+                .OrderBy(pp => pp.ProgramDate)
+                .ThenBy(pp => pp.ServiceName)
+                .ThenBy(pp => pp.MemberName)
+                .Select(pp => new TeamPlanningResponse
+                {
+                    Date = pp.ProgramDate,
+                    ProgramName = pp.ProgramName,
+                    ProgramShortName = pp.ProgramShortName,
+                    ServiceName = pp.ServiceName,
+                    MemberName = pp.MemberName,
+                    PosteName = pp.PosteName,
+                    IndTraining = pp.IndTraining
+                })
+                .ToListAsync();
         }
     }
 }

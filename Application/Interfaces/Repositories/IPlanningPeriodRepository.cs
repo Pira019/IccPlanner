@@ -1,3 +1,4 @@
+using Application.Responses.Planning;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories
@@ -12,5 +13,7 @@ namespace Application.Interfaces.Repositories
         Task<PlanningPeriod?> GetByDepartmentMonthYearAsync(int departmentId, int month, int year);
         Task DeletePublishedPlanningsAsync(int periodId);
         Task AddPublishedPlanningsAsync(List<PublishedPlanning> plannings);
+        Task<List<MyPlanningResponse>> GetMyPlanningAsync(Guid memberId, int month, int year, int? departmentId);
+        Task<List<TeamPlanningResponse>> GetTeamPlanningAsync(int departmentId, int month, int year);
     }
 }
