@@ -23,5 +23,6 @@ namespace Application.Interfaces.Repositories
         ///     Retourne une <see cref="bool"/>
         /// </returns>
         public Task<bool> IsServiceExist(TimeOnly startTime, TimeOnly endTime, string displayServiceName);
+        public Task<TabServices?> FindByTimeAndNameAsync(TimeOnly startTime, TimeOnly endTime, string displayName);
     }
 }

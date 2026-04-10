@@ -2,7 +2,8 @@
 {
     public class TabServicesPrgDto
     {
-        public int IdTabService { get; set; } 
+        public int IdTabService { get; set; }
+        public int TabServicesId { get; set; }
         public string ServiceTitle { get; set; } 
         public TimeOnly StartTime { get; set; } 
         public TimeOnly EndTime { get; set; } 

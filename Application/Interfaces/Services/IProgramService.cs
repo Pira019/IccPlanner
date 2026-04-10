@@ -57,6 +57,7 @@ namespace Application.Interfaces.Services
         /// </param>
         /// <returns></returns>
         public Task<Result<bool>> Update(int idPrg, AddProgramRequest request, string userId, string permissionName);
+        public Task<Result<bool>> Delete(int idPrg, string userId, string permissionName);
         public Task<Result<GetPrg>> GetByMonthYear(int month, int year); 
     }
 }

@@ -15,5 +15,13 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(x => x.StartTime == startTime && x.EndTime == endTime && x.DisplayName.ToLower() == displayServiceName.ToLower());
         }
+
+        public async Task<TabServices?> FindByTimeAndNameAsync(TimeOnly startTime, TimeOnly endTime, string displayName)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x =>
+                x.StartTime == startTime
+                && x.EndTime == endTime
+                && x.DisplayName.ToLower() == displayName.ToLower());
+        }
     }
 }

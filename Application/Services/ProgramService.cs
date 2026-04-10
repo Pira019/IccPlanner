@@ -36,6 +36,18 @@ namespace Application.Services
                 return Result<AddProgramResponse>.Fail(string.Format(ValidationMessages.EXIST_Pro_Val, ValidationMessages.PROGRAM_NAME, request.Name));
             }
 
+            // Vérifier si un programme soft-deleted avec ce nom existe → le réactiver
+            var softDeleted = await _IProgramRepository.GetSoftDeletedByNameAsync(request.Name);
+            if (softDeleted != null)
+            {
+                _mapper.Map(request, softDeleted);
+                softDeleted.IsDeleted = false;
+                softDeleted.UpdatedAt = DateTime.UtcNow;
+                softDeleted.UpdatedBy = userAuth;
+                await _IProgramRepository.UpdateAsync(softDeleted);
+                return Result<AddProgramResponse>.Success(_mapper.Map<AddProgramResponse>(softDeleted));
+            }
+
             var dtoProgram = _mapper.Map<Program>(request);
             dtoProgram.AddBy = userAuth;
             var newProgram = await _IProgramRepository.Insert(dtoProgram);
@@ -97,6 +109,16 @@ namespace Application.Services
                 return Result<bool>.Fail(string.Format(ValidationMessages.EXIST_Pro_Val, ValidationMessages.PROGRAM_NAME, request.Name));
             }
 
+            // Si le nouveau nom correspond à un programme soft-deleted, le supprimer définitivement
+            if (program.Name.ToLower() != request.Name.ToLower())
+            {
+                var softDeleted = await _IProgramRepository.GetSoftDeletedByNameAsync(request.Name);
+                if (softDeleted != null)
+                {
+                    await _IProgramRepository.DeleteAsync(softDeleted.Id);
+                }
+            }
+
             _mapper.Map(request, program);
             program.UpdatedAt = DateTime.UtcNow;
             program.UpdatedBy = userId;
@@ -110,6 +132,28 @@ namespace Application.Services
         {
             var result = await  _prgDateRepository.GetByMonthYearAsync(month, year); 
             return Result<GetPrg>.Success(result);
+        }
+
+        public async Task<Result<bool>> Delete(int idPrg, string userId, string permissionName)
+        {
+            bool autor = await _IProgramRepository.CanUserAccessProgramAsync(idPrg, userId)
+                        || await _ClaimRepository.HasClaimAsync(userId, permissionName);
+
+            if (!autor)
+            {
+                return Result<bool>.Fail(ValidationMessages.MO_PrgNonAutor);
+            }
+
+            var program = await _IProgramRepository.GetByIdAsync(idPrg);
+
+            if (program == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.PRG_NOT_EXIST);
+            }
+
+            await _IProgramRepository.DeleteSoftAsync(idPrg);
+
+            return Result<bool>.Success(true);
         }
     }
 }

@@ -112,9 +112,11 @@ namespace Infrastructure.Repositories
                              ProgramId = dp.ProgramId,
                              ProgramTitle = dp.Program.Name,
                              ShortName = dp.Program.ShortName,
+                             Description = dp.Program.Description,
                              Services = pd.TabServicePrgs.Select(service => new TabServicesPrgDto
                              {
                                  IdTabService = service.Id,
+                                 TabServicesId = service.TabServicesId,
                                  ServiceTitle = service.DisplayName,
                                  StartTime = service.TabServices.StartTime,
                                  EndTime = service.TabServices.EndTime,
@@ -135,12 +137,14 @@ namespace Infrastructure.Repositories
                     {
                         GroupKey = group.Key.GroupKey!,
                         ServicePrograms = group
-                            .GroupBy(r => new { r.ProgramId, r.ProgramTitle, r.ShortName})
+                            .GroupBy(r => new { r.ProgramId, r.ProgramTitle, r.ShortName, r.Description})
                             .Select(programGroup => new ProgramServiceDto
                             {
                                 IdPrg = programGroup.Key.ProgramId,
+                                ProgramId = programGroup.Key.ProgramId,
                                 ShortName = programGroup.Key.ShortName,
                                 Title = programGroup.Key.ProgramTitle,
+                                Description = programGroup.Key.Description,
                                 Services = programGroup
                                     .SelectMany(r => r.Services)
                                     .ToList()

@@ -77,5 +77,12 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(x => x.Name.ToLower() == name.ToLower()); 
         }
+
+        public async Task<Program?> GetSoftDeletedByNameAsync(string name)
+        {
+            return await _dbSet
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower() && x.IsDeleted);
+        }
     }
 }

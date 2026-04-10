@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Prg
 
 using System.ComponentModel.DataAnnotations;
+using Shared.Utiles;
 
 namespace Domain.Entities
 {
@@ -12,7 +13,11 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int TabServicesId { get; set; }
         public int PrgDateId { get; set; }
-        public required string DisplayName { get; set; }
+        public required string DisplayName { 
+            get => _displayName;
+            set => _displayName = SharedUtiles.CapitalizeFirstLetter(value);
+        }
+        private string _displayName = string.Empty;
         public TabServices TabServices { get; set; } = null!;
         public PrgDate PrgDate { get; set; } = null!;
         public TimeOnly? ArrivalTimeOfMember { get; set; } 

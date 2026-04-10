@@ -1,14 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Shared.Utiles;
 
 namespace Domain.Entities
 {
     public class Department : BaseEntity
     {
+        private string _name = string.Empty;
         public int Id { get; set; }
         public int? MinistryId { get; set; }
         public Ministry? Ministry { get; set; }
         [MaxLength(255)]
-        public required string Name { get; set; }
+        public required string Name { 
+            get => _name;
+            set => _name = SharedUtiles.CapitalizeFirstLetter(value);
+        }
         public required string Description { get; set; }
 
         [MaxLength(15)]

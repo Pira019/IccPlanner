@@ -30,5 +30,7 @@ namespace Application.Interfaces.Services
         public Task<Result<List<GetDatesResponse>>> GetDatesByDepartAsync( int month, int year, int IdDepart);  
         public Task<Result<List<GetServicesListResponse>>> GetPrgServices( ServicesRequest request);
         public Task<Result<GetServiceByDepart?>> GetServicePrgByDepartAsync(int idDepart, DateOnly dateOnly, Guid? memberId);
+        public Task<Result<bool>> DeleteServicePrgAsync(int servicePrgId, Guid actionById, string permissionName);
+        public Task<Result<bool>> UpdateServicePrgAsync(int servicePrgId, UpdateServicePrgRequest request, Guid actionById, string permissionName);
     }
 }

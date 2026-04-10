@@ -69,5 +69,22 @@ namespace IccPlanner.Controllers
             }
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        [Authorize()]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var res = await _programService.Delete(id, userAuthId.ToString(), ClaimsConstants.CAN_MANAGER_PRG);
+
+            if (!res.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
+            }
+
+            return NoContent();
+        }
     }
 }
