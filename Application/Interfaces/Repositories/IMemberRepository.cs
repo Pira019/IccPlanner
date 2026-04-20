@@ -16,5 +16,18 @@ namespace Application.Interfaces.Repositories
         /// </param>
         /// <returns></returns>
         public Task<MembersResponse> GetByDepartmentIdAsync(int departmentId);
+        /// <summary>
+        ///     Récupère le profil complet d'un membre par son identifiant Guid.
+        /// </summary>
+        public Task<ProfileResponse?> GetProfileAsync(Guid memberId);
+
+        /// <summary>
+        ///     Récupère un membre par son identifiant Guid.
+        /// </summary>
+        public Task<Member?> GetByGuidAsync(Guid memberId);
+        /// <summary>
+        ///     Récupère les anniversaires du mois pour les départements donnés.
+        /// </summary>
+        public Task<List<BirthdayResponse>> GetBirthdaysByMonthAsync(List<int> departmentIds, int month);
     } 
 }
