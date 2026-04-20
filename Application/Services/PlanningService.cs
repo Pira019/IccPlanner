@@ -13,17 +13,23 @@ namespace Application.Services
         private readonly IPlanningPeriodRepository _planningPeriodRepository;
         private readonly IAvailabilityRepository _availabilityRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
+        private readonly IBaseRepository<Domain.Entities.Department> _departmentRepository;
+        private readonly ISchedulePdfService _schedulePdfService;
 
         public PlanningService(
             IPlanningRepository planningRepository,
             IPlanningPeriodRepository planningPeriodRepository,
             IAvailabilityRepository availabilityRepository,
-            IDepartmentMemberRepository departmentMemberRepository)
+            IDepartmentMemberRepository departmentMemberRepository,
+            IBaseRepository<Domain.Entities.Department> departmentRepository,
+            ISchedulePdfService schedulePdfService)
         {
             _planningRepository = planningRepository;
             _planningPeriodRepository = planningPeriodRepository;
             _availabilityRepository = availabilityRepository;
             _departmentMemberRepository = departmentMemberRepository;
+            _departmentRepository = departmentRepository;
+            _schedulePdfService = schedulePdfService;
         }
 
         public async Task<Result<AssignMemberResponse>> AssignMemberAsync(
@@ -289,6 +295,30 @@ namespace Application.Services
             await _planningPeriodRepository.UpdateAsync(period);
 
             return Result<bool>.Success(true);
+        }
+
+        public async Task<byte[]?> GenerateSchedulePdfAsync(int departmentId, int month, int year)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            if (department == null)
+            {
+                return null;
+            }
+
+            var data = await _planningRepository.GetMonthlyPlanningAsync(month, year, departmentId);
+            return _schedulePdfService.GenerateSchedulePdf(data, department.Name, department.ShortName, month, year);
+        }
+
+        public async Task<byte[]?> GenerateDailyPdfAsync(int departmentId, DateOnly date)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            if (department == null)
+            {
+                return null;
+            }
+
+            var data = await _planningRepository.GetMonthlyPlanningAsync(date.Month, date.Year, departmentId);
+            return _schedulePdfService.GenerateDailyPdf(data, department.Name, department.ShortName, date);
         }
     }
 }

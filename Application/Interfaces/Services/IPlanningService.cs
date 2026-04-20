@@ -14,5 +14,7 @@ namespace Application.Interfaces.Services
         public Task<List<MyPlanningResponse>> GetMyPlanningAsync(Guid memberId, int month, int year, int? departmentId);
         public Task<List<TeamPlanningResponse>> GetTeamPlanningAsync(int departmentId, int month, int year);
         public Task<List<MonthlyPlanningResponse>> GetMonthlyPlanningAsync(int month, int year, int departmentId);
+        public Task<byte[]?> GenerateSchedulePdfAsync(int departmentId, int month, int year);
+        public Task<byte[]?> GenerateDailyPdfAsync(int departmentId, DateOnly date);
     }
 }

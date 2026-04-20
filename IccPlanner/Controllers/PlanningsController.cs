@@ -26,7 +26,6 @@ namespace IccPlanner.Controllers
 
         /// <summary>
         ///     Assigner un membre au planning.
-        ///     Voir documentation : Scénario principal - Assigner un membre
         /// </summary>
         [HttpPost("{departmentId}")]
         [Authorize]
@@ -35,8 +34,6 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Assign(int departmentId, [FromBody] AssignMemberRequest request)
         {
             var memberId = await GetMemberAuthIdAsync();
-
-            // Étapes 2 à 6 — Vérifications + création du planning
             var result = await _planningService.AssignMemberAsync(request, memberId, departmentId);
 
             if (!result.IsSuccess)
@@ -44,19 +41,16 @@ namespace IccPlanner.Controllers
                 return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
             }
 
-            // Extension 3g — Warning de chevauchement (format ApiErrorResponseWarning)
             if (result.Value.IsWarning)
             {
                 return BadRequest(ApiError.ErrorMessageWarning(result.Value.Message!, null, null));
             }
 
-            // Étape 6 — Créé avec succès
             return Created(string.Empty, new { planningId = result.Value.PlanningId });
         }
 
         /// <summary>
-        ///     Récapitulatif mensuel du planning, groupé par programme.
-        ///     Le département est obligatoire.
+        ///     Récapitulatif mensuel du planning.
         /// </summary>
         [HttpGet("{month:int}/{year:int}")]
         [Authorize]
@@ -68,7 +62,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
-        ///     Statut du PlanningPeriod (publié, archivé, date de publication).
+        ///     Statut du PlanningPeriod.
         /// </summary>
         [HttpGet("{month:int}/{year:int}/status")]
         [Authorize]
@@ -80,7 +74,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
-        ///     Mon planning — retourne les assignations publiées du membre connecté.
+        ///     Mon planning — assignations publiées du membre connecté.
         /// </summary>
         [HttpGet("my-planning/{month:int}/{year:int}")]
         [Authorize]
@@ -93,20 +87,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
-        ///     Planning d'équipe — tous les membres programmés d'un département (version publiée).
-        /// </summary>
-        [HttpGet("team/{departmentId:int}/{month:int}/{year:int}")]
-        [Authorize]
-        [ProducesResponseType<List<TeamPlanningResponse>>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTeamPlanning(int departmentId, int month, int year)
-        {
-            var result = await _planningService.GetTeamPlanningAsync(departmentId, month, year);
-            return Ok(result);
-        }
-
-        /// <summary>
         ///     Retirer un membre du planning.
-        ///     Voir documentation : Scénario principal - Retirer un membre
         /// </summary>
         [HttpDelete("{planningId:int}")]
         [Authorize]
@@ -115,7 +96,6 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Unassign(int planningId)
         {
             var memberId = await GetMemberAuthIdAsync();
-
             var result = await _planningService.UnassignMemberAsync(planningId, memberId);
 
             if (!result.IsSuccess)
@@ -127,7 +107,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
-        ///     Modifier une assignation existante (poste, formation, observation, commentaire).
+        ///     Modifier une assignation existante.
         /// </summary>
         [HttpPut("{planningId:int}")]
         [Authorize]
@@ -136,7 +116,6 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Update(int planningId, [FromBody] UpdatePlanningRequest request)
         {
             var memberId = await GetMemberAuthIdAsync();
-
             var result = await _planningService.UpdatePlanningAsync(planningId, request, memberId);
 
             if (!result.IsSuccess)
@@ -148,8 +127,7 @@ namespace IccPlanner.Controllers
         }
 
         /// <summary>
-        ///     Publier le planning d'un département pour un mois/année.
-        ///     Crée un snapshot dans PublishedPlannings.
+        ///     Publier le planning d'un département.
         /// </summary>
         [HttpPost("{departmentId:int}/publish")]
         [Authorize]
@@ -158,7 +136,6 @@ namespace IccPlanner.Controllers
         public async Task<IActionResult> Publish(int departmentId, [FromQuery] int month, [FromQuery] int year)
         {
             var memberId = await GetMemberAuthIdAsync();
-
             var result = await _planningService.PublishPlanningAsync(departmentId, month, year, memberId);
 
             if (!result.IsSuccess)
@@ -167,6 +144,38 @@ namespace IccPlanner.Controllers
             }
 
             return Ok();
+        }
+
+        /// <summary>
+        ///     Générer le PDF de l'horaire mensuel.
+        /// </summary>
+        [HttpGet("{month:int}/{year:int}/pdf")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetSchedulePdf(int month, int year, [FromQuery] int departmentId)
+        {
+            var pdf = await _planningService.GenerateSchedulePdfAsync(departmentId, month, year);
+            if (pdf == null)
+            {
+                return NotFound();
+            }
+            return File(pdf, "application/pdf", $"Planification-{month:D2}-{year}.pdf");
+        }
+
+        /// <summary>
+        ///     Générer le PDF du planning journalier.
+        /// </summary>
+        [HttpGet("daily-pdf/{date}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDailyPdf(DateOnly date, [FromQuery] int departmentId)
+        {
+            var pdf = await _planningService.GenerateDailyPdfAsync(departmentId, date);
+            if (pdf == null)
+            {
+                return NotFound();
+            }
+            return File(pdf, "application/pdf", $"Planification-{date:yyyy-MM-dd}.pdf");
         }
     }
 }

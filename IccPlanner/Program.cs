@@ -153,6 +153,7 @@ namespace IccPlanner
             builder.Services.AddScoped<IPlanningPeriodRepository, PlanningPeriodRepository>();
             builder.Services.AddScoped<IRecurrentDateService, RecurrentDateService>();
             builder.Services.AddScoped<IPlanningArchiveService, PlanningArchiveService>();
+            builder.Services.AddScoped<ISchedulePdfService, SchedulePdfService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -266,6 +267,9 @@ namespace IccPlanner
             // Background Jobs
             builder.Services.AddHostedService<RecurrentDateGeneratorJob>();
             builder.Services.AddHostedService<PlanningArchiveJob>();
+
+            // QuestPDF
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             var app = builder.Build();
 
