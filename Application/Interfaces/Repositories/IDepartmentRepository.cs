@@ -68,5 +68,10 @@ namespace Application.Interfaces.Repositories
         ///     Affecte une liste de postes à un département.
         /// </summary>
         public Task AssignPostesAsync(int departmentId, List<int> posteIds);
+
+        /// <summary>
+        ///     Récupère les détails complets d'un département (infos, membres, postes, programmes).
+        /// </summary>
+        public Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId);
     }
 }

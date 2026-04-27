@@ -381,5 +381,11 @@ namespace Application.Services
         {
             return await _departmentRepository.GetDepartmentServicesByDateAsync(datePrg);
         }
+
+        /// <inheritdoc />
+        public async Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId)
+        {
+            return await _departmentRepository.GetDetailAsync(departmentId);
+        }
     }
 }

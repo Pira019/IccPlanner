@@ -173,6 +173,25 @@ namespace IccPlanner.Controllers
             return Ok(dept);
         }
 
+        /// <summary>
+        ///     Récupère les détails complets d'un département (infos, membres, postes, programmes).
+        /// </summary>
+        /// <param name="id">Id du département</param>
+        /// <returns>Détails complets du département</returns>
+        [HttpGet("{id}/details")]
+        [Authorize]
+        [ProducesResponseType<DepartmentDetailResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDetails(int id)
+        {
+            var detail = await _departmentService.GetDetailAsync(id);
+            if (detail == null)
+            {
+                return NotFound(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_NOT_EXIST, null, null));
+            }
+            return Ok(detail);
+        }
+
         [HttpGet("{id}/postes")]
         [Authorize]
         [ProducesResponseType<List<PosteResponse>>(StatusCodes.Status200OK)]

@@ -180,5 +180,55 @@ namespace Infrastructure.Repositories
 
             await PlannerContext.SaveChangesAsync();
         }
+
+        /// <summary>
+        ///     Récupère les détails complets d'un département en une seule requête.
+        /// </summary>
+        public async Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(d => d.Id == departmentId)
+                .Select(d => new DepartmentDetailResponse
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    ShortName = d.ShortName,
+                    Description = d.Description,
+                    StartDate = d.StartDate,
+                    MinistryName = d.Ministry != null ? d.Ministry.Name : null,
+                    MemberCount = d.DepartmentMembers.Count(),
+                    ProgramCount = d.DepartmentPrograms.Count(dp => !dp.IsDeleted),
+                    Members = d.DepartmentMembers
+                        .OrderBy(dm => dm.Member.Name)
+                        .ThenBy(dm => dm.Member.LastName)
+                        .Select(dm => new DepartmentDetailMember
+                        {
+                            DisplayName = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName : ""),
+                            Sexe = dm.Member.Sexe,
+                            Status = dm.Status.ToString(),
+                            Postes = dm.DepartmentMemberPosts.Select(p => p.Poste.Name).ToList()
+                        }).ToList(),
+                    Postes = d.Postes
+                        .OrderBy(p => p.Name)
+                        .Select(p => new DepartmentDetailPoste
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            ShortName = p.ShortName
+                        }).ToList(),
+                    Programs = d.DepartmentPrograms
+                        .Where(dp => !dp.IsDeleted)
+                        .OrderBy(dp => dp.Program.Name)
+                        .Select(dp => new DepartmentDetailProgram
+                        {
+                            ProgramId = dp.ProgramId,
+                            ProgramName = dp.Program.Name,
+                            ShortName = dp.Program.ShortName,
+                            IndRecurrent = dp.IndRecurent
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }

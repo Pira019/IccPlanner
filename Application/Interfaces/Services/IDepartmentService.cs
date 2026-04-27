@@ -122,6 +122,11 @@ namespace Application.Interfaces.Services
         /// </summary>
         public Task<List<DepartmentServicesResponse>> GetDepartmentServicesByDateAsync(DateOnly datePrg);
 
-
+        /// <summary>
+        ///     Récupère les détails complets d'un département (infos, membres, postes, programmes).
+        /// </summary>
+        /// <param name="departmentId">Id du département</param>
+        /// <returns>Détails complets ou null si non trouvé</returns>
+        public Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId);
     }
 }
