@@ -67,7 +67,7 @@ namespace Application.Services
                 {
                     await _accountRepository.AddUserRole(newUser!, RolesConstants.ADMIN);
                 }
-                // Envoie Email
+                // Envoie Email (non bloquant, géré dans SendEmailService)
                 await _sendEmailService.SendEmailConfirmation(newUser!);
             }
             return result;

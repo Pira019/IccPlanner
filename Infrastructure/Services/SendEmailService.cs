@@ -1,82 +1,97 @@
-﻿
-using Application.Interfaces.Services;
-using Domain.Entities; 
+﻿using Application.Interfaces.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using Infrastructure.Utility.Mails;
 using Infrastructure.Utility;
 using Infrastructure.Configurations;
+using brevo_csharp.Api;
 
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Service pour envoyer un Email
+    ///     Service pour envoyer des emails via l'API Brevo.
     /// </summary>
     public class SendEmailService : ISendEmailService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SendEmailService> _logger;
+        private readonly UserManager<User> _userManager;
+        private readonly AppSetting _appSetting;
 
         public SendEmailService(UserManager<User> userManager, AppSetting appSetting, ILogger<SendEmailService> logger)
         {
             _userManager = userManager;
-            AppSetting = appSetting;
+            _appSetting = appSetting;
             _logger = logger;
         }
 
-        private readonly UserManager<User> _userManager;
-        public AppSetting AppSetting { get; }
-
-        /// <summary>
-        /// Envoir l'email de confirmation
-        /// </summary>
-        /// <param name="email"></param>
+        /// <inheritdoc />
         public async Task SendEmailConfirmation(User user)
-        { 
+        {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-            var callbackUrl = FormatUtility.GenerateEmailConfirmationUrl(AppSetting.LinkUrlConfirmEmail!, user.Id, code);
-            var content = ModelMails.MailConfirmationHtlm(user.Member.Name ,callbackUrl);
+            var callbackUrl = FormatUtility.GenerateEmailConfirmationUrl(_appSetting.LinkUrlConfirmEmail!, user.Id, code);
+            var content = ModelMails.MailConfirmationHtlm(user.Member.Name, callbackUrl);
 
             await Execute(ModelMails.OBJECTEMAILCONFIRMATION, content, user.Email!);
         }
 
-        /// <summary>
-        /// Permet d'envoyer le email
-        /// </summary>
-        /// <param name="subject">Sujet duu mail</param>
-        /// <param name="content">Le contenu</param>
-        /// <param name="toEmail">Email destinateur</param>
-        /// <returns>Returne objet Task.</returns>
-        private async Task Execute(string subject,string content, string toEmail)
+        /// <inheritdoc />
+        public async Task SendInvitationEmail(string toEmail, string firstName, string departmentName, string invitationCode, int invitationId)
         {
-            var client = new SendGridClient(AppSetting.SendGridKey); 
+            var joinUrl = $"{_appSetting.FrontUrl}/register?invitationId={invitationId}";
+            var content = ModelMails.MailInvitationHtml(firstName, departmentName, invitationCode, joinUrl);
+            await Execute(ModelMails.OBJECTINVITATION, content, toEmail);
+        }
 
-            var msg = new SendGridMessage()
+        /// <summary>
+        ///     Lance l'envoi d'un email via l'API Brevo en arrière-plan.
+        ///     Ne bloque jamais la réponse HTTP. Les erreurs sont loggées.
+        /// </summary>
+        /// <param name="subject">Sujet du mail</param>
+        /// <param name="htmlContent">Contenu HTML</param>
+        /// <param name="toEmail">Email destinataire</param>
+        private Task Execute(string subject, string htmlContent, string toEmail)
+        {
+            var brevo = _appSetting.Brevo;
+
+            if (string.IsNullOrWhiteSpace(brevo?.ApiKey))
             {
-                From = new EmailAddress(AppSetting.EmailExp, AppSetting.AppName),
-                Subject = subject,
-                HtmlContent = content,
-            };
-
-            msg.AddTo(new EmailAddress(toEmail));
-            msg.SetClickTracking(false, false);
-
-            try
-            {
-                var response = await client.SendEmailAsync(msg);
-                _logger.LogInformation(response.IsSuccessStatusCode
-                ? "Email to {toEmail} queued successfully!"
-                : "Failure Email to {toEmail}");
+                _logger.LogWarning("Clé API Brevo non configurée. Email non envoyé à {ToEmail}.", toEmail);
+                return Task.CompletedTask;
             }
-            catch (Exception ex)
+
+            // Fire-and-forget : l'envoi se fait en arrière-plan
+            _ = Task.Run(async () =>
             {
-                _logger.LogError(ex, "An error occurred while sending an email to {toEmail}.", toEmail);
-            }
+                try
+                {
+                    brevo_csharp.Client.Configuration.Default.ApiKey.Clear();
+                    brevo_csharp.Client.Configuration.Default.ApiKey.Add("api-key", brevo.ApiKey);
+
+                    var apiInstance = new TransactionalEmailsApi();
+
+                    var sendSmtpEmail = new brevo_csharp.Model.SendSmtpEmail
+                    {
+                        Sender = new brevo_csharp.Model.SendSmtpEmailSender(brevo.FromName, brevo.FromEmail),
+                        To = new List<brevo_csharp.Model.SendSmtpEmailTo> { new brevo_csharp.Model.SendSmtpEmailTo(toEmail) },
+                        Subject = subject,
+                        HtmlContent = htmlContent
+                    };
+
+                    var result = await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
+                    _logger.LogInformation("Email envoyé à {ToEmail} avec succès. MessageId: {MessageId}", toEmail, result.MessageId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Erreur lors de l'envoi de l'email à {ToEmail}.", toEmail);
+                }
+            });
+
+            return Task.CompletedTask;
         }
     }
 }

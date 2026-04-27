@@ -19,16 +19,6 @@ namespace Infrastructure.Configurations
         public ContactSetting? Contact { get; set; }
 
         /// <summary>
-        /// Clé sendGrid pour le mail
-        /// </summary>
-        public string? SendGridKey { get; set; }
-
-        /// <summary>
-        /// Email Expéditeur
-        /// </summary>
-        public string? EmailExp { get; set; }
-
-        /// <summary>
         /// Lien de url cote front pour confirme l'adresse Email
         /// </summary>
         public string? LinkUrlConfirmEmail { get; set; }
@@ -53,6 +43,9 @@ namespace Infrastructure.Configurations
         /// </summary>
         public Parametres Parametres { get; set; }
 
-
+        /// <summary>
+        ///     Configuration Brevo (API) pour l'envoi d'emails.
+        /// </summary>
+        public BrevoSettings Brevo { get; set; } = new();
     }
 }

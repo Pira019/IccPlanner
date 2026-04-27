@@ -15,12 +15,19 @@ namespace Application.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IHttpContextAccessor _httpContextAccessor; 
         private readonly IAppSettings _appSettings;
+        private readonly ISendEmailService _sendEmailService;
+        private readonly IDepartmentRepository _departmentRepository;
+
         public InvitationService(IBaseRepository<Invitation> baseRepository, IMapper mapper,
-            IInvitationRepository invitationRepository, IHttpContextAccessor httpContextAccessor, IAppSettings appSettings) : base(baseRepository, mapper)
+            IInvitationRepository invitationRepository, IHttpContextAccessor httpContextAccessor,
+            IAppSettings appSettings, ISendEmailService sendEmailService,
+            IDepartmentRepository departmentRepository) : base(baseRepository, mapper)
         {
             _invitationRepository = invitationRepository;
             _httpContextAccessor = httpContextAccessor;
             _appSettings = appSettings;
+            _sendEmailService = sendEmailService;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<Result<InvitationResponse>> FindValidInviation(int id)
@@ -68,15 +75,25 @@ namespace Application.Services
                 invitation.IndAct = true;
                 invitation.UpdatedBy = GetAuthenticatedUserId();
 
-                await _invitationRepository.Update_Async (invitation,_invitation);
-
-                return Result<bool>.Success(true);
-            }else
+                await _invitationRepository.Update_Async(invitation, _invitation);
+            }
+            else
             {
                 await _invitationRepository.Insert(invitation);
             }
 
-            // TODO Envoie le mail un mail
+            // Récupérer le nom du département pour l'email
+            var department = await _departmentRepository.GetByIdAsync(request.DepartmentID);
+            var departmentName = department?.Name ?? "Département";
+
+            // Envoyer l'email d'invitation (non bloquant, géré dans SendEmailService)
+            await _sendEmailService.SendInvitationEmail(
+                request.Email,
+                request.FirstName,
+                departmentName,
+                code,
+                invitation.Id
+            );
                 
            return Result<bool>.Success(true);
         }
