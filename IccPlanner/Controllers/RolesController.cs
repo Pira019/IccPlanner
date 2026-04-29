@@ -15,11 +15,13 @@ namespace IccPlanner.Controllers
     {
         private readonly IRoleService _roleService;
         private readonly IRoleRepository _roleRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public RolesController(IRoleService roleService, IRoleRepository roleRepository)
+        public RolesController(IRoleService roleService, IRoleRepository roleRepository, IAccountRepository accountRepository)
         {
             _roleService = roleService;
             _roleRepository = roleRepository;
+            _accountRepository = accountRepository;
         }
 
         [HttpGet]
@@ -49,6 +51,66 @@ namespace IccPlanner.Controllers
             //get role 
             var result = await _roleService.GetRoleByName(createRoleRequest.Name);
             return Created(string.Empty, result);
+        }
+
+        /// <summary>
+        ///     Récupère tous les utilisateurs avec leurs rôles.
+        /// </summary>
+        [HttpGet("users")]
+        [Authorize(Policy = PolicyConstants.CAN_READ_ROLE)]
+        [ProducesResponseType<List<UserWithRolesResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUsersWithRoles()
+        {
+            var users = await _accountRepository.GetAllUsersAsync();
+            var result = new List<UserWithRolesResponse>();
+
+            foreach (var user in users)
+            {
+                var roles = await _accountRepository.GetUserRoles(user);
+                result.Add(new UserWithRolesResponse
+                {
+                    UserId = user.Id,
+                    DisplayName = user.Member.Name + " " + (user.Member.LastName ?? ""),
+                    Email = user.Email,
+                    Roles = roles.ToList()
+                });
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        ///     Assigne un rôle à un utilisateur et ajoute les claims correspondantes.
+        /// </summary>
+        [HttpPost("assign")]
+        [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request)
+        {
+            var result = await _roleService.AssignRoleAsync(request.UserId, request.RoleName);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        ///     Retire un rôle à un utilisateur et supprime les claims correspondantes.
+        /// </summary>
+        [HttpPost("unassign")]
+        [Authorize(Policy = PolicyConstants.CAN_CREATE_ROLE)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UnassignRole([FromBody] AssignRoleRequest request)
+        {
+            var result = await _roleService.UnassignRoleAsync(request.UserId, request.RoleName);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+            return Ok();
         }
 
     }

@@ -26,5 +26,12 @@ namespace Application.Interfaces.Services
         ///     Returns a Result containing an InvitationResponse if a valid invitation is found, or an error message if not.
         /// </returns>
         public Task<Result<InvitationResponse>> FindValidInviation(int id);
+
+        /// <summary>
+        ///     Importe des invitations en masse depuis un fichier Excel (colonnes: Prenom, Email).
+        /// </summary>
+        /// <param name="request">Fichier Excel + DepartmentId</param>
+        /// <returns>Résultat avec le nombre d'envois et les erreurs</returns>
+        public Task<Result<BulkInviteResponse>> BulkInviteAsync(BulkInviteRequest request);
     }
 }

@@ -18,5 +18,18 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet.Where(p => ids.Contains(p.Id)).ToListAsync();
         }
+
+        /// <inheritdoc />
+        public async Task<List<string>> GetAllNamesAsync()
+        {
+            return await _dbSet.Select(p => p.Name).ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task InsertRangeAsync(List<Permission> permissions)
+        {
+            await _dbSet.AddRangeAsync(permissions);
+            await PlannerContext.SaveChangesAsync();
+        }
     }
 }

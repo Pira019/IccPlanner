@@ -42,5 +42,21 @@ namespace Infrastructure.Repositories
             await PlannerContext.SaveChangesAsync();
 
         }
+
+        /// <inheritdoc />
+        public async Task<List<Invitation>> FindByEmailsAsync(List<string> emails)
+        {
+            var lowerEmails = emails.Select(e => e.ToLower()).ToList();
+            return await _dbSet
+                .Where(i => lowerEmails.Contains(i.Email.ToLower()))
+                .ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task InsertAllAsync(List<Invitation> invitations)
+        {
+            await _dbSet.AddRangeAsync(invitations);
+            await PlannerContext.SaveChangesAsync();
+        }
     }
 }

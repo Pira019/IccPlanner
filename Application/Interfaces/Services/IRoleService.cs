@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.Role;
+using Application.Interfaces.Repositories;
 using Application.Requests.Role;
 using Application.Responses.Role;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +26,20 @@ namespace Application.Interfaces.Services
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant le result de l'opération </returns>
         public Task<CreateRoleResponse> GetRoleByName(string roleName);
-        
+
+        /// <summary>
+        ///     Seed les rôles par défaut avec leurs permissions associées.
+        /// </summary>
+        public Task SeedDefaultRolesAsync();
+
+        /// <summary>
+        ///     Assigne un rôle à un utilisateur et ajoute les claims (permissions) correspondantes.
+        /// </summary>
+        public Task<Result<bool>> AssignRoleAsync(string userId, string roleName);
+
+        /// <summary>
+        ///     Retire un rôle à un utilisateur et supprime les claims (permissions) correspondantes.
+        /// </summary>
+        public Task<Result<bool>> UnassignRoleAsync(string userId, string roleName);
     }
 }

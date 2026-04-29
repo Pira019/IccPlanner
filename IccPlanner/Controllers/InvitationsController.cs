@@ -57,6 +57,24 @@ namespace IccPlanner.Controllers
                 return BadRequest(ApiError.ErrorMessage(response.Error, null, null));
             }
             return Ok(response.Value);
+        }
+
+        /// <summary>
+        ///     Importe des invitations en masse via un fichier Excel (colonnes: Prenom, Email).
+        /// </summary>
+        [HttpPost("bulk")]
+        [Authorize]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<BulkInviteResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> BulkInvite([FromForm] BulkInviteRequest request)
+        {
+            var response = await _invitationService.BulkInviteAsync(request);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(response.Error, null, null));
+            }
+            return Ok(response.Value);
         } 
     }
 }

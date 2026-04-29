@@ -465,4 +465,10 @@
   <data name="PLANNING_PAST_DATE" xml:space="preserve">
     <value>Vous ne pouvez pas modifier le planning d'une date passée.</value>
   </data>
+  <data name="FILE_EMPTY" xml:space="preserve">
+    <value>Le fichier est vide ou ne contient aucune feuille.</value>
+  </data>
+  <data name="FILE_INVALID_COLUMNS" xml:space="preserve">
+    <value>Le fichier doit contenir les colonnes : Prenom, Email.</value>
+  </data>
 </root>

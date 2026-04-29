@@ -226,6 +226,19 @@ namespace Infrastructure.Repositories
                             ProgramName = dp.Program.Name,
                             ShortName = dp.Program.ShortName,
                             IndRecurrent = dp.IndRecurent
+                        }).ToList(),
+                    Invitations = PlannerContext.Invitations
+                        .Where(i => i.DepartmentId == departmentId)
+                        .OrderByDescending(i => i.DateSend)
+                        .Select(i => new DepartmentDetailInvitation
+                        {
+                            Id = i.Id,
+                            FirstName = i.FirstName,
+                            Email = i.Email,
+                            DateSend = i.DateSend,
+                            DateExpiration = i.DateExpiration,
+                            IndUsed = i.IndUsed,
+                            IndAct = i.IndAct
                         }).ToList()
                 })
                 .FirstOrDefaultAsync();

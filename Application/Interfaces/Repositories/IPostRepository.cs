@@ -12,5 +12,15 @@ namespace Application.Interfaces.Repositories
         public Task UpdateAsync(Poste poste);
         public Task DeleteAsync(int id);
         public Task<bool> IsNameExistsAsync(string name);
+
+        /// <summary>
+        ///     Récupère tous les ShortName de postes existants.
+        /// </summary>
+        public Task<List<string>> GetAllShortNamesAsync();
+
+        /// <summary>
+        ///     Insère plusieurs postes en une seule opération.
+        /// </summary>
+        public Task InsertRangeAsync(List<Poste> postes);
     }
 }

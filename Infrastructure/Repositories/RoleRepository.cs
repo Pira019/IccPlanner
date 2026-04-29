@@ -55,5 +55,21 @@ namespace Infrastructure.Repositories
         {
             return await _roleManager.FindByNameAsync(roleName);
         }
+
+        /// <inheritdoc />
+        public async Task<Role?> GetRoleWithPermissionsAsync(string roleName)
+        {
+            return await _iccPlannerContext.Set<Role>()
+                .Include(r => r.Permissions)
+                .FirstOrDefaultAsync(r => r.NormalizedName == roleName.ToUpper());
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateRolePermissionsAsync(Role role, IEnumerable<Permission> permissions)
+        {
+            role.Permissions.Clear();
+            role.Permissions.AddRange(permissions);
+            await _iccPlannerContext.SaveChangesAsync();
+        }
     }
 }

@@ -41,6 +41,16 @@ namespace Application.Interfaces.Repositories
     /// </summary>
     /// <param name="invitationId"></param>
     /// <returns></returns>
-        public Task<Invitation?> FindValidInv(int invitationId); 
+        public Task<Invitation?> FindValidInv(int invitationId);
+
+        /// <summary>
+        ///     Récupère toutes les invitations dont l'email est dans la liste fournie.
+        /// </summary>
+        public Task<List<Invitation>> FindByEmailsAsync(List<string> emails);
+
+        /// <summary>
+        ///     Insère plusieurs invitations en une seule opération.
+        /// </summary>
+        public Task InsertAllAsync(List<Invitation> invitations);
     }
 }

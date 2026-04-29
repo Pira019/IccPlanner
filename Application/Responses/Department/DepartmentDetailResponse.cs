@@ -16,6 +16,7 @@ namespace Application.Responses.Department
         public List<DepartmentDetailMember> Members { get; set; } = [];
         public List<DepartmentDetailPoste> Postes { get; set; } = [];
         public List<DepartmentDetailProgram> Programs { get; set; } = [];
+        public List<DepartmentDetailInvitation> Invitations { get; set; } = [];
     }
 
     public class DepartmentDetailMember
@@ -39,5 +40,20 @@ namespace Application.Responses.Department
         public string ProgramName { get; set; } = string.Empty;
         public string? ShortName { get; set; }
         public bool IndRecurrent { get; set; }
+    }
+
+    /// <summary>
+    ///     Invitation envoyée pour un département.
+    /// </summary>
+    public class DepartmentDetailInvitation
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public DateTime DateSend { get; set; }
+        public DateTime DateExpiration { get; set; }
+        public bool IndUsed { get; set; }
+        public bool IndAct { get; set; }
+        public bool IsExpired => !IndUsed && DateExpiration < DateTime.UtcNow;
     }
 }

@@ -1103,5 +1103,23 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("PLANNING_PAST_DATE", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The file is empty or contains no worksheet.
+        /// </summary>
+        public static string FILE_EMPTY {
+            get {
+                return ResourceManager.GetString("FILE_EMPTY", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The file must contain columns: Prenom, Email.
+        /// </summary>
+        public static string FILE_INVALID_COLUMNS {
+            get {
+                return ResourceManager.GetString("FILE_INVALID_COLUMNS", resourceCulture);
+            }
+        }
     }
 }

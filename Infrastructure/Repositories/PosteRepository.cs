@@ -60,5 +60,21 @@ namespace Infrastructure.Repositories
         {
             return await PlannerContext.Postes.AnyAsync(p => p.Name.ToLower() == name.ToLower());
         }
+
+        /// <inheritdoc />
+        public async Task<List<string>> GetAllShortNamesAsync()
+        {
+            return await PlannerContext.Postes
+                .Where(p => p.ShortName != null)
+                .Select(p => p.ShortName!)
+                .ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task InsertRangeAsync(List<Poste> postes)
+        {
+            await PlannerContext.Postes.AddRangeAsync(postes);
+            await PlannerContext.SaveChangesAsync();
+        }
     }
 }

@@ -8,14 +8,18 @@ namespace Application.Interfaces.Repositories
     public interface IPermissionRepository : IBaseRepository<Permission>
     {
         /// <summary>
-        ///     Récupère une liste d'identifiants de permissions en fonction d'une liste d'identifiants fournie.
+        ///     Récupère une liste de permissions en fonction d'une liste d'identifiants fournie.
         /// </summary>
-        /// <param name="ids">
-        ///     Liste des identifiants des permissions à récupérer.
-        /// </param>
-        /// <returns>
-        ///     Retourne une collection d'entiers représentant les identifiants des permissions correspondantes.
-        /// </returns>
         public Task<IEnumerable<Permission>> GetByIdsAsync(List<int> ids);
+
+        /// <summary>
+        ///     Récupère tous les noms de permissions existantes.
+        /// </summary>
+        public Task<List<string>> GetAllNamesAsync();
+
+        /// <summary>
+        ///     Insère plusieurs permissions en une seule opération.
+        /// </summary>
+        public Task InsertRangeAsync(List<Permission> permissions);
     }
 }

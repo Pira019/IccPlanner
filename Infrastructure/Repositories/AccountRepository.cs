@@ -79,6 +79,36 @@ namespace Infrastructure.Repositories
             return await _userManager.GetRolesAsync(user);
         }
 
+        /// <summary>
+        ///     Retire un rôle à un utilisateur.
+        /// </summary>
+        public async Task RemoveUserRole(User user, string roleName)
+        {
+            await _userManager.RemoveFromRoleAsync(user, roleName);
+        }
+
+        /// <summary>
+        ///     Récupère tous les utilisateurs avec leurs rôles et claims.
+        /// </summary>
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _userManager.Users
+                .Include(u => u.Member)
+                .OrderBy(u => u.Member.Name)
+                .ThenBy(u => u.Member.LastName)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        ///     Récupère les rôles d'un utilisateur par son Id.
+        /// </summary>
+        public async Task<IList<string>> GetUserRolesByIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) { return new List<string>(); }
+            return await _userManager.GetRolesAsync(user);
+        }
+
         public async Task<bool> IsAdminExistsAsync()
         {
             var isAdminExists = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
@@ -108,6 +138,29 @@ namespace Infrastructure.Repositories
         public Task<SignInResult> SignIn(string email, string password, bool isPersistent = false)
         {
             return _signInManager.PasswordSignInAsync(email, password, isPersistent, true);
+        }
+
+        /// <inheritdoc />
+        public async Task AddClaimsAsync(User user, IEnumerable<string> permissionNames)
+        {
+            var claims = permissionNames.Select(p => new System.Security.Claims.Claim("Permission", p));
+            await _userManager.AddClaimsAsync(user, claims);
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveClaimsAsync(User user, IEnumerable<string> permissionNames)
+        {
+            var claims = permissionNames.Select(p => new System.Security.Claims.Claim("Permission", p));
+            await _userManager.RemoveClaimsAsync(user, claims);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<string>> GetUserPermissionClaimsAsync(string userId)
+        {
+            return await _iccPlannerContext.UserClaims
+                .Where(uc => uc.UserId == userId && uc.ClaimType == "Permission")
+                .Select(uc => uc.ClaimValue!)
+                .ToListAsync();
         }
 
     }

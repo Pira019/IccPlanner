@@ -11,5 +11,10 @@ namespace Application.Interfaces.Services
         public Task<List<PosteResponse>> GetAllAsync();
         public Task<Result<PosteResponse>> GetByIdAsync(int id);
         public Task<Result<bool>> DeleteAsync(int id);
+
+        /// <summary>
+        ///     Seed les postes par défaut du système.
+        /// </summary>
+        public Task SeedDefaultPostesAsync();
     }
 }

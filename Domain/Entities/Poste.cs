@@ -24,6 +24,11 @@ namespace Domain.Entities
         /// </summary>
         public bool IndGest { get; set; } = default;
 
+        /// <summary>
+        ///     Ordre d'affichage du poste (nullable).
+        /// </summary>
+        public int? DisplayOrder { get; set; }
+
         public List<Department> Departments { get; } = [];
     }
 }

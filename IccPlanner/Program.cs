@@ -39,7 +39,7 @@ namespace IccPlanner
     /// </summary>
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -154,6 +154,8 @@ namespace IccPlanner
             builder.Services.AddScoped<IRecurrentDateService, RecurrentDateService>();
             builder.Services.AddScoped<IPlanningArchiveService, PlanningArchiveService>();
             builder.Services.AddScoped<ISchedulePdfService, SchedulePdfService>();
+
+            builder.Services.AddScoped<IPermissionService, PermissionService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -272,6 +274,19 @@ namespace IccPlanner
             QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             var app = builder.Build();
+
+            // Seed des permissions au démarrage
+            using (var scope = app.Services.CreateScope())
+            {
+                var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+                await permissionService.SeedDefaultPermissionsAsync();
+
+                var posteService = scope.ServiceProvider.GetRequiredService<IPosteService>();
+                await posteService.SeedDefaultPostesAsync();
+
+                var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
+                await roleService.SeedDefaultRolesAsync();
+            }
 
             app.UseRequestLocalization();
 

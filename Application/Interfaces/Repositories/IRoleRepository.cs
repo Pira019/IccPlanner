@@ -31,5 +31,15 @@ namespace Application.Interfaces.Repositories
         /// <returns><see cref="Task"/> représente l'opération asynchrone, 
         /// contenant <see cref="Role"/> de l'opération </returns>
         public Task<Role?> GetRoleByNameAsync(string roleName);
+
+        /// <summary>
+        ///     Récupère un rôle avec ses permissions par son nom.
+        /// </summary>
+        public Task<Role?> GetRoleWithPermissionsAsync(string roleName);
+
+        /// <summary>
+        ///     Met à jour les permissions d'un rôle existant.
+        /// </summary>
+        public Task UpdateRolePermissionsAsync(Role role, IEnumerable<Permission> permissions);
     }
 }

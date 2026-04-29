@@ -77,6 +77,21 @@ namespace Application.Interfaces.Repositories
         public Task<IList<string>> GetUserRoles(User user);
 
         /// <summary>
+        ///     Retire un rôle à un utilisateur.
+        /// </summary>
+        public Task RemoveUserRole(User user, string roleName);
+
+        /// <summary>
+        ///     Récupère tous les utilisateurs avec leurs membres.
+        /// </summary>
+        public Task<List<User>> GetAllUsersAsync();
+
+        /// <summary>
+        ///     Récupère les rôles d'un utilisateur par son Id.
+        /// </summary>
+        public Task<IList<string>> GetUserRolesByIdAsync(string userId);
+
+        /// <summary>
         /// Permet de trouver un membre par ID
         /// </summary>
         /// <param name="memberId">L'Id du membre</param>
@@ -105,6 +120,21 @@ namespace Application.Interfaces.Repositories
         /// </summary>
         /// <param name="users">Liste des utilisateurs</param>
         /// <returns> les users filtres </returns>
-        public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);  
+        public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);
+
+        /// <summary>
+        ///     Ajoute des claims (permissions) à un utilisateur.
+        /// </summary>
+        public Task AddClaimsAsync(User user, IEnumerable<string> permissionNames);
+
+        /// <summary>
+        ///     Supprime des claims (permissions) d'un utilisateur.
+        /// </summary>
+        public Task RemoveClaimsAsync(User user, IEnumerable<string> permissionNames);
+
+        /// <summary>
+        ///     Récupère les valeurs des claims Permission d'un utilisateur.
+        /// </summary>
+        public Task<List<string>> GetUserPermissionClaimsAsync(string userId);
     }
 }

@@ -93,10 +93,46 @@ namespace Application.Services
         {
             var poste = await _postRepository.GetByIdAsync(id);
             if (poste == null)
+            {
                 return Result<bool>.Fail(string.Format(ValidationMessages.NOT_EXIST, "Poste"));
+            }
 
             await _postRepository.DeleteAsync(id);
             return Result<bool>.Success(true);
+        }
+
+        /// <summary>
+        ///     Liste des postes par défaut du système.
+        /// </summary>
+        private static readonly List<(string ShortName, string Name, string Description, int Order)> DefaultPostes =
+        [
+            ("RESPO", "Responsable", "Il est le référent du département.", 1),
+            ("PLAN", "Planificateur", "Planifie et organise les tâches du département pendant les activités.", 2),
+            ("COORDO", "Coordinateur", "Assure la coordination des équipes et des tâches.", 3),
+            ("GESTI", "Gestionnaire", "Gère les ressources et le suivi administratif.", 4),
+            ("RADACT", "Rédacteur", "Veille aux messages envoyés dans le groupe.", 5),
+        ];
+
+        /// <inheritdoc />
+        public async Task SeedDefaultPostesAsync()
+        {
+            var existingShortNames = await _postRepository.GetAllShortNamesAsync();
+
+            var toInsert = DefaultPostes
+                .Where(p => !existingShortNames.Contains(p.ShortName))
+                .Select(p => new Poste
+                {
+                    ShortName = p.ShortName,
+                    Name = p.Name,
+                    Description = p.Description,
+                    DisplayOrder = p.Order
+                })
+                .ToList();
+
+            if (toInsert.Count > 0)
+            {
+                await _postRepository.InsertRangeAsync(toInsert);
+            }
         }
     }
 }
