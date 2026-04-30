@@ -72,7 +72,7 @@ namespace Application.Services
             }
 
             var member = await _accountRepository.GetAuthMemberAsync(userId_);
-            var departmentMemberId = await _departmentMemberRepository.GetMemberInDepartmentIdAsync(idDepart, member.Id);
+            var departmentMemberId = await _departmentMemberRepository.GetMemberInDepartmentIdAsync(idDepart, member!.Id);
 
             if (departmentMemberId == null)
             {

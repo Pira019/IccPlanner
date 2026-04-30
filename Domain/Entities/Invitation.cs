@@ -58,7 +58,7 @@ namespace Domain.Entities
         /// <summary>
         ///     Ajouté par l'utilisateur.
         /// </summary>
-        public string AddBy { get; set; }
+        public string? AddBy { get; set; }
 
         /// <summary>
         ///    Indentifiant de l'utilisateur qui a mis à jour l'invitation.

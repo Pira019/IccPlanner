@@ -11,7 +11,7 @@ namespace Application.Helper.Validators
             _startDatePropertyName = startDatePropertyName;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;
             var type = instance.GetType();
@@ -30,7 +30,7 @@ namespace Application.Helper.Validators
                     return new ValidationResult(ValidatorErrorsMessage.END_DATE_MUST_BE_GREATER.Message);
                 }
             }
-            return ValidationResult.Success;
+            return ValidationResult.Success!;
         }
     }
 }

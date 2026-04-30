@@ -62,7 +62,7 @@ namespace Infrastructure.Repositories
                         && x.Date.Value.Month == dateFilter.Month && x.Date.Value.Year == dateFilter.Year
                         )
                 .Select(prgDate => prgDate.Date)
-                .Select(date => date.Value)
+                .Select(date => date!.Value)
                 .Distinct()
                 .ToListAsync();
         }

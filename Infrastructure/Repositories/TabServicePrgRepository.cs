@@ -56,7 +56,7 @@ namespace Infrastructure.Repositories
                         StartTime = s.TabServices.StartTime.ToString(),
                         EndTime = s.TabServices.EndTime.ToString(),
                         ArrivalTime = s.ArrivalTimeOfMember.HasValue
-                            ? s.ArrivalTimeOfMember.ToString()
+                            ? s.ArrivalTimeOfMember.ToString()!
                             : string.Empty
                     }).ToList()
                 })

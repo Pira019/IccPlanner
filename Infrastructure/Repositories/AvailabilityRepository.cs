@@ -120,7 +120,7 @@ namespace Infrastructure.Repositories
                             PlanningId = a.PlanningId,
                             PosteId = a.PosteId,
                             MemberId = a.MemberId,
-                            DisplayName = a.MemberName + " " + a.MemberLastName.Substring(0, 1) + ".",
+                            DisplayName = a.MemberName + " " + a.MemberLastName!.Substring(0, 1) + ".",
                             IsPlanned = a.IsPlanned,
                             IsTraining = a.IsTraining,
                             CreatedAt = a.CreatedAt

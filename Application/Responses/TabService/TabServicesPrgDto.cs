@@ -4,7 +4,7 @@
     {
         public int IdTabService { get; set; }
         public int TabServicesId { get; set; }
-        public string ServiceTitle { get; set; } 
+        public string ServiceTitle { get; set; } = string.Empty;
         public TimeOnly StartTime { get; set; } 
         public TimeOnly EndTime { get; set; } 
         public TimeOnly? ArrivalTime { get; set; } 

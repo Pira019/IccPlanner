@@ -66,7 +66,7 @@ namespace Infrastructure.Repositories
                     Month = a.TabServicePrg.PrgDate.Date!.Value.Month,
                     Year = a.TabServicePrg.PrgDate.Date!.Value.Year,
                     ProgramDate = a.TabServicePrg.PrgDate.Date!.Value,
-                    MemberName = a.DepartmentMember.Member.Name + " " + a.DepartmentMember.Member.LastName.Substring(0, 1) + ".",
+                    MemberName = a.DepartmentMember.Member.Name + " " + a.DepartmentMember.Member.LastName!.Substring(0, 1) + ".",
                     StartTime = a.TabServicePrg.TabServices.StartTime,
                     EndTime = a.TabServicePrg.TabServices.EndTime
                 })

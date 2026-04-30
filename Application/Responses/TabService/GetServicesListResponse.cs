@@ -4,8 +4,8 @@ namespace Application.Responses.TabService
 {
     public class GetServicesListResponse
     {
-        public string GroupKey { get; set; }
+        public string GroupKey { get; set; } = string.Empty;
         public int IdPrgDate { get; set; }
-        public List<ProgramServiceDto> ServicePrograms { get; set; }
+        public List<ProgramServiceDto> ServicePrograms { get; set; } = [];
     }
 }

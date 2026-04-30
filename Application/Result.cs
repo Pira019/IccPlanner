@@ -6,9 +6,9 @@
     public class Result<T>
     {
         public bool IsSuccess { get; private set; }
-        public string Error { get; private set; }
+        public string Error { get; private set; } = default!;
         public string? CodeErreur { get; private set; }
-        public T Value { get; private set; }
+        public T Value { get; private set; } = default!;
 
         private Result(bool isSuccess, T value, string error, string? codeErreur)
         {
@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="value">The value to associate with the successful result.</param>
         /// <returns>A <see cref="Result{T}"/> instance representing a successful operation with the provided value.</returns>
-        public static Result<T> Success(T value) => new Result<T>(true, value, null,null);
+        public static Result<T> Success(T value) => new Result<T>(true, value, null!, null);
 
         /// <summary>
         ///     Facilite la création d'un résultat d'échec avec un message d'erreur spécifié.
@@ -35,6 +35,6 @@
         ///     Code d'erreur optionnel pour identifier le type d'erreur.
         /// </param>
         /// <returns></returns>
-        public static Result<T> Fail(string error, string? codeErr=null) => new Result<T>(false, default, error,null);
+        public static Result<T> Fail(string error, string? codeErr=null) => new Result<T>(false, default!, error, null);
     }
 }

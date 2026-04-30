@@ -14,7 +14,7 @@ namespace Application.Helper.Validators
             this.ErrorMessage = ValidatorErrorsMessage.LETTERS_ONLY_ATTRIBUTE.Message;
         }
 
-        public override bool IsValid(object value)
+        public override bool IsValid(object? value)
         {
             if (value == null) return true; // Si la valeur est nulle, la validation sera considérée comme réussie
 

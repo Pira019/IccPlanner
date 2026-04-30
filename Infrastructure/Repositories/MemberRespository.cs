@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
                  {
                      IdDepartMember = dm.Id,
                      Name = dm.Member.Name + " " + dm.Member.LastName,
-                     NickName = dm.NickName,
+                     NickName = dm.NickName!,
                      Sex = dm.Member.Sexe,
                      Status = dm.Status.ToString(),
                      Postes = dm.DepartmentMemberPosts.Select(p => p.Poste.Name)

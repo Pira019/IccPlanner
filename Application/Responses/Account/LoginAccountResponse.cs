@@ -3,8 +3,8 @@
     public class LoginAccountResponse
     {
 
-        public string userId { get; set; }
-        public List<string> claims { get; set; }
-        public List<string> roles { get; set; }
+        public string userId { get; set; } = string.Empty;
+        public List<string> claims { get; set; } = [];
+        public List<string> roles { get; set; } = [];
     }
 }

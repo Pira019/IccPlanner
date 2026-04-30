@@ -41,7 +41,7 @@ namespace Infrastructure.Configurations
         /// <summary>
         ///     Paramètres de l'application.
         /// </summary>
-        public Parametres Parametres { get; set; }
+        public Parametres Parametres { get; set; } = new();
 
         /// <summary>
         ///     Configuration Brevo (API) pour l'envoi d'emails.

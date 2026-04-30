@@ -5,10 +5,10 @@ namespace Application.Responses.ServicePrg
     {
        public int Id { get; set; }
        public bool IsAvailable { get; set; }
-       public string DisplayName { get; set; }
+       public string DisplayName { get; set; } = string.Empty;
        public string? Comment { get; set; }
-       public string StartTime { get; set; }
-       public string EndTime { get; set; }
-       public string ArrivalTime { get; set; }
+       public string StartTime { get; set; } = string.Empty;
+       public string EndTime { get; set; } = string.Empty;
+       public string ArrivalTime { get; set; } = string.Empty;
     }
 }

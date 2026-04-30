@@ -12,11 +12,11 @@
         /// <summary>
         ///     Nom du programme.
         /// </summary>
-        public String Title { get; set; }
+        public String Title { get; set; } = string.Empty;
         /// <summary>
         ///     Date de l'événement.
         /// </summary>
-        public String Date { get; set; }
+        public String Date { get; set; } = string.Empty;
         public bool IndRecurrent { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class PrgServiceDto
     { 
-        public IEnumerable<TabServicesPrgDto> Services { get; set; }
+        public IEnumerable<TabServicesPrgDto> Services { get; set; } = [];
     }
 }

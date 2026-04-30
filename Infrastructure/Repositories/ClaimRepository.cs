@@ -41,12 +41,12 @@ namespace Infrastructure.Repositories
 
             return new ClaimsResponse
             {
-                Roles = user.Claims
+                Roles = user?.Claims
                     .Where(c => c.Type == ClaimTypes.Role)
                     .Select(c => c.Value)
                     .ToList(),
 
-                Permissions = user.Claims
+                Permissions = user?.Claims
                     .Where(c => c.Type == ClaimType.Permission.ToString())
                     .Select(c => c.Value)
                     .ToList(),

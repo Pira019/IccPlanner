@@ -65,7 +65,7 @@ namespace Application.Services
 
             if (result.Succeeded)
             {
-                var newUser = await FindUserAccountByEmail(request.Email);
+                var newUser = await FindUserAccountByEmail(request.Email!);
 
                 if (isAdmin)
                 {
@@ -111,7 +111,7 @@ namespace Application.Services
             {
                 userId = user!.Id,
                 roles = roles.ToList(),
-                claims = userClaims.ToList()
+                claims = userClaims.ToList()!
             };
 
             return Result<LoginAccountResponse>.Success(response); 

@@ -10,7 +10,7 @@ namespace Application.Requests.Department
     /// </summary>
     public class AddDepartmentProgramRequest
     { 
-        public List<int> DepartmentIds { get; set; } 
+        public List<int> DepartmentIds { get; set; } = [];
         public required int ProgramId { get; set; }
 
         /// <summary>
