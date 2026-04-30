@@ -47,7 +47,7 @@ namespace Infrastructure.Repositories
         /// <inheritdoc />
         public async Task<List<(string Email, string Name)>> GetAutoPlanningRecipientsAsync(int departmentId)
         {
-            return await PlannerContext.DepartmentMemberPosts
+            var data = await PlannerContext.DepartmentMemberPosts
                 .AsNoTracking()
                 .Where(dmp => dmp.DepartmentMember.DepartmentId == departmentId
                     && dmp.IndAutoPlanning
@@ -59,9 +59,9 @@ namespace Infrastructure.Repositories
                     Name = dmp.DepartmentMember.Member.Name
                 })
                 .Distinct()
-                .AsEnumerable()
-                .Select(x => (x.Email, x.Name))
-                .ToList();
+                .ToListAsync();
+
+            return data.Select(x => (x.Email, x.Name)).ToList();
         }
     }
 }
