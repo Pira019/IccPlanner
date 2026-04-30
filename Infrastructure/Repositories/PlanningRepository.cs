@@ -126,6 +126,7 @@ namespace Infrastructure.Repositories
                     PlanningId = p.Id,
                     p.MemberName,
                     PosteName = p.Poste != null ? p.Poste.Name : null,
+                    PosteDisplayOrder = p.Poste != null ? p.Poste.DisplayOrder : (int?)null,
                     p.IndTraining
                 })
                 .ToListAsync();
@@ -156,6 +157,7 @@ namespace Infrastructure.Repositories
                                             PlanningId = r.PlanningId,
                                             MemberName = r.MemberName,
                                             PosteName = r.PosteName,
+                                            PosteDisplayOrder = r.PosteDisplayOrder,
                                             IndTraining = r.IndTraining
                                         }).ToList()
                                 }).ToList()

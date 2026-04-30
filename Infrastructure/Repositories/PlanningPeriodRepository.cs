@@ -85,19 +85,75 @@ namespace Infrastructure.Repositories
                 query = query.Where(pp => pp.PlanningPeriod.DepartmentId == departmentId.Value);
             }
 
-            return await query
+            // 1. Récupérer les assignations du membre
+            var myPlannings = await query
                 .OrderBy(pp => pp.ProgramDate)
-                .Select(pp => new MyPlanningResponse
+                .Select(pp => new
                 {
-                    Date = pp.ProgramDate,
-                    ProgramName = pp.ProgramName,
-                    ProgramShortName = pp.ProgramShortName,
-                    ServiceName = pp.ServiceName,
-                    PosteName = pp.PosteName,
-                    IndTraining = pp.IndTraining,
-                    DepartmentName = pp.PlanningPeriod.Department.Name
+                    pp.ProgramDate,
+                    pp.ProgramName,
+                    pp.ProgramShortName,
+                    pp.ServiceName,
+                    pp.PosteName,
+                    pp.IndTraining,
+                    DepartmentName = pp.PlanningPeriod.Department.Name,
+                    DepartmentId = pp.PlanningPeriod.DepartmentId
                 })
                 .ToListAsync();
+
+            if (myPlannings.Count == 0)
+            {
+                return [];
+            }
+
+            // 2. Récupérer tous les coéquipiers pour les mêmes dates/services/départements (1 seule requête)
+            var dates = myPlannings.Select(p => p.ProgramDate).Distinct().ToList();
+            var deptIds = myPlannings.Select(p => p.DepartmentId).Distinct().ToList();
+
+            var allTeammates = await PlannerContext.PublishedPlannings
+                .AsNoTracking()
+                .Where(pp => pp.MemberId != memberId
+                    && dates.Contains(pp.ProgramDate)
+                    && deptIds.Contains(pp.PlanningPeriod.DepartmentId)
+                    && pp.ProgramDate.Month == month
+                    && pp.ProgramDate.Year == year
+                    && pp.PlanningPeriod.IndPublished)
+                .Select(pp => new
+                {
+                    pp.ProgramDate,
+                    pp.ServiceName,
+                    pp.ProgramName,
+                    pp.MemberName,
+                    pp.PosteName,
+                    pp.IndTraining,
+                    DepartmentId = pp.PlanningPeriod.DepartmentId
+                })
+                .ToListAsync();
+
+            // 3. Assembler
+            return myPlannings.Select(p => new MyPlanningResponse
+            {
+                Date = p.ProgramDate,
+                ProgramName = p.ProgramName,
+                ProgramShortName = p.ProgramShortName,
+                ServiceName = p.ServiceName,
+                PosteName = p.PosteName,
+                IndTraining = p.IndTraining,
+                DepartmentName = p.DepartmentName,
+                Teammates = allTeammates
+                    .Where(t => t.ProgramDate == p.ProgramDate
+                        && t.ServiceName == p.ServiceName
+                        && t.ProgramName == p.ProgramName
+                        && t.DepartmentId == p.DepartmentId)
+                    .Select(t => new MyPlanningTeammate
+                    {
+                        MemberName = t.MemberName,
+                        PosteName = t.PosteName,
+                        IndTraining = t.IndTraining
+                    })
+                    .OrderBy(t => t.MemberName)
+                    .ToList()
+            }).ToList();
         }
 
         public async Task<List<TeamPlanningResponse>> GetTeamPlanningAsync(int departmentId, int month, int year)

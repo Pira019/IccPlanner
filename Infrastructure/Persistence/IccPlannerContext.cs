@@ -44,6 +44,7 @@ namespace Infrastructure.Persistence
         public DbSet<TabServices> TabServices { get; set; }
         public DbSet<TabServicePrg> TabServicePrgs { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
+        public DbSet<AppSettingEntry> AppSettingEntries { get; set; }
 
 
         public IccPlannerContext(DbContextOptions<IccPlannerContext> options)

@@ -34,6 +34,7 @@ namespace Infrastructure.Services
                                 ProgramShortName = prg.ProgramShortName,
                                 ServiceName = svc.ServiceName,
                                 PosteName = m.PosteName ?? "-",
+                                PosteDisplayOrder = m.PosteDisplayOrder,
                                 MemberName = m.MemberName,
                                 IndTraining = m.IndTraining
                             });
@@ -240,6 +241,7 @@ namespace Infrastructure.Services
                                 ProgramShortName = prg.ProgramShortName,
                                 ServiceName = svc.ServiceName,
                                 PosteName = m.PosteName ?? "-",
+                                PosteDisplayOrder = m.PosteDisplayOrder,
                                 MemberName = m.MemberName,
                                 IndTraining = m.IndTraining
                             });
@@ -255,7 +257,13 @@ namespace Infrastructure.Services
                 .ThenBy(c => c.ServiceName)
                 .ToList();
 
-            var postes = rows.Select(r => r.PosteName).Distinct().OrderBy(p => p).ToList();
+            var postes = rows
+                .GroupBy(r => r.PosteName)
+                .Select(g => new { Name = g.Key, Order = g.Min(r => r.PosteDisplayOrder) ?? int.MaxValue })
+                .OrderBy(p => p.Order)
+                .ThenBy(p => p.Name)
+                .Select(p => p.Name)
+                .ToList();
 
             var doc = Document.Create(container =>
             {
@@ -387,9 +395,11 @@ namespace Infrastructure.Services
                 .ToList();
 
             var postes = entries
-                .Select(r => r.PosteName)
-                .Distinct()
-                .OrderBy(p => p)
+                .GroupBy(r => r.PosteName)
+                .Select(g => new { Name = g.Key, Order = g.Min(r => r.PosteDisplayOrder) ?? int.MaxValue })
+                .OrderBy(p => p.Order)
+                .ThenBy(p => p.Name)
+                .Select(p => p.Name)
                 .ToList();
 
             return new WeekData { WeekNum = weekNum, Entries = entries, Columns = columns, Postes = postes };
@@ -432,6 +442,7 @@ namespace Infrastructure.Services
             public string? ProgramShortName { get; set; }
             public string ServiceName { get; set; } = string.Empty;
             public string PosteName { get; set; } = string.Empty;
+            public int? PosteDisplayOrder { get; set; }
             public string MemberName { get; set; } = string.Empty;
             public bool IndTraining { get; set; }
         }

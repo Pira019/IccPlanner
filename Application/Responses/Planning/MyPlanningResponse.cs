@@ -9,5 +9,20 @@ namespace Application.Responses.Planning
         public string? PosteName { get; set; }
         public bool IndTraining { get; set; }
         public string DepartmentName { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Autres membres programmés pour le même service/date.
+        /// </summary>
+        public List<MyPlanningTeammate> Teammates { get; set; } = [];
+    }
+
+    /// <summary>
+    ///     Coéquipier programmé pour le même service/date.
+    /// </summary>
+    public class MyPlanningTeammate
+    {
+        public string MemberName { get; set; } = string.Empty;
+        public string? PosteName { get; set; }
+        public bool IndTraining { get; set; }
     }
 }

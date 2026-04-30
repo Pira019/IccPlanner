@@ -29,6 +29,7 @@ namespace Application.Responses.Planning
         public int PlanningId { get; set; }
         public string MemberName { get; set; } = string.Empty;
         public string? PosteName { get; set; }
+        public int? PosteDisplayOrder { get; set; }
         public bool IndTraining { get; set; }
     }
 }

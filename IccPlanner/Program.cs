@@ -156,6 +156,8 @@ namespace IccPlanner
             builder.Services.AddScoped<ISchedulePdfService, SchedulePdfService>();
 
             builder.Services.AddScoped<IPermissionService, PermissionService>();
+            builder.Services.AddScoped<IAppSettingEntryRepository, AppSettingEntryRepository>();
+            builder.Services.AddScoped<IAppSettingEntryService, AppSettingEntryService>();
 
             builder.Services.AddScoped<CustomJwtBearerEventHandler>();
 
@@ -286,6 +288,20 @@ namespace IccPlanner
 
                 var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
                 await roleService.SeedDefaultRolesAsync();
+
+                // Seed du délai global par défaut (3 jours)
+                var settingRepo = scope.ServiceProvider.GetRequiredService<IAppSettingEntryRepository>();
+                var existingGlobal = await settingRepo.GetAsync("deadline", "global");
+                if (existingGlobal == null)
+                {
+                    await settingRepo.UpsertAsync(new Domain.Entities.AppSettingEntry
+                    {
+                        Category = "deadline",
+                        Key = "global",
+                        Value = "3",
+                        Unit = "days"
+                    });
+                }
             }
 
             app.UseRequestLocalization();
