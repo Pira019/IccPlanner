@@ -20,5 +20,15 @@ namespace Application.Interfaces.Services
         /// <param name="invitationCode">Code d'invitation à 4 chiffres</param>
         /// <param name="invitationId">Id de l'invitation</param>
         Task SendInvitationEmail(string toEmail, string firstName, string departmentName, string invitationCode, int invitationId);
+
+        /// <summary>
+        ///     Envoie un email de réinitialisation de mot de passe.
+        /// </summary>
+        Task SendResetPasswordEmail(string toEmail, string name, string resetUrl);
+
+        /// <summary>
+        ///     Envoie un email avec le planning PDF en pièce jointe.
+        /// </summary>
+        Task SendPlanningPdfEmail(string toEmail, string name, string departmentName, string monthYear, byte[] pdfBytes);
     }
 }

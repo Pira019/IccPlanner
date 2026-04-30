@@ -163,5 +163,17 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        /// <inheritdoc />
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string newPassword)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, newPassword);
+        }
+
     }
 }

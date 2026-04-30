@@ -47,6 +47,21 @@ namespace Infrastructure.Services
             await Execute(ModelMails.OBJECTINVITATION, content, toEmail);
         }
 
+        /// <inheritdoc />
+        public async Task SendResetPasswordEmail(string toEmail, string name, string resetUrl)
+        {
+            var content = ModelMails.MailResetPasswordHtml(name, resetUrl);
+            await Execute(ModelMails.OBJECTRESETPASSWORD, content, toEmail);
+        }
+
+        /// <inheritdoc />
+        public async Task SendPlanningPdfEmail(string toEmail, string name, string departmentName, string monthYear, byte[] pdfBytes)
+        {
+            var content = ModelMails.MailPlanningPublishedHtml(name, departmentName, monthYear);
+            var fileName = $"Planning_{departmentName.Replace(" ", "_")}_{monthYear.Replace(" ", "_")}.pdf";
+            await ExecuteWithAttachment(ModelMails.OBJECTPLANNING + " — " + departmentName, content, toEmail, pdfBytes, fileName);
+        }
+
         /// <summary>
         ///     Lance l'envoi d'un email via l'API Brevo en arrière-plan.
         ///     Ne bloque jamais la réponse HTTP. Les erreurs sont loggées.
@@ -88,6 +103,55 @@ namespace Infrastructure.Services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Erreur lors de l'envoi de l'email à {ToEmail}.", toEmail);
+                }
+            });
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Envoie un email avec pièce jointe via l'API Brevo en arrière-plan.
+        /// </summary>
+        private Task ExecuteWithAttachment(string subject, string htmlContent, string toEmail, byte[] attachmentBytes, string fileName)
+        {
+            var brevo = _appSetting.Brevo;
+
+            if (string.IsNullOrWhiteSpace(brevo?.ApiKey))
+            {
+                _logger.LogWarning("Clé API Brevo non configurée. Email non envoyé à {ToEmail}.", toEmail);
+                return Task.CompletedTask;
+            }
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    brevo_csharp.Client.Configuration.Default.ApiKey.Clear();
+                    brevo_csharp.Client.Configuration.Default.ApiKey.Add("api-key", brevo.ApiKey);
+
+                    var apiInstance = new TransactionalEmailsApi();
+
+                    var sendSmtpEmail = new brevo_csharp.Model.SendSmtpEmail
+                    {
+                        Sender = new brevo_csharp.Model.SendSmtpEmailSender(brevo.FromName, brevo.FromEmail),
+                        To = new List<brevo_csharp.Model.SendSmtpEmailTo> { new brevo_csharp.Model.SendSmtpEmailTo(toEmail) },
+                        Subject = subject,
+                        HtmlContent = htmlContent,
+                        Attachment = new List<brevo_csharp.Model.SendSmtpEmailAttachment>
+                        {
+                            new brevo_csharp.Model.SendSmtpEmailAttachment(
+                                name: fileName,
+                                content: attachmentBytes
+                            )
+                        }
+                    };
+
+                    var result = await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
+                    _logger.LogInformation("Email avec PDF envoyé à {ToEmail}. MessageId: {MessageId}", toEmail, result.MessageId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Erreur lors de l'envoi de l'email avec PDF à {ToEmail}.", toEmail);
                 }
             });
 

@@ -77,6 +77,14 @@ namespace Application.Interfaces.Services
         /// </returns>
         public ClaimsResponse GetUserClaims();
 
+        /// <summary>
+        ///     Envoie un email de réinitialisation de mot de passe.
+        /// </summary>
+        public Task<Result<bool>> ForgotPasswordAsync(string email);
 
+        /// <summary>
+        ///     Réinitialise le mot de passe avec le token reçu par email.
+        /// </summary>
+        public Task<Result<bool>> ResetPasswordAsync(string userId, string token, string newPassword);
     } 
 }

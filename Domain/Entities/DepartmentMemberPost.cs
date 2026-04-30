@@ -10,6 +10,12 @@
         public int PosteId { get; set; }
         public DateOnly? StartAt { get; set; }
         public DateOnly? EndAt { get; set; }
+
+        /// <summary>
+        ///     Indique si le membre souhaite recevoir le planning par email lors de la publication.
+        /// </summary>
+        public bool IndAutoPlanning { get; set; }
+
         public Poste Poste { get; set; } = null!; 
         public DepartmentMember DepartmentMember { get; set; } = null!;
     }

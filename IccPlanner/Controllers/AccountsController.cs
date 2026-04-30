@@ -133,5 +133,33 @@ namespace IccPlanner.Controllers
             var claims = _accountService.GetUserClaims();
             return Ok(claims);
         }
+
+        /// <summary>
+        ///     Demande de réinitialisation de mot de passe. Envoie un email avec un lien.
+        /// </summary>
+        [HttpPost("forgot-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            await _accountService.ForgotPasswordAsync(request.Email);
+            // Toujours retourner 200 pour ne pas révéler si l'email existe
+            return Ok();
+        }
+
+        /// <summary>
+        ///     Réinitialise le mot de passe avec le token reçu par email.
+        /// </summary>
+        [HttpPost("reset-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var result = await _accountService.ResetPasswordAsync(request.UserId, request.Token, request.NewPassword);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            }
+            return Ok();
+        }
     }
 }

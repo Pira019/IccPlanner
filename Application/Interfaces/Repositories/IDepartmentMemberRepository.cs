@@ -46,5 +46,10 @@ namespace Application.Interfaces.Repositories
         ///     Vérifie si un membre a le droit de gérer le planning (IndPlanning = true) dans un département.
         /// </summary>
         public Task<bool> HasPlanningRightAsync(Guid memberId, int departmentId);
+
+        /// <summary>
+        ///     Récupère les emails des membres qui ont IndAutoPlanning = true dans un département.
+        /// </summary>
+        public Task<List<(string Email, string Name)>> GetAutoPlanningRecipientsAsync(int departmentId);
     }
 }

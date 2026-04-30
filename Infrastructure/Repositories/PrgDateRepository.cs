@@ -27,6 +27,8 @@ namespace Infrastructure.Repositories
                 {
                     Id = prgDate.Id,
                     IdPrg = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Id,
+                    DepartmentId = prgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId,
+                    DepartmentName = prgDate.PrgDepartmentInfo.DepartmentProgram.Department.Name,
                     Title = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
                     IndRecurrent = prgDate.PrgDepartmentInfo.DepartmentProgram.IndRecurent,
                     Date = prgDate.Date!.Value.ToString("yyyy-MM-dd")

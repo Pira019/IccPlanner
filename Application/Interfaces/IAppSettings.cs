@@ -9,5 +9,10 @@ namespace Application.Interfaces
     public interface IAppSettings
     {
         Parametres Parametres { get; }
+
+        /// <summary>
+        ///     URL du front-end.
+        /// </summary>
+        string? FrontUrl { get; }
     }
 }

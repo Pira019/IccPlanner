@@ -8,6 +8,8 @@
     {
         public const string OBJECTEMAILCONFIRMATION = "Confirmation de votre adresse e-mail";
         public const string OBJECTINVITATION = "Vous êtes invité(e) à rejoindre un département";
+        public const string OBJECTRESETPASSWORD = "Réinitialisation de votre mot de passe";
+        public const string OBJECTPLANNING = "Planning publié";
 
         /// <summary>
         ///     Layout de base pour tous les emails.
@@ -45,7 +47,7 @@
             {bodyContent}
         </div>
         <div class='footer'>
-            <p>ICC ELGO Planner &mdash; Ne répondez pas à cet e-mail.</p>
+            <p>Agenda STAR &mdash; Ne répondez pas à cet e-mail.</p>
         </div>
     </div>
 </div>
@@ -86,6 +88,38 @@
                 <p class='muted'>Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.</p>";
 
             return BaseLayout($"Invitation — {departmentName}", body);
+        }
+
+        /// <summary>
+        ///     Email de réinitialisation de mot de passe.
+        /// </summary>
+        public static string MailResetPasswordHtml(string name, string resetUrl)
+        {
+            var body = $@"
+                <p>Bonjour {name},</p>
+                <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                <p style='text-align: center;'>
+                    <a href='{resetUrl}' class='btn'>Réinitialiser mon mot de passe</a>
+                </p>
+                <p class='muted'>Ce lien expire dans 20 minutes. Si vous n'avez pas fait cette demande, ignorez ce message.</p>";
+
+            return BaseLayout("Réinitialisation du mot de passe", body);
+        }
+
+        /// <summary>
+        ///     Email de publication du planning avec PDF en pièce jointe.
+        /// </summary>
+        public static string MailPlanningPublishedHtml(string name, string departmentName, string monthYear)
+        {
+            var body = $@"
+                <p>Bonjour {name},</p>
+                <p>Le planning du département <strong>{departmentName}</strong> pour <strong>{monthYear}</strong> a été publié.</p>
+                <p>Vous trouverez le planning en pièce jointe de cet e-mail (PDF).</p>
+                <p>Vous pouvez également consulter votre planning en ligne à tout moment.</p>
+                <p class='muted'>Vous recevez cet e-mail car vous avez activé la réception automatique du planning.</p>";
+
+            return BaseLayout($"Planning publié — {departmentName}", body);
         }
     }
 }

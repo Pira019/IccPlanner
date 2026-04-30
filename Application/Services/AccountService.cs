@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Application.Constants;
 using Application.Dtos.Account;
+using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Account;
@@ -27,6 +28,7 @@ namespace Application.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
+        private readonly IAppSettings _appSettings;
 
         public AccountService(
             IAccountRepository accountRepository,
@@ -35,6 +37,7 @@ namespace Application.Services
             IInvitationRepository invitationRepository,
             IDepartmentRepository departmentRepository,
             IDepartmentMemberRepository departmentMemberRepository,
+            IAppSettings appSettings,
             IBaseRepository<User> baseRepository, IMapper mapper, IHttpContextAccessor? httpContextAccessor = null) : base(baseRepository, mapper, httpContextAccessor)
         {
             _accountRepository = accountRepository; 
@@ -43,6 +46,7 @@ namespace Application.Services
             _departmentRepository = departmentRepository;
             _departmentMemberRepository = departmentMemberRepository;
             _invitationRepository = invitationRepository;
+            _appSettings = appSettings;
         }
 
 
@@ -223,6 +227,48 @@ namespace Application.Services
            await  _invitationRepository.MarkAsUsedAsync(invitation.Id); // Marquer l'invitation comme utilisée
              
            return Result<bool>.Success(true);
+        }
+
+        /// <inheritdoc />
+        public async Task<Result<bool>> ForgotPasswordAsync(string email)
+        {
+            var user = await _accountRepository.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // Ne pas révéler si l'email existe ou non (sécurité)
+                return Result<bool>.Success(true);
+            }
+
+            var token = await _accountRepository.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var resetUrl = $"{_appSettings.FrontUrl}/reset-password?uid={user.Id}&token={encodedToken}";
+
+            var member = await _accountRepository.FindMemberByUserIdAsync(user.Id);
+            var name = member?.Name ?? email;
+
+            await _sendEmailService.SendResetPasswordEmail(email, name, resetUrl);
+            return Result<bool>.Success(true);
+        }
+
+        /// <inheritdoc />
+        public async Task<Result<bool>> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var user = await _accountRepository.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return Result<bool>.Fail(ValidationMessages.AJ_IdInvNonExist);
+            }
+
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var result = await _accountRepository.ResetPasswordAsync(user, decodedToken, newPassword);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return Result<bool>.Fail(errors);
+            }
+
+            return Result<bool>.Success(true);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Application.Services
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
         private readonly IBaseRepository<Domain.Entities.Department> _departmentRepository;
         private readonly ISchedulePdfService _schedulePdfService;
+        private readonly ISendEmailService _sendEmailService;
 
         public PlanningService(
             IPlanningRepository planningRepository,
@@ -22,7 +23,8 @@ namespace Application.Services
             IAvailabilityRepository availabilityRepository,
             IDepartmentMemberRepository departmentMemberRepository,
             IBaseRepository<Domain.Entities.Department> departmentRepository,
-            ISchedulePdfService schedulePdfService)
+            ISchedulePdfService schedulePdfService,
+            ISendEmailService sendEmailService)
         {
             _planningRepository = planningRepository;
             _planningPeriodRepository = planningPeriodRepository;
@@ -30,6 +32,7 @@ namespace Application.Services
             _departmentMemberRepository = departmentMemberRepository;
             _departmentRepository = departmentRepository;
             _schedulePdfService = schedulePdfService;
+            _sendEmailService = sendEmailService;
         }
 
         public async Task<Result<AssignMemberResponse>> AssignMemberAsync(
@@ -293,6 +296,30 @@ namespace Application.Services
             period.PublishedAt = DateTime.UtcNow;
             period.PublishedById = actionById;
             await _planningPeriodRepository.UpdateAsync(period);
+
+            // Étape 7 — Envoyer le PDF par email aux membres avec IndAutoPlanning = true
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var recipients = await _departmentMemberRepository.GetAutoPlanningRecipientsAsync(departmentId);
+                    if (recipients.Count > 0)
+                    {
+                        var department = await _departmentRepository.GetByIdAsync(departmentId);
+                        var deptName = department?.Name ?? "Département";
+                        var data = await _planningRepository.GetMonthlyPlanningAsync(month, year, departmentId);
+                        var pdfBytes = _schedulePdfService.GenerateSchedulePdf(data, deptName, department?.ShortName, month, year);
+                        var culture = new System.Globalization.CultureInfo("fr-FR");
+                        var monthYear = $"{culture.DateTimeFormat.GetMonthName(month)} {year}";
+
+                        foreach (var (email, name) in recipients)
+                        {
+                            await _sendEmailService.SendPlanningPdfEmail(email, name, deptName, monthYear, pdfBytes);
+                        }
+                    }
+                }
+                catch { /* Loggé dans SendEmailService */ }
+            });
 
             return Result<bool>.Success(true);
         }

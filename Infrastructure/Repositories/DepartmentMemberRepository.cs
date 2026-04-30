@@ -43,5 +43,25 @@ namespace Infrastructure.Repositories
                 && dm.DepartmentId == departmentId
                 && dm.IndPlanning);
         }
+
+        /// <inheritdoc />
+        public async Task<List<(string Email, string Name)>> GetAutoPlanningRecipientsAsync(int departmentId)
+        {
+            return await PlannerContext.DepartmentMemberPosts
+                .AsNoTracking()
+                .Where(dmp => dmp.DepartmentMember.DepartmentId == departmentId
+                    && dmp.IndAutoPlanning
+                    && dmp.DepartmentMember.Member.User != null
+                    && dmp.DepartmentMember.Member.User.Email != null)
+                .Select(dmp => new
+                {
+                    Email = dmp.DepartmentMember.Member.User!.Email!,
+                    Name = dmp.DepartmentMember.Member.Name
+                })
+                .Distinct()
+                .AsEnumerable()
+                .Select(x => (x.Email, x.Name))
+                .ToList();
+        }
     }
 }

@@ -123,6 +123,16 @@ namespace Application.Interfaces.Repositories
         public Task<List<User>> FilterUsersWithUniquePhoneNumbers(IEnumerable<User> users);
 
         /// <summary>
+        ///     Génère un token de réinitialisation de mot de passe.
+        /// </summary>
+        public Task<string> GeneratePasswordResetTokenAsync(User user);
+
+        /// <summary>
+        ///     Réinitialise le mot de passe avec un token.
+        /// </summary>
+        public Task<IdentityResult> ResetPasswordAsync(User user, string token, string newPassword);
+
+        /// <summary>
         ///     Ajoute des claims (permissions) à un utilisateur.
         /// </summary>
         public Task AddClaimsAsync(User user, IEnumerable<string> permissionNames);
