@@ -42,7 +42,10 @@ namespace Application.Services
             {
                 Id = created.Id,
                 Name = created.Name,
-                ShortName = created.ShortName
+                ShortName = created.ShortName,
+                Description = created.Description,
+                IndGest = created.IndGest,
+                IndSystem = created.IndSystem
             });
         }
 
@@ -66,7 +69,10 @@ namespace Application.Services
             {
                 Id = existing.Id,
                 Name = existing.Name,
-                ShortName = existing.ShortName
+                ShortName = existing.ShortName,
+                Description = existing.Description,
+                IndGest = existing.IndGest,
+                IndSystem = existing.IndSystem
             });
         }
 
@@ -85,7 +91,10 @@ namespace Application.Services
             {
                 Id = poste.Id,
                 Name = poste.Name,
-                ShortName = poste.ShortName
+                ShortName = poste.ShortName,
+                Description = poste.Description,
+                IndGest = poste.IndGest,
+                IndSystem = poste.IndSystem
             });
         }
 
@@ -95,6 +104,11 @@ namespace Application.Services
             if (poste == null)
             {
                 return Result<bool>.Fail(string.Format(ValidationMessages.NOT_EXIST, "Poste"));
+            }
+
+            if (poste.IndSystem)
+            {
+                return Result<bool>.Fail("Ce poste est un poste systeme et ne peut pas etre supprime.");
             }
 
             await _postRepository.DeleteAsync(id);
@@ -125,7 +139,8 @@ namespace Application.Services
                     ShortName = p.ShortName,
                     Name = p.Name,
                     Description = p.Description,
-                    DisplayOrder = p.Order
+                    DisplayOrder = p.Order,
+                    IndSystem = true
                 })
                 .ToList();
 

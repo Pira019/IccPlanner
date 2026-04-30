@@ -38,7 +38,11 @@ namespace Application.Services
             {
                 return Result<InvitationResponse>.Fail(ValidationMessages.AJ_IdInvNonExist);
             }
-            return Result<InvitationResponse>.Success(_mapper.Map<InvitationResponse>(invitation));
+
+            var department = await _departmentRepository.GetByIdAsync(invitation.DepartmentId);
+            var response = _mapper.Map<InvitationResponse>(invitation);
+            response.DepartmentName = department?.Name ?? string.Empty;
+            return Result<InvitationResponse>.Success(response);
         }
 
         public async Task<Result<bool>> SendInvitationAnsyc(SendRequest request)

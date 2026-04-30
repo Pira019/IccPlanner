@@ -40,7 +40,10 @@ namespace Infrastructure.Repositories
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ShortName = p.ShortName
+                    ShortName = p.ShortName,
+                    Description = p.Description,
+                    IndGest = p.IndGest,
+                    IndSystem = p.IndSystem
                 })
                 .OrderBy(p => p.Name)
                 .ToListAsync();
@@ -70,7 +73,7 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <inheritdoc />t
+        /// <inheritdoc />
         public async Task InsertRangeAsync(List<Poste> postes)
         {
             await PlannerContext.Postes.AddRangeAsync(postes);

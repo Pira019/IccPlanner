@@ -73,5 +73,12 @@ namespace Application.Interfaces.Repositories
         ///     Récupère les détails complets d'un département (infos, membres, postes, programmes).
         /// </summary>
         public Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId);
+
+        /// <summary>
+        ///     Affecte des postes à un membre du département (remplace les postes existants).
+        /// </summary>
+        /// <param name="departmentMemberId">Id du DepartmentMember</param>
+        /// <param name="posteIds">Liste des ids de postes à affecter</param>
+        public Task AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds);
     }
 }

@@ -128,5 +128,12 @@ namespace Application.Interfaces.Services
         /// <param name="departmentId">Id du département</param>
         /// <returns>Détails complets ou null si non trouvé</returns>
         public Task<DepartmentDetailResponse?> GetDetailAsync(int departmentId);
+
+        /// <summary>
+        ///     Affecte des postes à un membre du département.
+        /// </summary>
+        /// <param name="departmentMemberId">Id du DepartmentMember</param>
+        /// <param name="posteIds">Liste des ids de postes</param>
+        public Task<Result<bool>> AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds);
     }
 }

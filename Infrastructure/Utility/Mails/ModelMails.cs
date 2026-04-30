@@ -47,7 +47,7 @@
             {bodyContent}
         </div>
         <div class='footer'>
-            <p>Agenda STAR &mdash; Ne répondez pas à cet e-mail.</p>
+            <p>Agenda STAR - Ne répondez pas à cet e-mail.</p>
         </div>
     </div>
 </div>
@@ -87,7 +87,7 @@
                 </p>
                 <p class='muted'>Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.</p>";
 
-            return BaseLayout($"Invitation — {departmentName}", body);
+            return BaseLayout($"Invitation - {departmentName}", body);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@
                 <p>Vous pouvez également consulter votre planning en ligne à tout moment.</p>
                 <p class='muted'>Vous recevez cet e-mail car vous avez activé la réception automatique du planning.</p>";
 
-            return BaseLayout($"Planning publié — {departmentName}", body);
+            return BaseLayout($"Planning publié - {departmentName}", body);
         }
     }
 }

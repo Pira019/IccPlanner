@@ -213,6 +213,21 @@ namespace IccPlanner.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///     Affecte des postes à un membre du département.
+        /// </summary>
+        [HttpPost("{id}/members/{departmentMemberId}/postes")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AssignPostesToMember(int id, int departmentMemberId, [FromBody] AssignPostesRequest request)
+        {
+            var result = await _departmentService.AssignPostesToMemberAsync(departmentMemberId, request.PosteIds);
+            if (!result.IsSuccess)
+                return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            return Ok();
+        }
+
 
     }
 }

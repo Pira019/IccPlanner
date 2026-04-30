@@ -29,6 +29,11 @@ namespace Domain.Entities
         /// </summary>
         public int? DisplayOrder { get; set; }
 
+        /// <summary>
+        ///     Indique si le poste est un poste systeme (seed) et ne peut pas etre supprime.
+        /// </summary>
+        public bool IndSystem { get; set; }
+
         public List<Department> Departments { get; } = [];
     }
 }

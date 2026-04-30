@@ -204,6 +204,7 @@ namespace Infrastructure.Repositories
                         .ThenBy(dm => dm.Member.LastName)
                         .Select(dm => new DepartmentDetailMember
                         {
+                            DepartmentMemberId = dm.Id,
                             DisplayName = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName : ""),
                             Sexe = dm.Member.Sexe,
                             Status = dm.Status.ToString(),
@@ -242,6 +243,25 @@ namespace Infrastructure.Repositories
                         }).ToList()
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds)
+        {
+            // Supprimer les postes existants du membre via SQL direct (evite le probleme de colonne manquante)
+            await PlannerContext.DepartmentMemberPosts
+                .Where(dmp => dmp.DepartmentMemberId == departmentMemberId)
+                .ExecuteDeleteAsync();
+
+            // Ajouter les nouveaux postes
+            var newEntries = posteIds.Select(posteId => new DepartmentMemberPost
+            {
+                DepartmentMemberId = departmentMemberId,
+                PosteId = posteId
+            }).ToList();
+
+            await PlannerContext.DepartmentMemberPosts.AddRangeAsync(newEntries);
+            await PlannerContext.SaveChangesAsync();
         }
     }
 }

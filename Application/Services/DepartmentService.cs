@@ -387,5 +387,12 @@ namespace Application.Services
         {
             return await _departmentRepository.GetDetailAsync(departmentId);
         }
+
+        /// <inheritdoc />
+        public async Task<Result<bool>> AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds)
+        {
+            await _departmentRepository.AssignPostesToMemberAsync(departmentMemberId, posteIds);
+            return Result<bool>.Success(true);
+        }
     }
 }

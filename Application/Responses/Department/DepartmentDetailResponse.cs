@@ -21,6 +21,7 @@ namespace Application.Responses.Department
 
     public class DepartmentDetailMember
     {
+        public int DepartmentMemberId { get; set; }
         public string DisplayName { get; set; } = string.Empty;
         public string? Sexe { get; set; }
         public string? Status { get; set; }
