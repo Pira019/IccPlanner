@@ -70,7 +70,7 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc />t
         public async Task InsertRangeAsync(List<Poste> postes)
         {
             await PlannerContext.Postes.AddRangeAsync(postes);
