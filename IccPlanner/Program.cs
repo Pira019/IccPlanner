@@ -290,18 +290,8 @@ namespace IccPlanner
                 await roleService.SeedDefaultRolesAsync();
 
                 // Seed du délai global par défaut (3 jours)
-                var settingRepo = scope.ServiceProvider.GetRequiredService<IAppSettingEntryRepository>();
-                var existingGlobal = await settingRepo.GetAsync("deadline", "global");
-                if (existingGlobal == null)
-                {
-                    await settingRepo.UpsertAsync(new Domain.Entities.AppSettingEntry
-                    {
-                        Category = "deadline",
-                        Key = "global",
-                        Value = "3",
-                        Unit = "days"
-                    });
-                }
+                var settingService = scope.ServiceProvider.GetRequiredService<IAppSettingEntryService>();
+                await settingService.SeedDefaultSettingsAsync();
             }
 
             app.UseRequestLocalization();

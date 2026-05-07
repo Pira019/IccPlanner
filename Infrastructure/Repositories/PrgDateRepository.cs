@@ -29,7 +29,9 @@ namespace Infrastructure.Repositories
                     IdPrg = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Id,
                     DepartmentId = prgDate.PrgDepartmentInfo.DepartmentProgram.DepartmentId,
                     DepartmentName = prgDate.PrgDepartmentInfo.DepartmentProgram.Department.Name,
+                    DepartmentShortName = prgDate.PrgDepartmentInfo.DepartmentProgram.Department.ShortName,
                     Title = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
+                    ShortName = prgDate.PrgDepartmentInfo.DepartmentProgram.Program.ShortName,
                     IndRecurrent = prgDate.PrgDepartmentInfo.DepartmentProgram.IndRecurent,
                     Date = prgDate.Date!.Value.ToString("yyyy-MM-dd")
                 })
@@ -37,11 +39,12 @@ namespace Infrastructure.Repositories
 
             // Liste distincte des programmes
             var programs = events
-                .GroupBy(e => new { e.IdPrg, e.Title })       
+                .GroupBy(e => new { e.IdPrg, e.Title, e.ShortName })       
                 .Select(g => new PrgResponse
                 {
                     Id = g.Key.IdPrg,       
-                    Name = g.Key.Title
+                    Name = g.Key.Title,
+                    ShortName = g.Key.ShortName
                 })
                 .OrderBy(p => p.Name) 
                 .ToList();
@@ -86,12 +89,25 @@ namespace Infrastructure.Repositories
         // <inheritdoc />
         public async Task<IEnumerable<int>> GetRecurringPrgDateIdsFromNowAsync(int prgDateId)
         {
-            return await _dbSet.Include(x => x.PrgDepartmentInfo)
-                                        .Where(x => x.Id == prgDateId
-                                                  && x.PrgDepartmentInfo.DepartmentProgram.IndRecurent
-                                                  && x.Date >= DateOnly.FromDateTime(DateTime.Now))
-                                        .Select(x => x.Id)
-                                        .ToArrayAsync();
+            // Trouver le PrgDate et son programme
+            var prgDate = await _dbSet
+                .Include(x => x.PrgDepartmentInfo)
+                    .ThenInclude(x => x.DepartmentProgram)
+                .FirstOrDefaultAsync(x => x.Id == prgDateId);
+
+            if (prgDate == null || prgDate.PrgDepartmentInfo?.DepartmentProgram == null || !prgDate.PrgDepartmentInfo.DepartmentProgram.IndRecurent)
+                return Array.Empty<int>();
+
+            var programId = prgDate.PrgDepartmentInfo.DepartmentProgram.ProgramId;
+
+            // Retourner toutes les PrgDate de TOUS les departements qui ont ce programme, a partir d'aujourd'hui
+            return await _dbSet
+                .Where(x => x.PrgDepartmentInfo.DepartmentProgram.ProgramId == programId
+                          && x.PrgDepartmentInfo.DepartmentProgram.IndRecurent
+                          && x.Date.HasValue
+                          && x.Date.Value >= DateOnly.FromDateTime(DateTime.UtcNow))
+                .Select(x => x.Id)
+                .ToArrayAsync();
         }
     }
 }

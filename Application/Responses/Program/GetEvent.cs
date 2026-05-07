@@ -10,9 +10,17 @@
         /// </summary>
         public string? DepartmentName { get; set; }
         /// <summary>
+        ///     Nom court du département.
+        /// </summary>
+        public string? DepartmentShortName { get; set; }
+        /// <summary>
         ///     Nom du programme.
         /// </summary>
         public String Title { get; set; } = string.Empty;
+        /// <summary>
+        ///     Nom court du programme.
+        /// </summary>
+        public string? ShortName { get; set; }
         /// <summary>
         ///     Date de l'événement.
         /// </summary>

@@ -18,8 +18,13 @@ namespace Application.Interfaces.Services
         Task SaveDeadlineSettingsAsync(SaveDeadlineSettingsRequest request);
 
         /// <summary>
-        ///     Supprime une rÃ¨gle de dÃ©lai par son Id.
+        ///     Supprime une règle de délai par son Id.
         /// </summary>
         Task DeleteRuleAsync(int id);
+
+        /// <summary>
+        ///     Seed les parametres par defaut (deadline global = 3 jours).
+        /// </summary>
+        Task SeedDefaultSettingsAsync();
     }
 }

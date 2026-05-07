@@ -1,3 +1,4 @@
+using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Responses.Settings;
@@ -11,11 +12,13 @@ namespace Application.Services
     public class AppSettingEntryService : IAppSettingEntryService
     {
         private readonly IAppSettingEntryRepository _repository;
+        private readonly IAppSettings _appSettings;
         private const string CATEGORY = "deadline";
 
-        public AppSettingEntryService(IAppSettingEntryRepository repository)
+        public AppSettingEntryService(IAppSettingEntryRepository repository, IAppSettings appSettings)
         {
             _repository = repository;
+            _appSettings = appSettings;
         }
 
         /// <inheritdoc />
@@ -29,13 +32,12 @@ namespace Application.Services
             {
                 int.TryParse(global.Value, out var val);
                 response.GlobalDeadline = val;
-                response.GlobalUnit = global.Unit ?? "days";
+                response.GlobalUnit = global.Unit ?? _appSettings.Parametres.DefaultDeadlineUnit;
             }
             else
             {
-                // Valeur par défaut si pas encore en base
-                response.GlobalDeadline = 3;
-                response.GlobalUnit = "days";
+                response.GlobalDeadline = _appSettings.Parametres.DefaultDeadlineValue;
+                response.GlobalUnit = _appSettings.Parametres.DefaultDeadlineUnit;
             }
 
             response.ProgramRules = entries
@@ -104,6 +106,22 @@ namespace Application.Services
         public async Task DeleteRuleAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+
+        /// <inheritdoc />
+        public async Task SeedDefaultSettingsAsync()
+        {
+            var existingGlobal = await _repository.GetAsync(CATEGORY, "global");
+            if (existingGlobal == null)
+            {
+                await _repository.UpsertAsync(new AppSettingEntry
+                {
+                    Category = CATEGORY,
+                    Key = "global",
+                    Value = _appSettings.Parametres.DefaultDeadlineValue.ToString(),
+                    Unit = _appSettings.Parametres.DefaultDeadlineUnit
+                });
+            }
         }
     }
 }

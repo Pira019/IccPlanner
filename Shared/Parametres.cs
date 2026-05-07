@@ -11,6 +11,16 @@
         ///     Nombre de jours à l'avance pour générer les dates récurrentes (valeur par défaut).
         /// </summary>
         public int RecurrentDaysAhead { get; set; } = 30;
+
+        /// <summary>
+        ///     Delai global par defaut pour les disponibilites (en jours).
+        /// </summary>
+        public int DefaultDeadlineValue { get; set; } = 3;
+
+        /// <summary>
+        ///     Unite du delai global par defaut.
+        /// </summary>
+        public string DefaultDeadlineUnit { get; set; } = "days";
     }
 
     /// <summary>

@@ -50,8 +50,8 @@ namespace Application.Services
                 return Result<bool>.Fail(string.Format(ValidationMessages.NOT_EXIST, ValidationMessages.PROGRAM_));
             }
 
-            // verification de l'existence d'un programme de service pour la même date
-            var  prgServiceExiste  = await  _tabServicePrgRepository.IsServicePrgExistAsync(prgDepartmentRequest.ServiceId, prgDepartmentRequest.PrgDateId);
+            // Bloquer si exactement le meme service (meme ServiceId) existe deja pour cette date
+            var prgServiceExiste = await _tabServicePrgRepository.IsServicePrgExistAsync(prgDepartmentRequest.ServiceId, prgDepartmentRequest.PrgDateId);
             if (prgServiceExiste)
             {
                 return Result<bool>.Fail(ValidationMessages.PGM_SERVICE_EXIST);
@@ -59,29 +59,33 @@ namespace Application.Services
 
             List<TabServicePrg> servicePrgs = new List<TabServicePrg>();
 
-            var prgDateIds = await _prgDateRepository.GetRecurringPrgDateIdsFromNowAsync(prgDepartmentRequest.PrgDateId);
-
             var newService = new TabServicePrg
             {
                 Notes = prgDepartmentRequest.Notes,
                 ArrivalTimeOfMember = string.IsNullOrWhiteSpace(prgDepartmentRequest.MemberArrivalTime) ? serviceExists.ArrivalTimeOfMember : TimeOnly.Parse(prgDepartmentRequest.MemberArrivalTime),
                 DisplayName = prgDepartmentRequest.DisplayName ?? serviceExists.DisplayName,
                 TabServicesId = prgDepartmentRequest.ServiceId,
+                PrgDateId = prgDepartmentRequest.PrgDateId
             };
 
-            //Si le programme est de type reccuerrent, on ajoute un programme de service pour chaque date retournée par GetRecurringPrgDateIdsFromNowAsync, sinon on ajoute un seul programme de service avec la date spécifiée dans la requete
-            if (prgDateIds.Any())
+            servicePrgs.Add(newService);
+
+            // Pour les programmes recurrents, propager sur les autres dates existantes
+            var prgDateIds = await _prgDateRepository.GetRecurringPrgDateIdsFromNowAsync(prgDepartmentRequest.PrgDateId);
+            foreach (var item in prgDateIds.Where(id => id != prgDepartmentRequest.PrgDateId))
             {
-                foreach (var item in prgDateIds.ToList())
+                var exists = await _tabServicePrgRepository.IsServicePrgExistAsync(prgDepartmentRequest.ServiceId, item);
+                if (!exists)
                 {
-                    newService.PrgDateId = item;
-                    servicePrgs.Add(newService);
+                    servicePrgs.Add(new TabServicePrg
+                    {
+                        Notes = prgDepartmentRequest.Notes,
+                        ArrivalTimeOfMember = string.IsNullOrWhiteSpace(prgDepartmentRequest.MemberArrivalTime) ? serviceExists.ArrivalTimeOfMember : TimeOnly.Parse(prgDepartmentRequest.MemberArrivalTime),
+                        DisplayName = prgDepartmentRequest.DisplayName ?? serviceExists.DisplayName,
+                        TabServicesId = prgDepartmentRequest.ServiceId,
+                        PrgDateId = item
+                    });
                 }
-            }
-            else
-            {
-                newService.PrgDateId = prgDepartmentRequest.PrgDateId;
-                servicePrgs.Add(newService);
             }
 
             await _tabServicePrgRepository.InsertAllAsync(servicePrgs); 

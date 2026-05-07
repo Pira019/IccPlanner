@@ -94,6 +94,18 @@ namespace Infrastructure.Repositories
                 query = query.Where(dp => dp.IndRecurent == request.IndRecureent);
             }
 
+            if (request.ProgramId.HasValue)
+            {
+                query = query.Where(dp => dp.ProgramId == request.ProgramId.Value);
+            }
+
+            // Parser la date de filtre si fournie
+            DateOnly? filterDate = null;
+            if (!string.IsNullOrEmpty(request.Date) && DateOnly.TryParse(request.Date, out var parsedDate))
+            {
+                filterDate = parsedDate;
+            }
+
             // Récupérer les données brutes
             var rawData = await query
                  .SelectMany(dp => dp.PrgDepartmentInfos!
@@ -101,7 +113,8 @@ namespace Infrastructure.Repositories
                          .Where(pd =>
                              pd.Date.HasValue &&
                              (!request.month.HasValue || pd.Date.Value.Month == request.month) &&
-                             (!request.year.HasValue || pd.Date.Value.Year == request.year)
+                             (!request.year.HasValue || pd.Date.Value.Year == request.year) &&
+                             (!filterDate.HasValue || pd.Date.Value == filterDate.Value)
                          )
                          .Select(pd => new
                          {
@@ -136,6 +149,7 @@ namespace Infrastructure.Repositories
                     .Select(group => new GetServicesListResponse
                     {
                         GroupKey = group.Key.GroupKey!,
+                        IdPrgDate = group.First().PrgDateId,
                         ServicePrograms = group
                             .GroupBy(r => new { r.ProgramId, r.ProgramTitle, r.ShortName, r.Description})
                             .Select(programGroup => new ProgramServiceDto
@@ -147,6 +161,8 @@ namespace Infrastructure.Repositories
                                 Description = programGroup.Key.Description,
                                 Services = programGroup
                                     .SelectMany(r => r.Services)
+                                    .GroupBy(s => new { s.TabServicesId, s.ServiceTitle })
+                                    .Select(g => g.First())
                                     .ToList()
                             })
                             .ToList()
