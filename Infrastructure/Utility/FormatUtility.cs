@@ -6,7 +6,7 @@ namespace Infrastructure.Utility
     {
         public static string GenerateEmailConfirmationUrl(string url, string id, string code)
         {
-            return $"{url}?id={HtmlEncoder.Default.Encode(id)}&code={HtmlEncoder.Default.Encode(code)}";
+            return $"{url}?userId={HtmlEncoder.Default.Encode(id)}&token={HtmlEncoder.Default.Encode(code)}";
         }
     }
 }

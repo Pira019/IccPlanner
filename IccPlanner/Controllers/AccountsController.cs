@@ -60,7 +60,7 @@ namespace IccPlanner.Controllers
         [HttpGet("confirm-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequest request)
         {
             // Trouver l'utilisateur
             var user = await _accountService.FindUserAccountById(request.UserId);
