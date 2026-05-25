@@ -8,6 +8,7 @@
         // Permissions liées aux rôles
         public const string CAN_CREATE_ROLE = "CanCreateRole";
         public const string CAN_READ_ROLE = "CanReadRole";
+        public const string CAN_MANAG_ROLES = "CanManagRoles";
 
         // Permissions liées aux Ministères
         public const string CAN_CREATE_MINISTRY = "CanCreateMinistry";

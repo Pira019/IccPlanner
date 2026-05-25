@@ -8,6 +8,7 @@ using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Constants;
 
 namespace Application.Services
 {
@@ -28,24 +29,24 @@ namespace Application.Services
         [
             ("Admin", "Administrateur", true,
             [
-                "CanReadRole", "CanCreateRole", "CanCreateMinistry",
-                "CanManagDepart", "depart:manager", "manage_program_details",
-                "prg:manager", "ManagerService"
+                PermissionsConstants.CAN_READ_ROLE, PermissionsConstants.CAN_CREATE_ROLE, PermissionsConstants.CAN_MANAG_ROLES,
+                PermissionsConstants.CAN_CREATE_MINISTRY, PermissionsConstants.CAN_MANAG_DEPART, PermissionsConstants.DEPART_MANAGER,
+                PermissionsConstants.MANAGE_PRG_DETAILS, PermissionsConstants.PRG_MANAGER, PermissionsConstants.MANAGER_SERVICE
             ]),
             ("Ap", "Assistant Pasteur", true,
             [
-                "CanCreateMinistry", "CanAttributDepartmentChef", "CanManagDepart",
-                "manage_program_details", "prg:manager"
+                PermissionsConstants.CAN_CREATE_MINISTRY, PermissionsConstants.CAN_ATTRIBUT_DEPARTMENT_CHEF, PermissionsConstants.CAN_MANAG_DEPART,
+                PermissionsConstants.MANAGE_PRG_DETAILS, PermissionsConstants.PRG_MANAGER
             ]),
             ("Pasteur", "Pasteur", true,
             [
-                "CanCreateMinistry", "CanManagDepart", "CanCreateDepartement",
-                "manage_program_details", "prg:manager"
+                PermissionsConstants.CAN_CREATE_MINISTRY, PermissionsConstants.CAN_MANAG_DEPART, PermissionsConstants.CAN_CREATE_DEPARTMENT,
+                PermissionsConstants.MANAGE_PRG_DETAILS, PermissionsConstants.PRG_MANAGER
             ]),
             ("Berger", "Berger", true,
             [
-                "CanCreateMinistry", "CanManagDepart",
-                "manage_program_details", "prg:manager"
+                PermissionsConstants.CAN_CREATE_MINISTRY, PermissionsConstants.CAN_MANAG_DEPART,
+                PermissionsConstants.MANAGE_PRG_DETAILS, PermissionsConstants.PRG_MANAGER
             ]),
         ];
 

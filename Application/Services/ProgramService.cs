@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Dtos.Program;
+using Application.Helper;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Program;
@@ -17,16 +18,19 @@ namespace Application.Services
         private readonly IPrgDateRepository _prgDateRepository;
         private readonly IClaimRepository _ClaimRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public ProgramService(IBaseRepository<Program> baseRepository, IMapper mapper,
             IPrgDateRepository prgDateRepository,
-            IProgramRepository programRepository, IClaimRepository claimRepository, IDepartmentMemberRepository departmentMemberRepository)
+            IProgramRepository programRepository, IClaimRepository claimRepository, IDepartmentMemberRepository departmentMemberRepository,
+            IAccountRepository accountRepository)
             : base(baseRepository, mapper)
         {
             _IProgramRepository = programRepository;
             _ClaimRepository = claimRepository;
             _departmentMemberRepository = departmentMemberRepository;
             _prgDateRepository = prgDateRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userAuth)
@@ -128,9 +132,19 @@ namespace Application.Services
             return Result<bool>.Success(true);
         }
 
-        public async Task<Result<GetPrg>> GetByMonthYear(int month, int year)
+        public async Task<Result<GetPrg>> GetByMonthYear(int month, int year, string userAuthId, string claimValue)
         {
-            var result = await  _prgDateRepository.GetByMonthYearAsync(month, year); 
+            // Si admin (a le claim), retourner tous les programmes
+            var userClaims = Utiles.DeserializePermissions(_ClaimRepository.GetUserClaims()?.Permissions);
+            string? memberId = null;
+
+            if (userClaims == null || !userClaims.Contains(claimValue))
+            {
+                var member = await _accountRepository.FindMemberByUserIdAsync(userAuthId);
+                memberId = member?.Id.ToString();
+            }
+
+            var result = await _prgDateRepository.GetByMonthYearAsync(month, year, memberId);
             return Result<GetPrg>.Success(result);
         }
 

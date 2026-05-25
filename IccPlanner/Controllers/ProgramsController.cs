@@ -50,7 +50,8 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<GetPrg>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(int month, int year)
         {
-            var result = await _programService.GetByMonthYear(month, year);
+            var userAuthId = Utiles.GetUserIdFromClaims(User)!;
+            var result = await _programService.GetByMonthYear(month, year, userAuthId.ToString(), ClaimsConstants.CAN_MANANG_DEPART);
             return Ok(result.Value);
         }
 

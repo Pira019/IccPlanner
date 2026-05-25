@@ -14,12 +14,19 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<GetPrg> GetByMonthYearAsync(int month, int year)
+        public async Task<GetPrg> GetByMonthYearAsync(int month, int year, string? memberId = null)
         {
             var query = _dbSet
                   .Where(x => x.Date.HasValue
                               && x.Date.Value.Month == month
                               && x.Date.Value.Year == year);
+
+            // Filtrer par les departements du membre si memberId est fourni
+            if (!string.IsNullOrEmpty(memberId))
+            {
+                var memberGuid = Guid.Parse(memberId);
+                query = query.Where(x => x.PrgDepartmentInfo.DepartmentProgram.Department.DepartmentMembers.Any(dm => dm.MemberId == memberGuid));
+            }
 
             // Liste complète des événements
             var events = await query

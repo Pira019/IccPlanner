@@ -13,6 +13,9 @@ namespace Application.Dtos.TabServicePrgDto
         public string Title { get; set; } = string.Empty;
         public string? ShortName { get; set; }
         public string? Description { get; set; }
+        public int DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
+        public string? DepartmentShortName { get; set; }
         public IEnumerable<TabServicesPrgDto> Services { get; set; } = [];
 
     }

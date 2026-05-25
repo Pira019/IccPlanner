@@ -2,6 +2,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
+using Shared.Constants;
 
 namespace Application.Services
 {
@@ -18,23 +19,24 @@ namespace Application.Services
         /// </summary>
         private static readonly List<(string Name, string Description, string Fnc)> DefaultPermissions =
         [
-            // Rôles
-            ("CanReadRole", "Peut lire un rôle", "Role"),
-            ("CanCreateRole", "Peut créer un rôle", "Role"),
+            // Roles
+            (PermissionsConstants.CAN_READ_ROLE, PermissionsConstants.CAN_READ_ROLE_DESC, PermissionsConstants.CAT_ROLE),
+            (PermissionsConstants.CAN_CREATE_ROLE, PermissionsConstants.CAN_CREATE_ROLE_DESC, PermissionsConstants.CAT_ROLE),
+            (PermissionsConstants.CAN_MANAG_ROLES, PermissionsConstants.CAN_MANAG_ROLES_DESC, PermissionsConstants.CAT_ROLE),
 
-            // Ministère
-            ("CanCreateMinistry", "Peut gérer un ministère", "Ministry"),
+            // Ministere
+            (PermissionsConstants.CAN_CREATE_MINISTRY, PermissionsConstants.CAN_CREATE_MINISTRY_DESC, PermissionsConstants.CAT_MINISTRY),
 
-            // Département
-            ("CanManagDepart", "Peut gérer un département (Créer, Supprimer et Modifier)", "Dept"),
-            ("depart:manager", "Droit de gestion sur le département auquel l'utilisateur est rattaché", "Dept"),
-            ("manage_program_details", "Permet de gérer les détails des programmes d'un département", "Dept"),
+            // Departement
+            (PermissionsConstants.CAN_MANAG_DEPART, PermissionsConstants.CAN_MANAG_DEPART_DESC, PermissionsConstants.CAT_DEPT),
+            (PermissionsConstants.DEPART_MANAGER, PermissionsConstants.DEPART_MANAGER_DESC, PermissionsConstants.CAT_DEPT),
+            (PermissionsConstants.MANAGE_PRG_DETAILS, PermissionsConstants.MANAGE_PRG_DETAILS_DESC, PermissionsConstants.CAT_DEPT),
 
             // Programme
-            ("prg:manager", "Peut gérer un programme (Créer, Supprimer et Modifier)", "Prg"),
+            (PermissionsConstants.PRG_MANAGER, PermissionsConstants.PRG_MANAGER_DESC, PermissionsConstants.CAT_PRG),
 
             // Service
-            ("ManagerService", "Peut gérer les services", "Service"),
+            (PermissionsConstants.MANAGER_SERVICE, PermissionsConstants.MANAGER_SERVICE_DESC, PermissionsConstants.CAT_SERVICE),
         ];
 
         public PermissionService(IPermissionRepository permissionRepository, ILogger<PermissionService> logger)

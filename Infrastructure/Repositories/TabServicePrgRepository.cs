@@ -126,6 +126,9 @@ namespace Infrastructure.Repositories
                              ProgramTitle = dp.Program.Name,
                              ShortName = dp.Program.ShortName,
                              Description = dp.Program.Description,
+                             DepartmentId = dp.DepartmentId,
+                             DepartmentName = dp.Department.Name,
+                             DepartmentShortName = dp.Department.ShortName,
                              Services = pd.TabServicePrgs.Select(service => new TabServicesPrgDto
                              {
                                  IdTabService = service.Id,
@@ -133,7 +136,8 @@ namespace Infrastructure.Repositories
                                  ServiceTitle = service.DisplayName,
                                  StartTime = service.TabServices.StartTime,
                                  EndTime = service.TabServices.EndTime,
-                                 ArrivalTime = service.ArrivalTimeOfMember
+                                 ArrivalTime = service.ArrivalTimeOfMember,
+                                 Notes = service.Notes
                              }).ToList()
                          })
                      ))
@@ -151,7 +155,7 @@ namespace Infrastructure.Repositories
                         GroupKey = group.Key.GroupKey!,
                         IdPrgDate = group.First().PrgDateId,
                         ServicePrograms = group
-                            .GroupBy(r => new { r.ProgramId, r.ProgramTitle, r.ShortName, r.Description})
+                            .GroupBy(r => new { r.ProgramId, r.ProgramTitle, r.ShortName, r.Description, r.DepartmentId, r.DepartmentName, r.DepartmentShortName})
                             .Select(programGroup => new ProgramServiceDto
                             {
                                 IdPrg = programGroup.Key.ProgramId,
@@ -159,6 +163,9 @@ namespace Infrastructure.Repositories
                                 ShortName = programGroup.Key.ShortName,
                                 Title = programGroup.Key.ProgramTitle,
                                 Description = programGroup.Key.Description,
+                                DepartmentId = programGroup.Key.DepartmentId,
+                                DepartmentName = programGroup.Key.DepartmentName,
+                                DepartmentShortName = programGroup.Key.DepartmentShortName,
                                 Services = programGroup
                                     .SelectMany(r => r.Services)
                                     .GroupBy(s => new { s.TabServicesId, s.ServiceTitle })

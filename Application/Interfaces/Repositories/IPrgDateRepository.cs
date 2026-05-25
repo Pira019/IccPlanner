@@ -41,6 +41,6 @@ namespace Application.Interfaces.Repositories
         /// <returns>
         ///     Liste des programmes correspondant au mois et à l'année spécifiés.
         /// </returns>
-        public Task<GetPrg> GetByMonthYearAsync(int month, int year);
+        public Task<GetPrg> GetByMonthYearAsync(int month, int year, string? memberId = null);
     }
 }
