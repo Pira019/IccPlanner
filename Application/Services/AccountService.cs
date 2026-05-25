@@ -28,6 +28,7 @@ namespace Application.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IAppSettings _appSettings;
 
         public AccountService(
@@ -37,6 +38,7 @@ namespace Application.Services
             IInvitationRepository invitationRepository,
             IDepartmentRepository departmentRepository,
             IDepartmentMemberRepository departmentMemberRepository,
+            IRoleRepository roleRepository,
             IAppSettings appSettings,
             IBaseRepository<User> baseRepository, IMapper mapper, IHttpContextAccessor? httpContextAccessor = null) : base(baseRepository, mapper, httpContextAccessor)
         {
@@ -46,6 +48,7 @@ namespace Application.Services
             _departmentRepository = departmentRepository;
             _departmentMemberRepository = departmentMemberRepository;
             _invitationRepository = invitationRepository;
+            _roleRepository = roleRepository;
             _appSettings = appSettings;
         }
 
@@ -70,6 +73,13 @@ namespace Application.Services
                 if (isAdmin)
                 {
                     await _accountRepository.AddUserRole(newUser!, RolesConstants.ADMIN);
+                    // Assigner les permissions du rôle Admin en claims
+                    var adminRole = await _roleRepository.GetRoleWithPermissionsAsync(RolesConstants.ADMIN);
+                    if (adminRole != null && adminRole.Permissions.Count > 0)
+                    {
+                        var permissionNames = adminRole.Permissions.Select(p => p.Name).ToList();
+                        await _accountRepository.AddClaimsAsync(newUser!, permissionNames);
+                    }
                 }
                 // Envoie Email (non bloquant, géré dans SendEmailService)
                 await _sendEmailService.SendEmailConfirmation(newUser!);
