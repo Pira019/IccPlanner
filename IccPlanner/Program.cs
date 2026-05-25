@@ -292,6 +292,10 @@ namespace IccPlanner
                 // Seed du délai global par défaut (3 jours)
                 var settingService = scope.ServiceProvider.GetRequiredService<IAppSettingEntryService>();
                 await settingService.SeedDefaultSettingsAsync();
+
+                // Seed des services par défaut (cultes)
+                var serviceTabService = scope.ServiceProvider.GetRequiredService<IServiceTabService>();
+                await serviceTabService.SeedDefaultServicesAsync();
             }
 
             app.UseRequestLocalization();

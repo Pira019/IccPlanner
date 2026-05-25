@@ -11,6 +11,11 @@ namespace Application.Interfaces.Services
       /// </summary>
       /// <param name="request"></param>
       /// <returns></returns>
-        public Task<Result<int>> Add(AddServiceRequest request); 
+        public Task<Result<int>> Add(AddServiceRequest request);
+
+        /// <summary>
+        ///     Seed les services par défaut du système.
+        /// </summary>
+        public Task SeedDefaultServicesAsync();
     }
 }
