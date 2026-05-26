@@ -92,8 +92,8 @@ namespace Infrastructure.Repositories
                 {
                     DepartmentName = p.Availability.DepartmentMember.Department.Name,
                     ServiceName = p.Availability.TabServicePrg.DisplayName,
-                    StartTime = p.Availability.TabServicePrg.TabServices.StartTime.ToString(),
-                    EndTime = p.Availability.TabServicePrg.TabServices.EndTime.ToString()
+                    StartTime = p.Availability.TabServicePrg.TabServices.StartTime.ToString("HH:mm"),
+                    EndTime = p.Availability.TabServicePrg.TabServices.EndTime.ToString("HH:mm")
                 })
                 .ToListAsync();
         }

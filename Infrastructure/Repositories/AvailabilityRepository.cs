@@ -64,10 +64,10 @@ namespace Infrastructure.Repositories
                             TabServicePrgId = a.TabServicePrgId,
                             ServiceName = a.TabServicePrg.DisplayName,
                             ProgramName = a.TabServicePrg.PrgDate.PrgDepartmentInfo.DepartmentProgram.Program.Name,
-                            StartTime = a.TabServicePrg.TabServices.StartTime.ToString(),
-                            EndTime = a.TabServicePrg.TabServices.EndTime.ToString(),
+                            StartTime = a.TabServicePrg.TabServices.StartTime.ToString("HH:mm"),
+                            EndTime = a.TabServicePrg.TabServices.EndTime.ToString("HH:mm"),
                             ArrivalTime = a.TabServicePrg.ArrivalTimeOfMember.HasValue
-                                ? a.TabServicePrg.ArrivalTimeOfMember.ToString()
+                                ? a.TabServicePrg.ArrivalTimeOfMember.Value.ToString("HH:mm")
                                 : null
                         }).ToList()
                 })
@@ -109,9 +109,9 @@ namespace Infrastructure.Repositories
                     ServicePrgId = g.Key.TabServicePrgId,
                     ServiceName = g.Key.ServiceName,
                     ProgramName = g.Key.ProgramName,
-                    StartTime = g.Key.StartTime.ToString(),
-                    EndTime = g.Key.EndTime.ToString(),
-                    ArrivalTime = g.Key.ArrivalTime?.ToString(),
+                    StartTime = g.Key.StartTime.ToString("HH:mm"),
+                    EndTime = g.Key.EndTime.ToString("HH:mm"),
+                    ArrivalTime = g.Key.ArrivalTime?.ToString("HH:mm"),
                     AvailableMembers = g.OrderBy(a => a.MemberName)
                         .ThenBy(a => a.MemberLastName)
                         .Select(a => new AvailableMemberItem

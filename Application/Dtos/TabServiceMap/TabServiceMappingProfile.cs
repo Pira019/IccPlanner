@@ -25,9 +25,9 @@ namespace Application.Dtos.TabServiceMap
             CreateMap<TabServices, GetTabServiceListResponse>()
              .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Notes))
              .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
-             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
-             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime))
-             .ForMember(dest => dest.MemberArrivalTime, opt => opt.MapFrom(src => src.ArrivalTimeOfMember));
+             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime.ToString("HH:mm")))
+             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime.ToString("HH:mm")))
+             .ForMember(dest => dest.MemberArrivalTime, opt => opt.MapFrom(src => src.ArrivalTimeOfMember != null ? src.ArrivalTimeOfMember.Value.ToString("HH:mm") : null));
         }
     }
 }

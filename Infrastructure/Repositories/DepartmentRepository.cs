@@ -99,9 +99,9 @@ namespace Infrastructure.Repositories
                             ServicePrgId = s.ServicePrgId,
                             ServiceName = s.ServiceName,
                             ProgramName = s.ProgramName,
-                            StartTime = s.StartTime.ToString(),
-                            EndTime = s.EndTime.ToString(),
-                            ArrivalTime = s.ArrivalTime?.ToString()
+                            StartTime = s.StartTime.ToString("HH:mm"),
+                            EndTime = s.EndTime.ToString("HH:mm"),
+                            ArrivalTime = s.ArrivalTime?.ToString("HH:mm")
                         }).ToList()
                 })
                 .OrderBy(d => d.DepartmentName)

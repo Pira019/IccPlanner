@@ -53,10 +53,10 @@ namespace Infrastructure.Repositories
                         IsAvailable = s.Availabilities.Where(a => a.DepartmentMember.MemberId == memberId).Any(),
                         DisplayName = s.DisplayName,
                         Comment = s.Notes,
-                        StartTime = s.TabServices.StartTime.ToString(),
-                        EndTime = s.TabServices.EndTime.ToString(),
+                        StartTime = s.TabServices.StartTime.ToString("HH:mm"),
+                        EndTime = s.TabServices.EndTime.ToString("HH:mm"),
                         ArrivalTime = s.ArrivalTimeOfMember.HasValue
-                            ? s.ArrivalTimeOfMember.ToString()!
+                            ? s.ArrivalTimeOfMember.Value.ToString("HH:mm")
                             : string.Empty
                     }).ToList()
                 })
