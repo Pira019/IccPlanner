@@ -48,6 +48,11 @@ namespace Application.Interfaces.Repositories
         public Task<bool> HasPlanningRightAsync(Guid memberId, int departmentId);
 
         /// <summary>
+        ///     Récupère les IDs des départements où le membre a un poste avec IndGest = true.
+        /// </summary>
+        public Task<List<int>> GetManagedDepartmentIdsAsync(Guid memberId);
+
+        /// <summary>
         ///     Récupère les emails des membres qui ont IndAutoPlanning = true dans un département.
         /// </summary>
         public Task<List<(string Email, string Name)>> GetAutoPlanningRecipientsAsync(int departmentId);

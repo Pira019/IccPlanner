@@ -89,8 +89,7 @@ namespace IccPlanner.Controllers
 
         /// <summary>
         ///     Récupère les membres disponibles par département et date, groupés par service.
-        ///     L'utilisateur doit être membre du département avec un poste IndGest = true
-        ///     OU avoir le claim depart:manager contenant l'id du département.
+        ///     L'utilisateur doit être membre du département avec un poste IndGest = true ou IndPlanning = true.
         /// </summary>
         [HttpGet("{departmentId}/{date}")]
         [Authorize]
@@ -98,18 +97,12 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAvailableMembersByDate(int departmentId, DateOnly date)
         {
-            // Vérifier le claim depart:manager (format: depart:manager:1,2,4)
-            var hasClaim = Utiles.HasDepartmentPermission(User, ClaimsConstants.DEPART_MANAGER, departmentId, ClaimsConstants.PERMISSION);
+            var memberId = await GetMemberAuthIdAsync();
+            var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, departmentId)
+                        || await _departmentMemberRepository.HasPlanningRightAsync(memberId, departmentId);
 
-            if (!hasClaim)
-            {
-                // Vérifier si le membre a un poste avec IndGest = true dans ce département
-                var memberId = await GetMemberAuthIdAsync();
-                var hasManagementRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, departmentId);
-
-                if (!hasManagementRight)
-                    return Forbid();
-            }
+            if (!hasRight)
+                return Forbid();
 
             var result = await _availabilityService.GetAvailableMembersByDateAsync(departmentId, date);
             return Ok(result.Value);

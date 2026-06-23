@@ -45,6 +45,17 @@ namespace Infrastructure.Repositories
         }
 
         /// <inheritdoc />
+        public async Task<List<int>> GetManagedDepartmentIdsAsync(Guid memberId)
+        {
+            return await _dbSet
+                .Where(dm => dm.MemberId == memberId
+                    && dm.DepartmentMemberPosts.Any(dmp => dmp.Poste.IndGest))
+                .Select(dm => dm.DepartmentId)
+                .Distinct()
+                .ToListAsync();
+        }
+
+        /// <inheritdoc />
         public async Task<List<(string Email, string Name)>> GetAutoPlanningRecipientsAsync(int departmentId)
         {
             var data = await PlannerContext.DepartmentMemberPosts

@@ -79,5 +79,11 @@ namespace Infrastructure.Repositories
             await PlannerContext.Postes.AddRangeAsync(postes);
             await PlannerContext.SaveChangesAsync();
         }
+
+        /// <inheritdoc />
+        public async Task<Poste?> FindPosteByShortNameAsync(string shortName)
+        {
+            return await PlannerContext.Postes.FirstOrDefaultAsync(p => p.ShortName == shortName);
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace Application.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IDepartmentProgramRepository _departmentProgramRepository;
         private readonly IClaimRepository _claimRepository;
+        private readonly IDepartmentMemberRepository _departmentMemberRepository;
         private readonly IMinistryRepository _ministryRepository;
         private readonly IProgramRepository _programRepository;
         private readonly IRecurrentDateService _recurrentDateService;
@@ -35,7 +36,7 @@ namespace Application.Services
 
         public DepartmentService(IBaseRepository<Department> baseRepository, IMapper mapper, IDepartmentRepository departmentRepository, IPostRepository postRepository,
             IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository,
-            IClaimRepository claimRepository, IMinistryRepository ministryRepository,
+            IClaimRepository claimRepository, IDepartmentMemberRepository departmentMemberRepository, IMinistryRepository ministryRepository,
             IProgramRepository programRepository, IRecurrentDateService recurrentDateService, IAppSettings appSettings)
             : base(baseRepository, mapper)
         {
@@ -44,6 +45,7 @@ namespace Application.Services
             _accountRepository = accountRepository;
             _departmentProgramRepository = departmentProgramRepository;
             _claimRepository = claimRepository;
+            _departmentMemberRepository = departmentMemberRepository;
             _ministryRepository = ministryRepository;
             _programRepository = programRepository;
             _recurrentDateService = recurrentDateService;
@@ -392,7 +394,52 @@ namespace Application.Services
         public async Task<Result<bool>> AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds)
         {
             await _departmentRepository.AssignPostesToMemberAsync(departmentMemberId, posteIds);
+
+            // Synchroniser IndPlanning sur DepartmentMember selon les postes assignés
+            var postes = await _departmentRepository.GetPostesByIdsAsync(posteIds);
+            var hasPlanning = postes.Any(p => p.IndPlanning);
+            await _departmentRepository.UpdateDepartmentMemberIndPlanningAsync(departmentMemberId, hasPlanning);
+
+            // Synchroniser le claim depart:manager (sans IDs) si un poste IndGest = true est assigné
+            await SyncDepartManagerClaimAsync(departmentMemberId, postes);
+
             return Result<bool>.Success(true);
+        }
+
+        /// <summary>
+        ///     Ajoute ou retire le claim "depart:manager" selon les postes assignés.
+        /// </summary>
+        private async Task SyncDepartManagerClaimAsync(int departmentMemberId, List<Poste> postes)
+        {
+            var hasGestPoste = postes.Any(p => p.IndGest);
+
+            var memberInfo = await _departmentRepository.GetMemberInfoByDepartmentMemberIdAsync(departmentMemberId);
+            if (memberInfo == null) return;
+
+            var (userId, _) = memberInfo.Value;
+            var user = await _accountRepository.FindByIdAsync(userId);
+            if (user == null) return;
+
+            var existingClaims = await _accountRepository.GetUserPermissionClaimsAsync(userId);
+            var hasDepartManagerClaim = existingClaims.Contains("depart:manager");
+
+            if (hasGestPoste && !hasDepartManagerClaim)
+            {
+                await _accountRepository.AddClaimsAsync(user, ["depart:manager"]);
+            }
+            else if (!hasGestPoste && hasDepartManagerClaim)
+            {
+                // Vérifier s'il a encore IndGest dans un autre département
+                var member = await _accountRepository.FindMemberByUserIdAsync(userId);
+                if (member != null)
+                {
+                    var managedDepts = await _departmentMemberRepository.GetManagedDepartmentIdsAsync(member.Id);
+                    if (managedDepts.Count == 0)
+                    {
+                        await _accountRepository.RemoveClaimsAsync(user, ["depart:manager"]);
+                    }
+                }
+            }
         }
     }
 }

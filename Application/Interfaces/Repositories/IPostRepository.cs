@@ -22,5 +22,10 @@ namespace Application.Interfaces.Repositories
         ///     Insère plusieurs postes en une seule opération.
         /// </summary>
         public Task InsertRangeAsync(List<Poste> postes);
+
+        /// <summary>
+        ///     Récupère un poste par son ShortName.
+        /// </summary>
+        public Task<Poste?> FindPosteByShortNameAsync(string shortName);
     }
 }

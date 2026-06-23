@@ -34,6 +34,11 @@ namespace Domain.Entities
         /// </summary>
         public bool IndSystem { get; set; }
 
+        /// <summary>
+        ///     Indique si le poste confère le droit de gérer le planning.
+        /// </summary>
+        public bool IndPlanning { get; set; } = false;
+
         public List<Department> Departments { get; } = [];
     }
 }

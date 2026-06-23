@@ -80,5 +80,20 @@ namespace Application.Interfaces.Repositories
         /// <param name="departmentMemberId">Id du DepartmentMember</param>
         /// <param name="posteIds">Liste des ids de postes à affecter</param>
         public Task AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds);
+
+        /// <summary>
+        ///     Récupère des postes par leurs IDs.
+        /// </summary>
+        public Task<List<Poste>> GetPostesByIdsAsync(List<int> posteIds);
+
+        /// <summary>
+        ///     Récupère le userId et departmentId à partir d'un DepartmentMemberId.
+        /// </summary>
+        public Task<(string UserId, int DepartmentId)?> GetMemberInfoByDepartmentMemberIdAsync(int departmentMemberId);
+
+        /// <summary>
+        ///     Met à jour le flag IndPlanning sur un DepartmentMember.
+        /// </summary>
+        public Task UpdateDepartmentMemberIndPlanningAsync(int departmentMemberId, bool indPlanning);
     }
 }

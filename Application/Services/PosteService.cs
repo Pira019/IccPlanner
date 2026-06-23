@@ -118,13 +118,13 @@ namespace Application.Services
         /// <summary>
         ///     Liste des postes par défaut du système.
         /// </summary>
-        private static readonly List<(string ShortName, string Name, string Description, int Order)> DefaultPostes =
+        private static readonly List<(string ShortName, string Name, string Description, int Order, bool IndPlanning, bool IndGest)> DefaultPostes =
         [
-            ("RESPO", "Responsable", "Il est le référent du département.", 1),
-            ("PLAN", "Planificateur", "Planifie et organise les tâches du département pendant les activités.", 2),
-            ("COORDO", "Coordinateur", "Assure la coordination des équipes et des tâches.", 3),
-            ("GESTI", "Gestionnaire", "Gère les ressources et le suivi administratif.", 4),
-            ("RADACT", "Rédacteur", "Veille aux messages envoyés dans le groupe.", 5),
+            ("RESPO", "Responsable", "Il est le référent du département.", 1, true, true),
+            ("PLAN", "Planificateur", "Planifie et organise les tâches du département pendant les activités.", 2, true, false),
+            ("COORDO", "Coordinateur", "Assure la coordination des équipes et des tâches.", 3, true, true),
+            ("GESTI", "Gestionnaire", "Gère les ressources et le suivi administratif.", 4, true, true),
+            ("RADACT", "Rédacteur", "Veille aux messages envoyés dans le groupe.", 5, false, false),
         ];
 
         /// <inheritdoc />
@@ -140,13 +140,27 @@ namespace Application.Services
                     Name = p.Name,
                     Description = p.Description,
                     DisplayOrder = p.Order,
-                    IndSystem = true
+                    IndSystem = true,
+                    IndPlanning = p.IndPlanning,
+                    IndGest = p.IndGest
                 })
                 .ToList();
 
             if (toInsert.Count > 0)
             {
                 await _postRepository.InsertRangeAsync(toInsert);
+            }
+
+            // Mettre à jour les postes existants
+            foreach (var def in DefaultPostes.Where(p => existingShortNames.Contains(p.ShortName)))
+            {
+                var existing = await _postRepository.FindPosteByShortNameAsync(def.ShortName);
+                if (existing != null && (existing.IndPlanning != def.IndPlanning || existing.IndGest != def.IndGest))
+                {
+                    existing.IndPlanning = def.IndPlanning;
+                    existing.IndGest = def.IndGest;
+                    await _postRepository.UpdateAsync(existing);
+                }
             }
         }
     }

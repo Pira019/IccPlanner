@@ -263,5 +263,34 @@ namespace Infrastructure.Repositories
             await PlannerContext.DepartmentMemberPosts.AddRangeAsync(newEntries);
             await PlannerContext.SaveChangesAsync();
         }
+
+        /// <inheritdoc />
+        public async Task<List<Poste>> GetPostesByIdsAsync(List<int> posteIds)
+        {
+            return await PlannerContext.Postes
+                .Where(p => posteIds.Contains(p.Id))
+                .ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<(string UserId, int DepartmentId)?> GetMemberInfoByDepartmentMemberIdAsync(int departmentMemberId)
+        {
+            var result = await PlannerContext.DepartmentMembers
+                .Include(dm => dm.Member)
+                .Where(dm => dm.Id == departmentMemberId && dm.Member.User != null)
+                .Select(dm => new { dm.Member.User!.Id, dm.DepartmentId })
+                .FirstOrDefaultAsync();
+
+            if (result == null) return null;
+            return (result.Id, result.DepartmentId);
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateDepartmentMemberIndPlanningAsync(int departmentMemberId, bool indPlanning)
+        {
+            await PlannerContext.DepartmentMembers
+                .Where(dm => dm.Id == departmentMemberId)
+                .ExecuteUpdateAsync(s => s.SetProperty(dm => dm.IndPlanning, indPlanning));
+        }
     }
 }
