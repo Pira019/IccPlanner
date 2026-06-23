@@ -471,4 +471,7 @@
   <data name="FILE_INVALID_COLUMNS" xml:space="preserve">
     <value>Le fichier doit contenir les colonnes : Prenom, Email.</value>
   </data>
+  <data name="DEPARTMENT_UPDATE_NOT_AUTHORIZED" xml:space="preserve">
+    <value>Vous n'avez pas les droits pour modifier ce département. Vous devez être gestionnaire du département ou avoir la permission de gestion globale.</value>
+  </data>
 </root>

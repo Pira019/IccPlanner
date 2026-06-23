@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Application.Helper; 
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Department;
 using Application.Responses;
@@ -15,12 +16,16 @@ namespace IccPlanner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartmentsController : ControllerBase
+    public class DepartmentsController : PlannerBaseController
     {
         private readonly IDepartmentService _departmentService;
-        public DepartmentsController(IDepartmentService departmentService)
+        private readonly IDepartmentMemberRepository _departmentMemberRepository;
+
+        public DepartmentsController(IDepartmentService departmentService, IAccountRepository accountRepository, IDepartmentMemberRepository departmentMemberRepository)
+            : base(accountRepository)
         {
             _departmentService = departmentService;
+            _departmentMemberRepository = departmentMemberRepository;
         }
 
         /// <summary>
@@ -67,14 +72,24 @@ namespace IccPlanner.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART)]
+        [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<AddDepartmentResponse>(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put(int id,AddDepartmentRequest request)
+        public async Task<IActionResult> Put(int id, AddDepartmentRequest request)
         {
-            var newDepartment = await _departmentService.UpdateDept(id,request);
+            // Vérifier : claim CanManagDepart OU IndGest dans ce département
+            var hasClaim = Utiles.HasPermission(User, ClaimsConstants.CAN_MANANG_DEPART, ClaimsConstants.PERMISSION);
+            if (!hasClaim)
+            {
+                var memberId = await GetMemberAuthIdAsync();
+                var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, id);
+                if (!hasRight)
+                    return BadRequest(ApiError.ErrorMessage("Vous n'avez pas les droits pour modifier ce département. Vous devez être gestionnaire du département ou avoir la permission de gestion globale.", null, null));
+            }
+
+            var newDepartment = await _departmentService.UpdateDept(id, request);
             if (!newDepartment.IsSuccess)
             {
                 return BadRequest(ApiError.ErrorMessage(newDepartment.Error, null, null));

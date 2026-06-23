@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Requests.Invitation;
 using Application.Responses;
@@ -15,13 +16,16 @@ namespace IccPlanner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InvitationsController : ControllerBase
+    public class InvitationsController : PlannerBaseController
     {
         private readonly IInvitationService _invitationService;
+        private readonly IDepartmentMemberRepository _departmentMemberRepository;
 
-        public InvitationsController(IInvitationService invitationService)
+        public InvitationsController(IInvitationService invitationService, IAccountRepository accountRepository, IDepartmentMemberRepository departmentMemberRepository)
+            : base(accountRepository)
         {
             _invitationService = invitationService;
+            _departmentMemberRepository = departmentMemberRepository;
         }
 
 
@@ -37,6 +41,11 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<GetDepartResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Post([FromBody] SendRequest request)
         {
+            var memberId = await GetMemberAuthIdAsync();
+            var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, request.DepartmentID);
+            if (!hasRight)
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.PLANNING_NOT_AUTHORIZED, null, null));
+
             var response = await _invitationService.SendInvitationAnsyc(request);
 
             if (!response.IsSuccess)
@@ -69,6 +78,11 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<BulkInviteResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> BulkInvite([FromForm] BulkInviteRequest request)
         {
+            var memberId = await GetMemberAuthIdAsync();
+            var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, request.DepartmentId);
+            if (!hasRight)
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.PLANNING_NOT_AUTHORIZED, null, null));
+
             var response = await _invitationService.BulkInviteAsync(request);
             if (!response.IsSuccess)
             {
