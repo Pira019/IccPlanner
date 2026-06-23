@@ -474,4 +474,13 @@
   <data name="DEPARTMENT_UPDATE_NOT_AUTHORIZED" xml:space="preserve">
     <value>You are not authorized to modify this department. You must be a department manager or have global management permission.</value>
   </data>
+  <data name="CANT_DELETE_AVAILABILITY_PLANNED" xml:space="preserve">
+    <value>You cannot remove your availability because you are already scheduled for this slot. Please contact your manager.</value>
+  </data>
+  <data name="CANT_DELETE_DEPARTMENT_PROGRAM" xml:space="preserve">
+    <value>You are not authorized to remove this program from the department. You must be a manager of this department or have program management permission.</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_RESTORE_OR_CREATE" xml:space="preserve">
+    <value>This program was previously associated with this department. Do you want to restore it (with its dates and services) or create a new association?</value>
+  </data>
 </root>

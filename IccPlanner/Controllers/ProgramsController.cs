@@ -38,6 +38,10 @@ namespace IccPlanner.Controllers
 
             if (!res.IsSuccess) 
             {
+                if (res.CodeErreur == "NAME_EXISTS")
+                {
+                    return Conflict(ApiError.ErrorMessage(res.Error, null, null));
+                }
                 return BadRequest(ApiError.ErrorMessage(res.Error, null, null));
             }             
             return Created(string.Empty, res.Value);

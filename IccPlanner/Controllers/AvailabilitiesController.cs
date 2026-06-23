@@ -69,11 +69,17 @@ namespace IccPlanner.Controllers
                 return BadRequest(ApiError.ErrorMessage(ValidationMessages.AVAILAIBILITY_NOT_FOUND, null, null));
             }
 
-            if (avability?.DatePrg <= DateOnly.FromDateTime(DateTime.Now))
+            if (avability.DatePrg <= DateOnly.FromDateTime(DateTime.Now))
             {
                 return BadRequest(ApiError.ErrorMessage(ValidationMessages.CANT_DELETE_AVAIBILITY, null, null));
             }
-            await _availabilityRepository.DeleteAsync((int)avability?.Id!);
+
+            if (avability.IsPlanned)
+            {
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.CANT_DELETE_AVAILABILITY_PLANNED, null, null));
+            }
+
+            await _availabilityRepository.DeleteAsync((int)avability.Id!);
             return Ok();
         }
 

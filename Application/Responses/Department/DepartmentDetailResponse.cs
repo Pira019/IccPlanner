@@ -33,6 +33,7 @@ namespace Application.Responses.Department
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? ShortName { get; set; }
+        public string? Description { get; set; }
     }
 
     public class DepartmentDetailProgram
@@ -53,6 +54,7 @@ namespace Application.Responses.Department
         public string Email { get; set; } = string.Empty;
         public DateTime DateSend { get; set; }
         public DateTime DateExpiration { get; set; }
+        public DateTime? DateUsed { get; set; }
         public bool IndUsed { get; set; }
         public bool IndAct { get; set; }
         public bool IsExpired => !IndUsed && DateExpiration < DateTime.UtcNow;

@@ -25,6 +25,7 @@ namespace Infrastructure.Repositories
                 {
                     Id = availability.Id,
                     DatePrg = availability.TabServicePrg.PrgDate.Date,
+                    IsPlanned = availability.Planning != null
                 })
                 .FirstOrDefaultAsync();
         }

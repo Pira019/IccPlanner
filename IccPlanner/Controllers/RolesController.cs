@@ -70,7 +70,7 @@ namespace IccPlanner.Controllers
                 result.Add(new UserWithRolesResponse
                 {
                     UserId = user.Id,
-                    DisplayName = user.Member.Name + " " + (user.Member.LastName ?? ""),
+                    DisplayName = user.Member.Name + " " + (user.Member.LastName != null ? user.Member.LastName.Substring(0, 1) + "." : ""),
                     Email = user.Email,
                     Roles = roles.ToList()
                 });

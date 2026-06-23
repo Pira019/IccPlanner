@@ -20,7 +20,12 @@ namespace Infrastructure.Repositories
 
         public async Task BulkDeleteByIdsAsync(IEnumerable<int> ids)
         {
-            //await _dbSet.Where(e => ids.Contains(EF.Property<int>(e, "Id"))).ExecuteDelete();
+            await _dbSet
+                .IgnoreQueryFilters()
+                .Where(e => ids.Contains(EF.Property<int>(e, "Id")))
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(e => EF.Property<bool>(e, "IsDeleted"), true)
+                    .SetProperty(e => EF.Property<DateTimeOffset?>(e, "DeletedAt"), DateTimeOffset.UtcNow));
         }
 
         public async Task InsertAllAsync(IEnumerable<TEntity> entities)

@@ -17,7 +17,11 @@ namespace Domain.Entities
         public required string Description { get; set; }
 
         [MaxLength(15)]
-        public string? ShortName { get; set; }
+        public string? ShortName { 
+            get => _shortName;
+            set => _shortName = value?.ToUpper();
+        }
+        private string? _shortName;
         public DateOnly? StartDate { get; set; } // Date d'ouverture
         public List<Member> Members { get; } = [];
         public List<DepartmentMember> DepartmentMembers { get; } = [];

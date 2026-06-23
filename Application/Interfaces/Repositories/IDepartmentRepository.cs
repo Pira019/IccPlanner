@@ -95,5 +95,15 @@ namespace Application.Interfaces.Repositories
         ///     Met à jour le flag IndPlanning sur un DepartmentMember.
         /// </summary>
         public Task UpdateDepartmentMemberIndPlanningAsync(int departmentMemberId, bool indPlanning);
+
+        /// <summary>
+        ///     Désaffecte un poste d'un département.
+        /// </summary>
+        public Task RemovePosteFromDepartmentAsync(int departmentId, int posteId);
+
+        /// <summary>
+        ///     Récupère le departmentId à partir d'un DepartmentProgramId.
+        /// </summary>
+        public Task<int?> GetDepartmentIdByDepartmentProgramIdAsync(int departmentProgramId);
     }
 }

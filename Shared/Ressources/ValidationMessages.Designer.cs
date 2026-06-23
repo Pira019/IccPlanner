@@ -1121,5 +1121,41 @@ namespace Shared.Ressources {
                 return ResourceManager.GetString("FILE_INVALID_COLUMNS", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à You are not authorized to modify this department.
+        /// </summary>
+        public static string DEPARTMENT_UPDATE_NOT_AUTHORIZED {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_UPDATE_NOT_AUTHORIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cannot remove availability when already planned.
+        /// </summary>
+        public static string CANT_DELETE_AVAILABILITY_PLANNED {
+            get {
+                return ResourceManager.GetString("CANT_DELETE_AVAILABILITY_PLANNED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cannot delete department program without proper rights.
+        /// </summary>
+        public static string CANT_DELETE_DEPARTMENT_PROGRAM {
+            get {
+                return ResourceManager.GetString("CANT_DELETE_DEPARTMENT_PROGRAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Restore or create department program prompt.
+        /// </summary>
+        public static string DEPARTMENT_PROGRAM_RESTORE_OR_CREATE {
+            get {
+                return ResourceManager.GetString("DEPARTMENT_PROGRAM_RESTORE_OR_CREATE", resourceCulture);
+            }
+        }
     }
 }

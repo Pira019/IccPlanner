@@ -15,10 +15,52 @@ namespace Infrastructure.Repositories
         public async Task<DepartmentProgram?> FindDepartmentProgramAsync(List<int> departmentIds, int programId, bool IndRecurent)
         {
             return await _dbSet.Where(dp => departmentIds.Contains(dp.DepartmentId) &&
-                   programId == dp.ProgramId && dp.IndRecurent == IndRecurent)
+                   programId == dp.ProgramId && dp.IndRecurent == IndRecurent
+                   && !dp.Program.IsDeleted)
                    .Include(dp => dp.Department)
                    .Include(dp => dp.Program)
                    .FirstOrDefaultAsync();
+        }
+
+        public async Task<DepartmentProgram?> FindSoftDeletedAsync(List<int> departmentIds, int programId, bool indRec)
+        {
+            return await _dbSet
+                .IgnoreQueryFilters()
+                .Where(dp => departmentIds.Contains(dp.DepartmentId)
+                    && dp.ProgramId == programId
+                    && dp.IndRecurent == indRec
+                    && dp.IsDeleted)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateAsync(DepartmentProgram entity)
+        {
+            PlannerContext.DepartmentPrograms.Update(entity);
+            await PlannerContext.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteByProgramIdAsync(int programId)
+        {
+            await _dbSet
+                .Where(dp => dp.ProgramId == programId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(dp => dp.IsDeleted, true)
+                    .SetProperty(dp => dp.DeletedAt, DateTimeOffset.UtcNow));
+        }
+
+        public async Task<DepartmentProgram?> GetSoftDeletedByIdAsync(int id)
+        {
+            return await _dbSet
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(dp => dp.Id == id && dp.IsDeleted);
+        }
+
+        public async Task HardDeleteAsync(int id)
+        {
+            await _dbSet
+                .IgnoreQueryFilters()
+                .Where(dp => dp.Id == id)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<List<RecurrentProgramDto>> GetRecurrentProgramsForDateGenerationAsync()

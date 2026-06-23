@@ -111,7 +111,7 @@ namespace Application.Services
                 return Result<bool>.Fail(ValidationMessages.PRG_NOT_EXIST); 
             }
 
-            //Check si le programme existe
+            //Check si le programme existe déjà (incluant soft-deleted)
             var departmentProgram = await _departmentProgramRepository.FindDepartmentProgramAsync(departmentProgramRequest.DepartmentIds, departmentProgramRequest.ProgramId, departmentProgramRequest.IndRecurrent);
 
             if (departmentProgram != null) {
@@ -119,6 +119,21 @@ namespace Application.Services
 
                 return Result<bool>.Fail(String.Format(ValidationMessages.DEPARTMENT_PROGRAM_EXIST, deptName , 
                       CultureInfo.CurrentCulture.TextInfo.ToTitleCase(departmentProgram.Program.Name.ToLower())));
+            }
+
+            // Vérifier s'il existe un soft-deleted à restaurer
+            var softDeleted = await _departmentProgramRepository.FindSoftDeletedAsync(departmentProgramRequest.DepartmentIds, departmentProgramRequest.ProgramId, departmentProgramRequest.IndRecurrent);
+            if (softDeleted != null)
+            {
+                if (departmentProgramRequest.ForceCreate)
+                {
+                    // Hard delete l'ancien et continuer la création
+                    await _departmentProgramRepository.HardDeleteAsync(softDeleted.Id);
+                }
+                else
+                {
+                    return Result<bool>.Fail(ValidationMessages.DEPARTMENT_PROGRAM_RESTORE_OR_CREATE, "RESTORE_OR_CREATE");
+                }
             }
 
 
@@ -404,6 +419,35 @@ namespace Application.Services
             await SyncDepartManagerClaimAsync(departmentMemberId, postes);
 
             return Result<bool>.Success(true);
+        }
+
+        /// <inheritdoc />
+        public async Task RemovePosteFromDepartmentAsync(int departmentId, int posteId)
+        {
+            await _departmentRepository.RemovePosteFromDepartmentAsync(departmentId, posteId);
+        }
+
+        /// <inheritdoc />
+        public async Task<int?> GetDepartmentIdByDepartmentProgramIdAsync(string departmentProgramIds)
+        {
+            var ids = Utiles.ConvertStringToArray(departmentProgramIds)
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value)
+                .ToList();
+
+            if (ids.Count == 0) return null;
+            return await _departmentRepository.GetDepartmentIdByDepartmentProgramIdAsync(ids.First());
+        }
+
+        /// <inheritdoc />
+        public async Task RestoreDepartmentProgramAsync(int departmentProgramId)
+        {
+            var entity = await _departmentProgramRepository.GetSoftDeletedByIdAsync(departmentProgramId);
+            if (entity != null)
+            {
+                entity.Restore();
+                await _departmentProgramRepository.UpdateAsync(entity);
+            }
         }
 
         /// <summary>

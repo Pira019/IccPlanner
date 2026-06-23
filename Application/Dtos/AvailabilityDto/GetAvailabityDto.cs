@@ -4,5 +4,6 @@
     {
         public int? Id { get; set; }
         public DateOnly? DatePrg { get; set; }
+        public bool IsPlanned { get; set; }
     }
 }

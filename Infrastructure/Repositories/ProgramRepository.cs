@@ -84,5 +84,10 @@ namespace Infrastructure.Repositories
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower() && x.IsDeleted);
         }
+
+        public async Task<Program?> GetByNameAsync(string name)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+        }
     }
 }

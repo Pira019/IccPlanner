@@ -86,7 +86,7 @@ namespace IccPlanner.Controllers
                 var memberId = await GetMemberAuthIdAsync();
                 var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, id);
                 if (!hasRight)
-                    return BadRequest(ApiError.ErrorMessage("Vous n'avez pas les droits pour modifier ce département. Vous devez être gestionnaire du département ou avoir la permission de gestion globale.", null, null));
+                    return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_UPDATE_NOT_AUTHORIZED, null, null));
             }
 
             var newDepartment = await _departmentService.UpdateDept(id, request);
@@ -131,9 +131,6 @@ namespace IccPlanner.Controllers
         /// <summary>
         ///     Ajoute un programme aux département.
         /// </summary>
-        /// <param name="request">
-        ///     Model contenant les informations nécessaires pour ajouter un programme aux départements.
-        /// </param> 
         [HttpPost("programs")]
         [Authorize(PolicyConstants.CAN_MANG_DEPART_DETAIL)] 
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
@@ -147,19 +144,48 @@ namespace IccPlanner.Controllers
             
             if (!result.IsSuccess)
             {
+                if (result.CodeErreur == "RESTORE_OR_CREATE")
+                {
+                    return Conflict(ApiError.ErrorMessage(result.Error, null, null));
+                }
                 return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
             }  
             return Created();
         }
 
+        /// <summary>
+        ///     Restaure un DepartmentProgram soft-deleted.
+        /// </summary>
+        [HttpPost("programs/restore/{departmentProgramId}")]
+        [Authorize(PolicyConstants.CAN_MANG_DEPART_DETAIL)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RestoreDepartmentProgram(int departmentProgramId)
+        {
+            await _departmentService.RestoreDepartmentProgramAsync(departmentProgramId);
+            return Ok();
+        }
+
         [HttpDelete("department-program")]
-        [Authorize(Policy = PolicyConstants.CAN_MANG_DEPART_DETAIL)]
+        [Authorize]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status403Forbidden)]
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteDepartmentProgram([FromBody] DeleteDepartmentProgramRequest request)
         {
+            var hasClaim = Utiles.HasPermission(User, ClaimsConstants.CAN_MANAGER_PRG, ClaimsConstants.PERMISSION)
+                        || Utiles.HasPermission(User, ClaimsConstants.MANAGE_PRG_DETAIL, ClaimsConstants.PERMISSION)
+                        || Utiles.HasPermission(User, ClaimsConstants.DEPART_MANAGER, ClaimsConstants.PERMISSION);
+            if (!hasClaim)
+            {
+                // Fallback : vérifier IndGest sur le département concerné
+                var memberId = await GetMemberAuthIdAsync();
+                var departmentId = await _departmentService.GetDepartmentIdByDepartmentProgramIdAsync(request.DepartmentProgramIds);
+                if (departmentId == null || !await _departmentMemberRepository.HasManagementRightAsync(memberId, departmentId.Value))
+                    return BadRequest(ApiError.ErrorMessage(ValidationMessages.CANT_DELETE_DEPARTMENT_PROGRAM, null, null));
+            }
+
             await _departmentService.DeleteDepartmentProgramByIdsAsync(request);
             return NoContent();
         }
@@ -222,9 +248,30 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AssignPostes(int id, AssignPostesRequest request)
         {
+            var hasClaim = Utiles.HasPermission(User, ClaimsConstants.DEPART_MANAGER, ClaimsConstants.PERMISSION);
+            if (!hasClaim)
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_UPDATE_NOT_AUTHORIZED, null, null));
+
             var result = await _departmentService.AssignPostesAsync(id, request.PosteIds);
             if (!result.IsSuccess)
                 return BadRequest(ApiError.ErrorMessage(result.Error, null, null));
+            return Ok();
+        }
+
+        /// <summary>
+        ///     Désaffecte un poste d'un département.
+        /// </summary>
+        [HttpDelete("{id}/postes/{posteId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RemovePoste(int id, int posteId)
+        {
+            var hasClaim = Utiles.HasPermission(User, ClaimsConstants.DEPART_MANAGER, ClaimsConstants.PERMISSION);
+            if (!hasClaim)
+                return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_UPDATE_NOT_AUTHORIZED, null, null));
+
+            await _departmentService.RemovePosteFromDepartmentAsync(id, posteId);
             return Ok();
         }
 
@@ -237,6 +284,15 @@ namespace IccPlanner.Controllers
         [ProducesResponseType<ApiErrorResponseModel>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AssignPostesToMember(int id, int departmentMemberId, [FromBody] AssignPostesRequest request)
         {
+            var hasClaim = Utiles.HasPermission(User, ClaimsConstants.CAN_MANANG_DEPART, ClaimsConstants.PERMISSION);
+            if (!hasClaim)
+            {
+                var memberId = await GetMemberAuthIdAsync();
+                var hasRight = await _departmentMemberRepository.HasManagementRightAsync(memberId, id);
+                if (!hasRight)
+                    return BadRequest(ApiError.ErrorMessage(ValidationMessages.DEPARTMENT_UPDATE_NOT_AUTHORIZED, null, null));
+            }
+
             var result = await _departmentService.AssignPostesToMemberAsync(departmentMemberId, request.PosteIds);
             if (!result.IsSuccess)
                 return BadRequest(ApiError.ErrorMessage(result.Error, null, null));

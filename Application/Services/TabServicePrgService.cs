@@ -131,7 +131,7 @@ namespace Application.Services
                 }
             }
 
-            await _tabServicePrgRepository.DeleteAsync(servicePrgId);
+            await _tabServicePrgRepository.DeleteSoftAsync(servicePrgId);
             return Result<bool>.Success(true);
         }
 

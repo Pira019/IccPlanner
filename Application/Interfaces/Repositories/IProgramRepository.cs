@@ -41,5 +41,10 @@ namespace Application.Interfaces.Repositories
         ///     Cherche un programme soft-deleted par nom (pour réactivation).
         /// </summary>
         public Task<Program?> GetSoftDeletedByNameAsync(string name);
+
+        /// <summary>
+        ///     Récupère un programme actif par son nom.
+        /// </summary>
+        public Task<Program?> GetByNameAsync(string name);
     }
 }

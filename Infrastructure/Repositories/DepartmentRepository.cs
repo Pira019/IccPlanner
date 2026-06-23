@@ -205,7 +205,7 @@ namespace Infrastructure.Repositories
                         .Select(dm => new DepartmentDetailMember
                         {
                             DepartmentMemberId = dm.Id,
-                            DisplayName = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName : ""),
+                            DisplayName = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName.Substring(0, 1) + "." : ""),
                             Sexe = dm.Member.Sexe,
                             Status = dm.Status.ToString(),
                             Postes = dm.DepartmentMemberPosts.Select(p => p.Poste.Name).ToList()
@@ -216,7 +216,8 @@ namespace Infrastructure.Repositories
                         {
                             Id = p.Id,
                             Name = p.Name,
-                            ShortName = p.ShortName
+                            ShortName = p.ShortName,
+                            Description = p.Description
                         }).ToList(),
                     Programs = d.DepartmentPrograms
                         .Where(dp => !dp.IsDeleted)
@@ -235,9 +236,12 @@ namespace Infrastructure.Repositories
                         {
                             Id = i.Id,
                             FirstName = i.FirstName,
-                            Email = i.Email,
+                            Email = i.Email.Length > 2 
+                                ? i.Email.Substring(0, 2) + "xxxxxxx@" + i.Email.Substring(i.Email.IndexOf('@') + 1)
+                                : "xx@xxx",
                             DateSend = i.DateSend,
                             DateExpiration = i.DateExpiration,
+                            DateUsed = i.DateUsed,
                             IndUsed = i.IndUsed,
                             IndAct = i.IndAct
                         }).ToList()
@@ -291,6 +295,34 @@ namespace Infrastructure.Repositories
             await PlannerContext.DepartmentMembers
                 .Where(dm => dm.Id == departmentMemberId)
                 .ExecuteUpdateAsync(s => s.SetProperty(dm => dm.IndPlanning, indPlanning));
+        }
+
+        /// <inheritdoc />
+        public async Task RemovePosteFromDepartmentAsync(int departmentId, int posteId)
+        {
+            var department = await _dbSet
+                .Include(d => d.Postes)
+                .FirstOrDefaultAsync(d => d.Id == departmentId);
+
+            if (department != null)
+            {
+                var poste = department.Postes.FirstOrDefault(p => p.Id == posteId);
+                if (poste != null)
+                {
+                    department.Postes.Remove(poste);
+                    await PlannerContext.SaveChangesAsync();
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<int?> GetDepartmentIdByDepartmentProgramIdAsync(int departmentProgramId)
+        {
+            return await PlannerContext.DepartmentPrograms
+                .IgnoreQueryFilters()
+                .Where(dp => dp.Id == departmentProgramId)
+                .Select(dp => (int?)dp.DepartmentId)
+                .FirstOrDefaultAsync();
         }
     }
 }

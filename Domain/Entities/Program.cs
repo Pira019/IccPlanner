@@ -19,7 +19,11 @@ namespace Domain.Entities
         }
         public string? Description { get; set; }
         [MaxLength(15)]
-        public string? ShortName { get; set; }
+        public string? ShortName { 
+            get => _shortName;
+            set => _shortName = value?.ToUpper();
+        }
+        private string? _shortName;
 
         /// <summary>
         ///     Id de l'utilisateur ajouté.

@@ -135,5 +135,20 @@ namespace Application.Interfaces.Services
         /// <param name="departmentMemberId">Id du DepartmentMember</param>
         /// <param name="posteIds">Liste des ids de postes</param>
         public Task<Result<bool>> AssignPostesToMemberAsync(int departmentMemberId, List<int> posteIds);
+
+        /// <summary>
+        ///     Désaffecte un poste d'un département.
+        /// </summary>
+        public Task RemovePosteFromDepartmentAsync(int departmentId, int posteId);
+
+        /// <summary>
+        ///     Récupère le departmentId à partir d'un DepartmentProgramId.
+        /// </summary>
+        public Task<int?> GetDepartmentIdByDepartmentProgramIdAsync(string departmentProgramIds);
+
+        /// <summary>
+        ///     Restaure un DepartmentProgram soft-deleted.
+        /// </summary>
+        public Task RestoreDepartmentProgramAsync(int departmentProgramId);
     }
 }

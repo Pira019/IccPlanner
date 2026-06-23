@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
                  .Select(dm => new MemberItem
                  {
                      IdDepartMember = dm.Id,
-                     Name = dm.Member.Name + " " + dm.Member.LastName,
+                     Name = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName.Substring(0, 1) + "." : ""),
                      NickName = dm.NickName!,
                      Sex = dm.Member.Sexe,
                      Status = dm.Status.ToString(),
@@ -90,7 +90,7 @@ namespace Infrastructure.Repositories
                     dm.MemberId,
                     DisplayName = dm.Member.Name + " " + (dm.Member.LastName != null ? dm.Member.LastName.Substring(0, 1) + "." : ""),
                     BirthDate = dm.Member.BirthDate!.Value,
-                    DepartmentName = dm.Department.Name
+                    DepartmentName = (dm.Department.ShortName ?? dm.Department.Name).ToUpper()
                 })
                 .ToListAsync();
 

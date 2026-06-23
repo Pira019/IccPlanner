@@ -35,6 +35,6 @@
         ///     Code d'erreur optionnel pour identifier le type d'erreur.
         /// </param>
         /// <returns></returns>
-        public static Result<T> Fail(string error, string? codeErr=null) => new Result<T>(false, default!, error, null);
+        public static Result<T> Fail(string error, string? codeErr=null) => new Result<T>(false, default!, error, codeErr);
     }
 }

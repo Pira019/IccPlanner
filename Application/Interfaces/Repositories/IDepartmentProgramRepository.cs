@@ -11,6 +11,31 @@ namespace Application.Interfaces.Repositories
         public Task<DepartmentProgram?> FindDepartmentProgramAsync(List<int> departmentIds, int programId, bool indRec);
 
         /// <summary>
+        ///     Trouve un DepartmentProgram soft-deleted.
+        /// </summary>
+        public Task<DepartmentProgram?> FindSoftDeletedAsync(List<int> departmentIds, int programId, bool indRec);
+
+        /// <summary>
+        ///     Met à jour un DepartmentProgram.
+        /// </summary>
+        public Task UpdateAsync(DepartmentProgram entity);
+
+        /// <summary>
+        ///     Soft-delete tous les DepartmentProgram liés à un programme.
+        /// </summary>
+        public Task SoftDeleteByProgramIdAsync(int programId);
+
+        /// <summary>
+        ///     Récupère un DepartmentProgram soft-deleted par son ID.
+        /// </summary>
+        public Task<DepartmentProgram?> GetSoftDeletedByIdAsync(int id);
+
+        /// <summary>
+        ///     Supprime définitivement un DepartmentProgram.
+        /// </summary>
+        public Task HardDeleteAsync(int id);
+
+        /// <summary>
         ///     Récupère les programmes récurrents actifs pour la génération de dates.
         /// </summary>
         public Task<List<RecurrentProgramDto>> GetRecurrentProgramsForDateGenerationAsync();

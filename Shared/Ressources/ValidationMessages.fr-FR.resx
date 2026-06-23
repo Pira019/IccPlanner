@@ -474,4 +474,13 @@
   <data name="DEPARTMENT_UPDATE_NOT_AUTHORIZED" xml:space="preserve">
     <value>Vous n'avez pas les droits pour modifier ce département. Vous devez être gestionnaire du département ou avoir la permission de gestion globale.</value>
   </data>
+  <data name="CANT_DELETE_AVAILABILITY_PLANNED" xml:space="preserve">
+    <value>Vous ne pouvez pas retirer votre disponibilité car vous êtes déjà programmé(e) pour ce créneau. Veuillez contacter votre responsable.</value>
+  </data>
+  <data name="CANT_DELETE_DEPARTMENT_PROGRAM" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé(e) à retirer ce programme du département. Vous devez être gestionnaire de ce département ou avoir la permission de gestion des programmes.</value>
+  </data>
+  <data name="DEPARTMENT_PROGRAM_RESTORE_OR_CREATE" xml:space="preserve">
+    <value>Ce programme était précédemment associé à ce département. Voulez-vous le restaurer (avec ses dates et services) ou créer une nouvelle association ?</value>
+  </data>
 </root>

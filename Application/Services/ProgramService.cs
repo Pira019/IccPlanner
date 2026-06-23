@@ -19,11 +19,12 @@ namespace Application.Services
         private readonly IClaimRepository _ClaimRepository;
         private readonly IDepartmentMemberRepository _departmentMemberRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IDepartmentProgramRepository _departmentProgramRepository;
 
         public ProgramService(IBaseRepository<Program> baseRepository, IMapper mapper,
             IPrgDateRepository prgDateRepository,
             IProgramRepository programRepository, IClaimRepository claimRepository, IDepartmentMemberRepository departmentMemberRepository,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository, IDepartmentProgramRepository departmentProgramRepository)
             : base(baseRepository, mapper)
         {
             _IProgramRepository = programRepository;
@@ -31,13 +32,20 @@ namespace Application.Services
             _departmentMemberRepository = departmentMemberRepository;
             _prgDateRepository = prgDateRepository;
             _accountRepository = accountRepository;
+            _departmentProgramRepository = departmentProgramRepository;
         }
 
         public async Task<Result<AddProgramResponse>> Add(AddProgramRequest request, string userAuth)
         {
             if (await _IProgramRepository.IsNameExistsAsync(request.Name))
             {
-                return Result<AddProgramResponse>.Fail(string.Format(ValidationMessages.EXIST_Pro_Val, ValidationMessages.PROGRAM_NAME, request.Name));
+                if (request.ForceUseExisting)
+                {
+                    // L'utilisateur confirme : retourner le programme existant
+                    var existing = await _IProgramRepository.GetByNameAsync(request.Name);
+                    return Result<AddProgramResponse>.Success(_mapper.Map<AddProgramResponse>(existing!));
+                }
+                return Result<AddProgramResponse>.Fail(string.Format(ValidationMessages.EXIST_Pro_Val, ValidationMessages.PROGRAM_NAME, request.Name), "NAME_EXISTS");
             }
 
             // Vérifier si un programme soft-deleted avec ce nom existe → le réactiver
@@ -166,6 +174,9 @@ namespace Application.Services
             }
 
             await _IProgramRepository.DeleteSoftAsync(idPrg);
+
+            // Soft-delete les DepartmentProgram liés
+            await _departmentProgramRepository.SoftDeleteByProgramIdAsync(idPrg);
 
             return Result<bool>.Success(true);
         }

@@ -22,5 +22,10 @@ namespace Application.Requests.Department
         public string? DateStart { get; set; }  
         public string? DateEnd { get; set; }  
         public string? Comment { get; set; }
+
+        /// <summary>
+        ///     Force la création d'un nouveau lien même si un soft-deleted existe.
+        /// </summary>
+        public bool ForceCreate { get; set; } = false;
     }
 }
