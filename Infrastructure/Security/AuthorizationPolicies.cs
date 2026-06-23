@@ -40,9 +40,7 @@ namespace Infrastructure.Security
             options.AddPolicy(PolicyConstants.CAN_CREATE_MINISTRY, policy =>
                 policy.RequireAssertion(context =>
                 {
-                    var allowedRoles = new[] { RolesConstants.ADMIN, RolesConstants.AP, RolesConstants.PASTEUR, RolesConstants.BERGER };
-                    return allowedRoles.Any(role => context.User.IsInRole(role)) ||
-                           context.User.HasClaim(ClaimsConstants.PERMISSION, ClaimsConstants.CAN_CREATE_MINISTRY);
+                    return Utiles.HasPermission(context.User, ClaimsConstants.CAN_CREATE_MINISTRY, ClaimsConstants.PERMISSION);
                 }));
             /*Fin Accès Ministère*/
 
